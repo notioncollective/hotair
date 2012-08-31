@@ -32,8 +32,8 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.tweets);
-// app.get('/add', routes.add);
+app.get('/', routes.home);
+app.get('/tweets', routes.tweets);
 // app.post('/register', routes.register);
 // app.get('/list', routes.list);
 

@@ -31,17 +31,26 @@ exports.tweets = function(req, res) {
 			console.log(err);
 			return false;
 		}
+		reply.forEach(function(tweet) {
+			tweet.party = "Republican";
+		});
 		db.save(reply, function(err, resp) {
 			console.log('saved');
 		});
 		console.log(reply);
 	});
 	
-	
+	db.save('_design/tweets', {
+	      all: {
+	          map: function (doc) {
+	              if (doc.user && doc.text) emit(doc.user.name, doc.text);
+	          }
+	      }
+	  });
 	
 	var data = req.body;
 	
-	db.view('tweets/list', function(err, resp) {
+	db.view('tweets/all', function(err, resp) {
 	   	console.log("resp", resp);
 		var out = [];
 	    if(resp) {
