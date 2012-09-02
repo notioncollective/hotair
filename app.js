@@ -33,7 +33,8 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.home);
-app.get('/tweets', routes.tweets);
+app.get('/reset', routes.reset);
+app.get('/load_tweets', routes.load_tweets);
 // app.post('/register', routes.register);
 // app.get('/list', routes.list);
 
