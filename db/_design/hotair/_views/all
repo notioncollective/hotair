@@ -1,0 +1,4 @@
+MAP:
+function(doc) {
+  emit(doc.id, {"name": doc.user.name, "screen_name": doc.user.screen_name, "party": doc.party, "text": doc.text});
+}

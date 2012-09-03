@@ -20,39 +20,54 @@ var conn = new(cradle.Connection)(),
 	  , access_token_secret:  'AOaSNcoio81jhpwoX5VeuBeRpkWVqFWtJwxTApkDWs'
 	}),
 	_since_id = null,
-	_params_r = { owner_screen_name: 'tweetcongress', per_page: 10, slug: "republican" },
-	_params_d = { owner_screen_name: 'tweetcongress', per_page: 10, slug: "democrats" };
+	_params_r = { owner_screen_name: 'tweetcongress', per_page: 100, slug: "republican" },
+	_params_d = { owner_screen_name: 'tweetcongress', per_page: 100, slug: "democrats" };
 	
 function _getTweets(params) {
-	
-	if(_since_id) {
-		params.since_id = _since_id;
-	}
+	console.log("_getTweets");
+	if(!_.isNull(_since_id)) params.since_id = _since_id;
 	
 	T.get('lists/statuses', params, function(err, reply) {
 		
-		// console.log(err);
+		// if there's an error, return false
 		if(err) {
 			console.log(err);
 			return false;
 		}
-		if(reply.length > 0 && reply[0].id === _since_id) {
-			reply = reply.slice(1);
-		}
+		
+		// twitter response with since_id seems to return the since_id, so remove it to avoid duplication in db
+		// if(reply.length > 0 && reply[0].id === _since_id) {
+		// 			reply = reply.slice(1);
+		// 		}
+		
+		// add extra info
 		reply.forEach(function(tweet) {
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
+			console.log(tweet.id);
 		});
+		
+		// save to db
 		db.save(reply, function(err, resp) {
 			console.log('saved tweets');
 		});
-		// console.log(reply);
+		
+		// update _since_id based on response
+		var max = _.max(reply, function(tweet){ return tweet.id; });
+		console.log("max: ", max.id);
+		if(max.id) _since_id = max.id;
+		console.log("_since_id: ", _since_id);
 	});
 }
 
 function _getSinceId() {
+	console.log("_getSinceId", _since_id);
 	var dfd = Q.defer();
+	if(!_.isNull(_since_id)) {
+		dfd.resolve();
+		return dfd.promise;
+	}
 	db.view('hotair/since_id', { group: false }, function(err, resp) {
 		if(err) {
 			console.log(err);
@@ -81,6 +96,7 @@ exports.home = function(req, res){
 };
 
 exports.reset = function(rew, res) {
+	console.log("reset");
 	db.all(function(err, res) {
 		console.log(res);
 		_.each(res, function(doc, key) {
@@ -92,14 +108,6 @@ exports.reset = function(rew, res) {
 				console.log(doc.key+"removed");
 			});
 		});
-		// res.forEach(function(doc) {
-		// 	console.log(doc);
-		// 	if(doc.key.indexOf("_design/") !== -1) return;
-		// 	
-		// 	db.remove(doc.key, doc.value.rev, function (err, res) {
-		// 		console.log(doc.key+"removed");
-		//  			});
-		// });
 	});
 	res.send("reseting db");
 };
@@ -108,16 +116,17 @@ exports.reset = function(rew, res) {
 * This action hits the twitter API
 */
 exports.load_tweets = function(req, res) {
-	// console.log("since_id: ", _getSinceId());
+	console.log("load_tweets");
+	
 	
 	// Check if database is populated, if so use since_id
 	
-	_getSinceId()
-		.then(_getTweets(_params_r))
-		.then(_getTweets(_params_d));
+	// _getSinceId()
+	// 		.then(_getTweets(_params_r))
+	// 		.then(_getTweets(_params_d));
 	
-	// _getTweets(params_r);
-	// 	_getTweets(params_d);
+	_getTweets(_params_r);
+	_getTweets(_params_d);
 	
 	res.send("loading tweets");
 	
@@ -144,12 +153,16 @@ exports.load_tweets = function(req, res) {
 	// });
 }
 
-
-exports.tweets = function(req, res) {
-	db.view('tweets/all', function(err, resp) {
-	   	console.log("resp", resp);
+exports.all = function(req, res) {
+	var startkey = req.query.startkey || 0,
+		limit = req.query.limit || 100;
+	console.log("startkey: ", typeof startkey);
+	db.view('hotair/all', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
+	   	// console.log("resp", resp);
 		var out = [];
 	    if(resp) {
+			res.send(resp);
+			return;
 			resp.forEach(function(row) {
 		   	  out.push(row);	
 		   	});
@@ -159,6 +172,43 @@ exports.tweets = function(req, res) {
 	});
 }
 
+exports.democrats = function(req, res) {
+	var startkey = req.query.startkey || 0,
+		limit = req.query.limit || 100;
+	console.log("startkey: ", typeof startkey);
+	db.view('hotair/democrats', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
+	   	// console.log("resp", resp);
+		var out = [];
+	    if(resp) {
+			res.send(resp);
+			return;
+			resp.forEach(function(row) {
+		   	  out.push(row);	
+		   	});
+		}
+	   	console.log("out", out);
+		res.send(out);
+	});
+}
+
+exports.republican = function(req, res) {
+	var startkey = req.query.startkey || 0,
+		limit = req.query.limit || 100;
+	console.log("startkey: ", typeof startkey);
+	db.view('hotair/republican', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
+	   	// console.log("resp", resp);
+		var out = [];
+	    if(resp) {
+			res.send(resp);
+			return;
+			resp.forEach(function(row) {
+		   	  out.push(row);	
+		   	});
+		}
+	   	console.log("out", out);
+		res.send(out);
+	});
+}
 
 /*
  * Retrieve tweets

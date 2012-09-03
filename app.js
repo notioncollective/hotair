@@ -35,8 +35,9 @@ app.configure('development', function(){
 app.get('/', routes.home);
 app.get('/reset', routes.reset);
 app.get('/load_tweets', routes.load_tweets);
-// app.post('/register', routes.register);
-// app.get('/list', routes.list);
+app.get('/all', routes.all);
+app.get('/democrats', routes.democrats);
+app.get('/republican', routes.republican);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
