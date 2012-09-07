@@ -1,16 +1,21 @@
 {
   "name": "hotair",
-  "version": "0.0.1",
+  "version": "0.0.1-4",
   "private": true,
   "scripts": {
     "start": "node app"
   },
   "dependencies": {
     "express": "3.0.0rc1",
-    "jade": "*"
+    "jade": "0.27.x",
+    "cradle": "0.6.x",
+    "path": "0.4.x",
+    "twit": "0.1.8",
+    "lodash": "0.6.x",
+    "q": "0.8.8"
   },
   "subdomain": "hotair",
   "engines": {
-    "node": "0.8.7"
+    "node": "0.6.x"
   }
 }
