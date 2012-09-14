@@ -18,6 +18,7 @@ new cronJob('0 */12 * * * *', function(){
 }, null, true, "America/New_York");;
 
 var app = express();
+var auth = express.basicAuth('notion', 'Madi50nW1'); 
 
 
 // var conn = new(cradle.Connection)();
@@ -40,8 +41,9 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.home);
-app.get('/reset', routes.reset);
+app.get('/', auth, routes.home);
+app.get('/play', auth, routes.play)
+app.get('/reset', auth, routes.reset);
 app.get('/load_tweets', routes.load_tweets);
 app.get('/all', routes.all);
 app.get('/democrats', routes.democrats);

@@ -99,6 +99,10 @@ exports.home = function(req, res){
   res.render('home', { title: 'Hot Air' });
 };
 
+exports.play = function(req, res) {
+	res.render('home', { title: 'Hot Air' });
+}
+
 exports.reset = function(rew, res) {
 	console.log("reset");
 	db.all(function(err, res) {
