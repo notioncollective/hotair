@@ -44,10 +44,10 @@ app.configure('development', function(){
 app.get('/', auth, routes.home);
 app.get('/play', auth, routes.play)
 app.get('/reset', auth, routes.reset);
-app.get('/load_tweets', auth, routes.load_tweets);
-app.get('/all', auth, routes.all);
-app.get('/democrats', auth, routes.democrats);
-app.get('/republican', auth, routes.republican);
+app.get('/load_tweets', routes.load_tweets);
+app.get('/all', routes.all);
+app.get('/democrats', routes.democrats);
+app.get('/republican', routes.republican);
 
 app.post('/highscore', routes.highscore);
 
