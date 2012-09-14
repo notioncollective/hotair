@@ -1,7 +1,7 @@
 {
   "name": "hotair",
   "description": "A game for gasbags.",
-  "version": "0.0.1-7",
+  "version": "0.0.1-10",
   "private": true,
   "scripts": {
     "start": "node app"
@@ -15,7 +15,7 @@
     "lodash": "0.6.x",
     "q": "0.8.8",
     "cron": "1.0.1",
-		"time": "0.8.3"
+    "time": "0.8.3"
   },
   "subdomain": "hotair",
   "domains": [
