@@ -14,7 +14,8 @@
     "twit": "0.1.8",
     "lodash": "0.6.x",
     "q": "0.8.8",
-    "cron": "1.0.1"
+    "cron": "1.0.1",
+		"time": "0.8.3"
   },
   "subdomain": "hotair",
   "domains": [
