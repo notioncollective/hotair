@@ -7,7 +7,14 @@ var express = require('express')
   , routes = require('./routes/hotair')
   , http = require('http')
   , path = require('path')
-  , cradle = require('cradle');
+  , cradle = require('cradle')
+  , cronJob = require('cron').CronJob;
+
+
+// new cronJob('*/20 * * * * *', function(){
+    // console.log('You will see this message every 10 seconds.');
+    // routes.load_tweets();
+// }, null, true, "America/New_York");;
 
 var app = express();
 

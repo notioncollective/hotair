@@ -11,6 +11,8 @@ var cradle = require('cradle'),
 	_ = require('lodash'),
 	Q = require('q');
 
+
+
 var conn = new(cradle.Connection)(),
 	db = conn.database('hotair'),
 	T = new Twit({
@@ -41,11 +43,11 @@ function _getTweets(params) {
 		// 		}
 		
 		// add extra info
-		reply.forEach(function(tweet) {
+		_.each(reply, function(tweet) {
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
-			console.log(tweet.id);
+			console.log("tweet.id", tweet.id);
 		});
 		
 		// save to db
@@ -54,7 +56,8 @@ function _getTweets(params) {
 		});
 		
 		// update _since_id based on response
-		var max = _.max(reply, function(tweet){ return tweet.id; });
+		console.log(params.slug, reply);
+		var max = _.max(reply, function(tweet){ console.log(tweet.id); return tweet.id; });
 		console.log("max: ", max.id);
 		if(max.id) _since_id = max.id;
 		console.log("_since_id: ", _since_id);
@@ -128,6 +131,7 @@ exports.load_tweets = function(req, res) {
 	_getTweets(_params_r);
 	_getTweets(_params_d);
 	
+	if(!res) return;
 	res.send("loading tweets");
 	
 	// db.save('_design/tweets', {
