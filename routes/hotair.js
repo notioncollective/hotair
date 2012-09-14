@@ -251,17 +251,19 @@ exports.register = function(req, res) {
   });
 };
 
-exports.list = function(req, res) {
-  var list = [];
-  db.view('admin/test', function(err, resp) {
-   	console.log("resp", resp);
-    if(resp) {
-		resp.forEach(function(row) {
-	   	  list.push(row);	
-	   	});
-	}
-   	console.log("List", list);
-	res.render('list', {list: list});
-   });
-  
+/*
+ * Save a highscore
+ * POST
+ */
+exports.highscore = function(req, res) {
+	var data = req.body,
+		respBody = {};
+	db.save(data, function(db_err, db_res) {
+		if (err) {
+			respBody.error = db_err;
+		} else {
+			respBody.success = true;
+		}
+		res.send(JSON.stringify(respBody));
+	});
 };

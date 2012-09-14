@@ -20,7 +20,6 @@ new cronJob('0 */12 * * * *', function(){
 var app = express();
 
 
-
 // var conn = new(cradle.Connection)();
 // var db = conn.database('users');
 
@@ -31,9 +30,10 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
+  app.use(express.cookieParser('hotair'));
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, 'public'), {maxAge: 100000}));
 });
 
 app.configure('development', function(){
@@ -46,6 +46,8 @@ app.get('/load_tweets', routes.load_tweets);
 app.get('/all', routes.all);
 app.get('/democrats', routes.democrats);
 app.get('/republican', routes.republican);
+
+app.post('/highscore', routes.highscore);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
