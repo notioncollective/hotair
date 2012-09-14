@@ -7,7 +7,15 @@ var express = require('express')
   , routes = require('./routes/hotair')
   , http = require('http')
   , path = require('path')
-  , cradle = require('cradle');
+  , cradle = require('cradle')
+  , cronJob = require('cron').CronJob;
+
+
+// Cron Job to go grab new tweets every 5 minutes.
+new cronJob('0 */12 * * * *', function(){
+    console.log('CRON - fetching tweets.');
+    routes.load_tweets();
+}, null, true, "America/New_York");;
 
 var app = express();
 
