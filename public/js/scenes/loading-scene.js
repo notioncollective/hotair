@@ -4,7 +4,7 @@ Crafty.scene("loading", function() {
 		"img/20.png",
 		"img/40.png",
 		"img/60.png"],
-		Crafty.Twitter.init(true)
+		Crafty.Twitter.init()
 		// Crafty.Twitter.init()
 	);
 	Crafty.audio.add({
