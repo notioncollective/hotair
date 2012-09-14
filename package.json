@@ -19,7 +19,7 @@
   "domains": [
 		"hotairgame.com",
 		"www.hotairgame.com"
-	]
+	],
   "engines": {
     "node": "0.6.x"
   }
