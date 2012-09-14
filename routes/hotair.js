@@ -56,11 +56,12 @@ function _getTweets(params) {
 		});
 		
 		// update _since_id based on response
-		console.log(params.slug, reply);
+		/*console.log(params.slug, reply);
 		var max = _.max(reply, function(tweet){ console.log(tweet.id); return tweet.id; });
 		console.log("max: ", max.id);
 		if(max.id) _since_id = max.id;
 		console.log("_since_id: ", _since_id);
+		*/
 	});
 }
 
@@ -77,7 +78,7 @@ function _getSinceId() {
 			dfd.reject(new Error(err));
 			return;
 		}
-		console.log(resp);
+		console.log("since_id resp", resp);
 		if(resp.length > 0 && resp[0].value.max) {
 			var max = resp[0].value.max;
 			console.log("max: ", max);
@@ -124,12 +125,20 @@ exports.load_tweets = function(req, res) {
 	
 	// Check if database is populated, if so use since_id
 	
-	// _getSinceId()
-	// 		.then(_getTweets(_params_r))
-	// 		.then(_getTweets(_params_d));
+	_getSinceId()
+			.then(function(value) {
+				_getTweets(_params_r)
+			}, function(err) {
+				log(err);
+			})
+			.then(function(value) {
+				_getTweets(_params_d)
+			}, function(err) {
+				log(err);
+			});
 	
-	_getTweets(_params_r);
-	_getTweets(_params_d);
+	// _getTweets(_params_r);
+	// _getTweets(_params_d);
 	
 	if(!res) return;
 	res.send("loading tweets");
