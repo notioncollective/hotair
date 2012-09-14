@@ -1,0 +1,62 @@
+doctype 5
+html(lang="en")
+	head
+		title Hot Air
+		link(rel='stylesheet', type='text/css', href='css/style.css')
+		link(href='http://fonts.googleapis.com/css?family=Press+Start+2P', rel='stylesheet', type='text/css')
+	body(id="home")
+		// js librariess
+		- var libs = ['jquery-min', 'crafty', 'underscore-min', 'screenfull.min'];
+		- for (var i=0;i<libs.length;i++)
+			script(src="js/lib/#{libs[i]}.js", type="text/javascript", charset="utf-8")
+
+		// game extensions
+		- var ext = ['twitter-extension', 'start-screen-module', 'list-nav-module', 'enemy-controller-extension'];
+		- for (var i=0;i<ext.length;i++)
+			script(src="js/crafty-extensions/#{ext[i]}.js", type="text/javascript", charset="utf-8")
+
+		// game components
+		- var com = ['start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'levels', 'level-display', 'score', 'score-display', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'game', 'button'];
+		- for (var i=0;i<com.length;i++)
+			script(src="js/components/#{com[i]}.js", type="text/javascript", charset="utf-8")
+
+		// game scenes
+		- var scn = ['loading-scene', 'start-screen-scene', 'game-over-scene', 'gameplay-scene'];
+		- for (var i=0;i<scn.length;i++)
+			script(src="js/scenes/#{scn[i]}.js", type="text/javascript", charset="utf-8")
+
+		// sprites
+		script(src="js/sprites/sprites.js", type="text/javascript", charset="utf-8")
+
+		// main js
+		script(src="js/main.js", type="text/javascript", charset="utf-8")
+
+		.start-wrap
+			// START DISPLAY
+			#StartDisplay.start-scene
+				ul.list-inline
+					li: a#new-game(href='#new-game') New Game
+					li: a(href='#instructions') Instructions
+					li: a(href='#about') About
+					li: a(href='#high-scores') High Scores
+
+			// PARTY SELECT DISPLAY
+			#PartySelectDisplay.start-scene
+				ul.list-inline
+					li: a#select-democrats(href='#democrats', class='party-select', data-party='d') Democrats
+					li: a#select-republicans(href='#republicans', class='party-select', data-party='r') Republicans
+
+			// PAUSE DISPLAY
+			#PauseDisplay
+				h1 Paused
+				ul.list-inline
+					li: a#pause-resume(href='#pause-resume') Resume
+					li: a#pause-end-game(href='#pause-end-game') End Game
+
+			// TWEET DISPLAY
+			#TweetDisplay
+				.content
+
+			// FULL SCREEN
+			#FullScreenPrompt
+				.prompt Press Esc for Fullscreen Mode
