@@ -1,6 +1,6 @@
 {
   "name": "hotair",
-  "version": "0.0.1-4",
+  "version": "0.0.1-6",
   "private": true,
   "scripts": {
     "start": "node app"
@@ -13,13 +13,13 @@
     "twit": "0.1.8",
     "lodash": "0.6.x",
     "q": "0.8.8",
-    "cron": "1.0.1",
+    "cron": "1.0.1"
   },
   "subdomain": "hotair",
   "domains": [
-		"hotairgame.com",
-		"www.hotairgame.com"
-	],
+    "hotairgame.com",
+    "www.hotairgame.com"
+  ],
   "engines": {
     "node": "0.6.x"
   }
