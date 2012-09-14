@@ -147,6 +147,7 @@ Crafty.c("Game", {
 			this.decrementScore();
 			Crafty.audio.play('hit_bad');
 			this.removeLife();
+			this._perfectLevel = false;
 		} else {
 			this.incrementScore();
 			Crafty.audio.play('hit_good');
@@ -158,6 +159,7 @@ Crafty.c("Game", {
 		if (e.tweet.party != this._party) {
 			if(this.getScore() > 0) {
 				this.decrementScore();
+				this._perfectLevel = false;
 			} else {
 				this.removeLife();
 			}
@@ -169,14 +171,18 @@ Crafty.c("Game", {
 	
 	handleLevelComplete: function(e) {
 		console.log("handleLevelComplete");
+		if(this._perfectLevel) {
+			// perfect level, add a life!
+			this.addLife();
+		}
 		this.incrementLevel();
 	},
 	
 	handleNextLevel: function(e) {
+		console.log("handleNextLevel");
 		Crafty.audio.play("whoosh");
 		var numEnemiesPerLevel = this.getNumEnemiesPerLevel();
 		var start = (this.getLevel()-1)*2*numEnemiesPerLevel;
-		console.log("handleNextLevel");
 		this.setIncrement(100*this.getScoreMultiplier());
 		this.enemyController.loadEnemySet(start, numEnemiesPerLevel);
 		this.enemyController.setSpeed(this.getLevel()/1.5);

@@ -1,12 +1,14 @@
 Crafty.c("Levels", {
 	_level: 1,
-	_numEnemiesPerLevel: 3,
+	_perfectLevel: true,
+	_numEnemiesPerLevel: 2,
 	init: function() {
 		this.bind("NextLevel", this.nextLevel);
 		Crafty.trigger("SetLevel", {level: this._level});
 	},
 	incrementLevel: function() {
 		this._level += 1;
+		this._perfectLevel = true;
 		Crafty.trigger("NextLevel", {level: this._level});
 	},
 	setLevel: function(level) {
