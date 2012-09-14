@@ -39,6 +39,11 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler());
+	cradle.setup({ host: '127.0.0.1' });
+});
+
+app.configure('production', function(){
+	cradle.setup({ host: 'nodejitsudb198990392151.iriscouch.com' });
 });
 
 app.get('/', auth, routes.home);
