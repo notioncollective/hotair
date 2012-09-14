@@ -173,6 +173,7 @@ Crafty.c("Game", {
 		console.log("handleLevelComplete");
 		if(this._perfectLevel) {
 			// perfect level, add a life!
+			Crafty.audio.play("addLife");
 			this.addLife();
 		}
 		this.incrementLevel();
