@@ -19,7 +19,15 @@ Crafty.scene("gameplay", function() {
 	HA.tweetDisplay.show();
 	var scoreDisplay = Crafty.e("ScoreDisplay");
 	var livesDisplay = Crafty.e("LivesDisplay");
-	var levelDisplay = Crafty.e("LevelDisplay");
+	// var levelDisplay = Crafty.e("LevelDisplay");
+	var messageDisplay = Crafty.e("MessageDisplay");
+	
+	messageDisplay.bind("NextLevel", function(e) {
+		Crafty.trigger("ShowMessage", {text: "Level "+e.level});
+	});
+	messageDisplay.bind("SetLevel", function(e) {
+		Crafty.trigger("ShowMessage", {text: "Level "+e.level});
+	});
 	
 	
 	HA.game = Crafty.e("Game");

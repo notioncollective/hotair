@@ -12,10 +12,10 @@ Crafty.c("LevelDisplay", {
 			this.flashLevel();
 		});
 		
-		this.bind("NextLevel", function(e) {
-			this.text("Level "+e.level);
-			this.flashLevel();
-		});
+		// this.bind("NextLevel", function(e) {
+			// this.text("Level "+e.level);
+			// this.flashLevel();
+		// });
 	},
 	flashLevel: function() {
 		console.log("flashLevel");

@@ -159,10 +159,10 @@ Crafty.c("Game", {
 		if (e.tweet.party != this._party) {
 			if(this.getScore() > 0) {
 				this.decrementScore();
-				this._perfectLevel = false;
 			} else {
 				this.removeLife();
 			}
+			this._perfectLevel = false;
 			Crafty.audio.play('hit_bad');
 		} else {
 			Crafty.trigger("DestroyEnemy", {enemy: e.enemy});
@@ -171,12 +171,17 @@ Crafty.c("Game", {
 	
 	handleLevelComplete: function(e) {
 		console.log("handleLevelComplete");
+		var that = this;
 		if(this._perfectLevel) {
 			// perfect level, add a life!
 			Crafty.audio.play("addLife");
 			this.addLife();
+			Crafty.trigger("ShowMessage", {text: "Perfect Level!", callback: function() {
+				that.incrementLevel();		
+			}});
+		} else {
+			this.incrementLevel();
 		}
-		this.incrementLevel();
 	},
 	
 	handleNextLevel: function(e) {
