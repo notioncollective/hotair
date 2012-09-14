@@ -36,6 +36,9 @@ Crafty.scene("loading", function() {
 		],
 		select: [
 			"/snd/select.wav"
+		],
+		addLife: [
+			"/snd/addLife.wav"
 		]
 	});
 });

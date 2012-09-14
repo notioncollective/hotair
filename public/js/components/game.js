@@ -147,6 +147,7 @@ Crafty.c("Game", {
 			this.decrementScore();
 			Crafty.audio.play('hit_bad');
 			this.removeLife();
+			this._perfectLevel = false;
 		} else {
 			this.incrementScore();
 			Crafty.audio.play('hit_good');
@@ -161,6 +162,7 @@ Crafty.c("Game", {
 			} else {
 				this.removeLife();
 			}
+			this._perfectLevel = false;
 			Crafty.audio.play('hit_bad');
 		} else {
 			Crafty.trigger("DestroyEnemy", {enemy: e.enemy});
@@ -169,18 +171,28 @@ Crafty.c("Game", {
 	
 	handleLevelComplete: function(e) {
 		console.log("handleLevelComplete");
-		this.incrementLevel();
+		var that = this;
+		if(this._perfectLevel) {
+			// perfect level, add a life!
+			Crafty.audio.play("addLife");
+			this.addLife();
+			Crafty.trigger("ShowMessage", {text: "Perfect Level!", callback: function() {
+				that.incrementLevel();		
+			}});
+		} else {
+			this.incrementLevel();
+		}
 	},
 	
 	handleNextLevel: function(e) {
+		console.log("handleNextLevel");
 		Crafty.audio.play("whoosh");
 		var numEnemiesPerLevel = this.getNumEnemiesPerLevel();
 		var start = (this.getLevel()-1)*2*numEnemiesPerLevel;
-		console.log("handleNextLevel");
 		this.setIncrement(100*this.getScoreMultiplier());
 		this.enemyController.loadEnemySet(start, numEnemiesPerLevel);
 		this.enemyController.setSpeed(this.getLevel()/1.5);
-		this.enemyController.startProducing();
+		this.enemyController.startProducing(true);
 	},
 	
 	saveScore: function() {
