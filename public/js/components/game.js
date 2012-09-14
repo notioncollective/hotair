@@ -192,7 +192,7 @@ Crafty.c("Game", {
 		this.setIncrement(100*this.getScoreMultiplier());
 		this.enemyController.loadEnemySet(start, numEnemiesPerLevel);
 		this.enemyController.setSpeed(this.getLevel()/1.5);
-		this.enemyController.startProducing();
+		this.enemyController.startProducing(true);
 	},
 	
 	saveScore: function() {
