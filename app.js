@@ -33,7 +33,7 @@ app.configure(function(){
   app.use(express.cookieParser('hotair'));
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public'), {maxAge: 100000}));
+  app.use(express.static(path.join(__dirname, 'public'), {maxAge:  86400000}));
 });
 
 app.configure('development', function(){

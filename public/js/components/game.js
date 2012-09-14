@@ -10,6 +10,7 @@ Crafty.c("Game", {
 		
 		this.bind("GameOver", function(e) {
 			console.log("GAME OVER!!");
+			this.saveScore();
 			Crafty.scene("start");
 		});
 		
@@ -180,5 +181,17 @@ Crafty.c("Game", {
 		this.enemyController.loadEnemySet(start, numEnemiesPerLevel);
 		this.enemyController.setSpeed(this.getLevel()/1.5);
 		this.enemyController.startProducing();
+	},
+	
+	saveScore: function() {
+		$.ajax({
+			url: "/highscore",
+			type: "post",
+			contentType: "application/json",
+			data: JSON.stringify({user: "XXX", score: this.getScore(), party: this._party}),
+			success: function(resp) {
+				console.log("saved high score: ", resp);
+			}
+		});
 	}
 });
