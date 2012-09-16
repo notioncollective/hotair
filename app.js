@@ -46,7 +46,7 @@ app.configure('production', function(){
 	cradle.setup({ host: 'nodejitsudb198990392151.iriscouch.com' });
 });
 
-app.get('/', auth, routes.home);
+app.get('/', routes.home);
 app.get('/play', auth, routes.play)
 app.get('/reset', auth, routes.reset);
 app.get('/load_tweets', routes.load_tweets);
