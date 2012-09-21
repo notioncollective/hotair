@@ -16,7 +16,7 @@ Crafty.scene("loading", function() {
 		"/snd/addLife.wav"
 		],
 		function() {
-			Crafty.Twitter.init(true);
+			Crafty.Twitter.init();
 		}
 	);
 	Crafty.audio.add({
