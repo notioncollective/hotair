@@ -164,7 +164,6 @@ HA.game = function(ns, $, _, C) {
 			throw "Party must be a string containing either 'r' or 'd'";
 		}
 	};
-	
 
 	return ns;
 	

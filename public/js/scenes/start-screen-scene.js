@@ -30,6 +30,7 @@ Crafty.scene("start", function() {
 		var party = $(this).data('party');
 		HA.party = party;
 		Crafty.scene("gameplay");
+		// Crafty.Twitter.init(true);
 		return false;
 	});
 	

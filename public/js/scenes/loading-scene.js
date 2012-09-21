@@ -3,9 +3,21 @@ Crafty.scene("loading", function() {
 	Crafty.load([
 		"img/20.png",
 		"img/40.png",
-		"img/60.png"],
-		Crafty.Twitter.init()
-		// Crafty.Twitter.init()
+		"img/60.png",
+		"/snd/cloud_loops.mp3",
+		"/snd/drop.wav",
+		"/snd/level.wav",
+		"/snd/level.wav",
+		"/snd/hit_good.wav",
+		"/snd/hit_bad.wav",
+		"/snd/whoosh.wav",
+		"/snd/pause.wav",
+		"/snd/select.wav",
+		"/snd/addLife.wav"
+		],
+		function() {
+			Crafty.Twitter.init();
+		}
 	);
 	Crafty.audio.add({
 		// start_music: [

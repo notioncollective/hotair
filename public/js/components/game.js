@@ -10,8 +10,9 @@ Crafty.c("Game", {
 		
 		this.bind("GameOver", function(e) {
 			console.log("GAME OVER!!");
-			this.saveScore();
-			Crafty.scene("start");
+			// this.saveScore();
+			// Crafty.scene("start");
+			Crafty.scene("gameover");
 		});
 		
 		// Pause handler
@@ -94,7 +95,7 @@ Crafty.c("Game", {
 				$(document).off('click', "#pause-resume", _resume_game);
 				$(document).off('click', "#pause-end-game", _new_game);
 				partySelectMenu.destroy();
-				self.unPauseGame();
+				that.unPauseGame();
 				return false;
 			}
 			
@@ -102,7 +103,8 @@ Crafty.c("Game", {
 				e.preventDefault();
 				console.log("New game!");
 				that.unPauseGame();
-				that.enemyController.stopProducing()
+				that.enemyController.stopProducing();
+				that.enemyController.destroyAllEnemies();
 				Crafty.scene("start");
 				return false;
 			}
@@ -195,12 +197,12 @@ Crafty.c("Game", {
 		this.enemyController.startProducing(true);
 	},
 	
-	saveScore: function() {
+	saveScore: function(name) {
 		$.ajax({
 			url: "/highscore",
 			type: "post",
 			contentType: "application/json",
-			data: JSON.stringify({user: "XXX", score: this.getScore(), party: this._party}),
+			data: JSON.stringify({user: name, score: this.getScore(), party: this._party}),
 			success: function(resp) {
 				console.log("saved high score: ", resp);
 			}
