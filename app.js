@@ -39,9 +39,14 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler());
+	cradle.setup({ host: '127.0.0.1' });
 });
 
-app.get('/', auth, routes.home);
+app.configure('production', function(){
+	cradle.setup({ host: 'nodejitsudb198990392151.iriscouch.com' });
+});
+
+app.get('/', routes.home);
 app.get('/play', auth, routes.play)
 app.get('/reset', auth, routes.reset);
 app.get('/load_tweets', routes.load_tweets);

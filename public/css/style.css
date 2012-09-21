@@ -81,7 +81,7 @@ ul.list-inline li a {
 	z-index: -100;
 }
 */
-#StartDisplay, #PartySelectDisplay, #PauseDisplay {
+#StartDisplay, #PartySelectDisplay, #PauseDisplay, #GameOverDisplay {
 	display: none;
 	text-transform: uppercase;
 	text-align: center;
@@ -130,7 +130,7 @@ ul.list-inline li a {
 	height: 40px;
 }
 
-#PauseDisplay {
+#PauseDisplay, #GameOverDisplay {
 	z-index: 1000;
 	position: absolute;
 	left: 0;

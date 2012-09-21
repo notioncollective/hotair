@@ -11,7 +11,7 @@ Crafty.extend({
 			_selectedIndex = 0;
 			
 			// set up event handlers
-			$(document).on('keydown', _keyBindings);
+			$(document).on('keydown', $menuItems, _keyBindings);
 			
 		};
 		
