@@ -2,6 +2,8 @@
  * All modules related to the HotAir Game are contained within the HA root namespace.
  * @class HA
  */
+HA = {};
+
 HA = function(ns, $, _, C) {
 	var NAMESPACE_STR = "HA";
 	

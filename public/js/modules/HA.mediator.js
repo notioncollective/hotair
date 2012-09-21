@@ -5,7 +5,8 @@
 HA.mediator = function(ns, $, _, C) {
 	
 	var o = $({}), // empty jQuery object to manage events
-			_events = {} // stores events
+			_events = {}, // stores events
+			_options = {},
 			// defaults
 			_defaults = {
 				// EXAMPLE
@@ -27,6 +28,8 @@ HA.mediator = function(ns, $, _, C) {
 		
 		_.extend(_options, options, _defaults);
 	}
+
+	ns.init = _init;
 
   /**
     Subscribe a handler to an event 

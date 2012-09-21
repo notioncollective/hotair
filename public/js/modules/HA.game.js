@@ -18,10 +18,14 @@ HA.game = function(ns, $, _, C) {
 		
 		HA.player.init();
 		HA.mediator.init();
-		_createEnemyController();
+		HA.enemyController.init();
 		HA.sceneManager.init();
 		// TODO decide where twitter module needs to be initialized
 		// HA.twitter.init();
+		
+		// Load the first scene
+		C.init();
+		HA.sceneManager.loadScene("loading");
 	};
 	
 	/**
@@ -115,7 +119,6 @@ HA.game = function(ns, $, _, C) {
     @method _createEnemyController
    */	
 	var _createEnemyController = function() {
-		HA.enemyController.init();
 		HA.enemyController.loadEnemySet(0, _getNumEnemiesPerLevel());
 		HA.enemyController.setSpeed(_getSpeed());
 		console.log(HA.enemyController.isProducing());

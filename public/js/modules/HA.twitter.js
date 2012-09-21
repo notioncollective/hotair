@@ -3,7 +3,7 @@ HA.twitter = function(ns, $, _, C) {
 	
 	// PRIVATE
 	var _options = {},
-			_defaults {
+			_defaults = {
 				user: 'tweetcongress',
 				d_list: 'democrats',
 				r_list: 'republican',
@@ -19,6 +19,7 @@ HA.twitter = function(ns, $, _, C) {
     @method _init
    */		
 	function _init(options) {
+		if(test === undefined) {
 			console.log("test is null");
 			_load(_options.user, _options.d_list, 10, _page, {party:"d"});
 			_load(_options.user, _options.r_list, 10, _page, {party:"r"});
@@ -51,7 +52,8 @@ HA.twitter = function(ns, $, _, C) {
 			console.log("Twitter loaded");
 			// maybe change to use the "apply" method to manage scoping
 			_handleLoad(r, o, that);
-	})
+		});
+	}
 		
 	/**
     Load twitter data.
@@ -80,7 +82,7 @@ HA.twitter = function(ns, $, _, C) {
 			Crafty.scene("start");
 			return;
 		}
-	},
+	}
 	
 	/**
     See public method `getTweetSet'

@@ -33,7 +33,10 @@ HA.enemyController = function(ns, $, _, C) {
     _tweets = [],
     _enemies = [];
     
-  
+
+  function _init() {
+  	
+  }
   
   var _produceEnemy = function() {
     var tweet;
@@ -166,6 +169,12 @@ HA.enemyController = function(ns, $, _, C) {
   
   
   // Public interface
+  
+  /**
+   * Initialize the module.
+   * @method init
+   */
+  ns.init = _init;
   
   /**
    * Start producing enemies.  Sets _timer interval.
