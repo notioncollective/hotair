@@ -164,6 +164,7 @@ HA.game = function(ns, $, _, C) {
     Handles the &quot;new game&quot; event from the pause screen.
 		@private
     @method _handleNewGame
+		@param {Object} e Event object.
    *&#x2F;
 	var _handleNewGame = function(e) {
 		e.preventDefault();
@@ -203,7 +204,7 @@ HA.game = function(ns, $, _, C) {
 	};
 
 	&#x2F;**
-    Initialize {{#crossLink &quot;enemyController&quot;}}HA.enemyController{{&#x2F;crossLink}} module.
+    Initialize &#x60;HA.enemyController&#x60; module.
 		@private
     @method _createEnemyController
    *&#x2F;	
@@ -220,6 +221,7 @@ HA.game = function(ns, $, _, C) {
     Handle enemy hit event.
 		@private
     @method _handleEnemyHit
+		@param {Object} e Event object.
    *&#x2F;	
 	var _handleEnemyHit = function(e) {
 		console.log(&quot;Game: handleEnemyHit&quot;);
@@ -233,7 +235,13 @@ HA.game = function(ns, $, _, C) {
 			C.audio.play(&#x27;hit_good&#x27;);
 		}
 	};
-	
+
+	&#x2F;**
+    Handle event when an enemy goes offscreen.
+		@private
+    @method _handleEnemyOffScreen
+		@param {Object} e Event object.
+   *&#x2F;	
 	var _handleEnemyOffScreen = function(e) {
 		console.log(&quot;Game: handleEnemyOffScreen&quot;);
 		if (e.tweet.party != _party) {
@@ -249,6 +257,12 @@ HA.game = function(ns, $, _, C) {
 		}
 	};
 	
+	&#x2F;**
+    Handle level complete event.
+		@private
+    @method _handleLevelComplete
+		@param {Object} e Event object.
+   *&#x2F;
 	_handleLevelComplete = function(e) {
 		console.log(&quot;handleLevelComplete&quot;);
 		if(_perfectLevel) {
@@ -262,7 +276,13 @@ HA.game = function(ns, $, _, C) {
 			_incrementLevel();
 		}
 	};
-	
+
+	&#x2F;**
+    Handle next level event.
+		@private
+    @method _handleNextLevel
+		@param {Object} e Event object.
+   *&#x2F;	
 	var _handleNextLevel = function(e) {
 		console.log(&quot;handleNextLevel&quot;);
 		C.audio.play(&quot;whoosh&quot;);
@@ -274,6 +294,11 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.startProducing(true);
 	};
 	
+	&#x2F;**
+    Save score to high scores in database.
+		@private
+    @method _saveScore
+   *&#x2F;
 	var _saveScore = function() {
 		$.ajax({
 			url: &quot;&#x2F;highscore&quot;,
@@ -287,10 +312,41 @@ HA.game = function(ns, $, _, C) {
 	};
 	
 	&#x2F;&#x2F; public methods
+	
+	&#x2F;**
+    Initializer.
+		@public
+    @method init
+   *&#x2F;
 	ns.init = _init;
+	
+	&#x2F;**
+    Pause gameplay.
+		@public
+    @method pauseGame
+   *&#x2F;
 	ns.pauseGame = _pauseGame;
+	
+	&#x2F;**
+    UnPause gameplay.
+		@public
+    @method unPauseGame
+   *&#x2F;
 	ns.unPauseGame = _unPauseGame;
+	
+	&#x2F;**
+    UnPause gameplay.
+		@public
+    @method getParty
+   *&#x2F;
 	ns.getParty = function() { return _party; };
+
+	&#x2F;**
+    UnPause gameplay.
+		@public
+    @method setParty
+		@param {String} p String representing party affiliation (&#x27;r&#x27; or &#x27;d&#x27;)
+   *&#x2F;
 	ns.setParty = function(p) {
 		if(p == &#x27;r&#x27; || p == &#x27;d&#x27;) {
 			_party = p;
