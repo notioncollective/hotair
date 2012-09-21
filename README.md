@@ -18,6 +18,7 @@ NODE MODULES
 
 (*) Denotes compiled node modules
 
+### Used in runtime ###
  * express (3.0.0rc1)
  * jade (0.27.2)
  * cradle (0.6.x)
@@ -28,22 +29,24 @@ NODE MODULES
  * cron (1.0.1)
  * time (0.8.3) *
  
+### Used only locally (not in package.js) ###
+ * yuidoc (0.3.26)
 
 ARCHITECTURE
 ------------
 
-HA
-HA.game
-HA.player
-HA.mediator
-HA.enemyController
-HA.sceneManager
-HA.twitter
+ * HA
+ * HA.game
+ * HA.player
+ * HA.mediator
+ * HA.enemyController
+ * HA.sceneManager
+ * HA.twitter
 
-HA
+### HA ###
  * namespace
  
-HA.game
+### HA.game ###
  * highScores
  * player
  * levels
@@ -52,22 +55,22 @@ HA.game
  * sceneManager
  * twitter
 
-HA.player
+### HA.player ###
  * name
  * teamSelection
  * score
  * lives
  
-HA.mediator
+### HA.mediator ###
  * subscribe
  * publish
  * eventMap
  
-HA.enemyController
+### HA.enemyController ###
  * start
  * stop
  * init (bindEvents)
  * event handlers
  
-HA.sceneManager
+### HA.sceneManager ###
  * loadScene

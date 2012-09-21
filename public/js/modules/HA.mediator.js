@@ -26,7 +26,7 @@ HA.mediator = function(ns, $, _, C) {
 			delete options['events'];
 		}
 		
-		_.extend(_options, options);
+		_.extend(_options, options, _defaults);
 	}
 
   /**
