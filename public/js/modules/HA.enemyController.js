@@ -4,4 +4,4 @@ HA.enemyController = function(ns, $, _, C) {
 	
 	return ns;
 	
-}(HA || {}, jQuery, _, Crafty);
+}(HA.enemyController jQuery, _, Crafty);

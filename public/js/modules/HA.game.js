@@ -4,4 +4,4 @@ HA.game = function(ns, $, _, C) {
 	
 	return ns;
 	
-}(HA || {}, jQuery, _, Crafty);
+}(HA.game, jQuery, _, Crafty);

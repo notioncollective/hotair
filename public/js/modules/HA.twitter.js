@@ -4,4 +4,4 @@ HA.twitter = function(ns, $, _, C) {
 	
 	return ns;
 	
-}(HA || {}, jQuery, _, Crafty);
+}(HA.twitter, jQuery, _, Crafty);

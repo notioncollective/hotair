@@ -19,6 +19,11 @@ HA = function(ns, $, _, C) {
 	    return o;
 	};
 	
+	// aliasing method?
+	// something that would allow you to do something like
+	// HA.alias("HA.mediator", "HA.m") so that "HA.m"
+	// is essentially a short hand for "HA.mediator"
+	
 	return ns;
 	
 }(HA || {}, jQuery, _, Crafty);

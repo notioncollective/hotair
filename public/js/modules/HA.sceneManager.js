@@ -4,4 +4,4 @@ HA.sceneManager = function(ns, $, _, C) {
 	
 	return ns;
 	
-}(HA || {}, jQuery, _, Crafty);
+}(HA.sceneManager, jQuery, _, Crafty);
