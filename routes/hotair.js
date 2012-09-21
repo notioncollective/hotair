@@ -192,35 +192,35 @@ exports.all = function(req, res) {
 /**
   Loads merged tweets (both dem + republican).
 	@param {Number} startkey Start index
-	@param {Number} limit Number of responses to retrieve
+	@param {Number} limit Number of responses to retrieve. If this is an odd number it will be reduced by 1.
 */
 exports.load_tweets = function(req, res) {
 	var startkey = req.query.startkey || 0,
 			limit = req.query.limit || 100,
 			i = 0, // counts the number of lists recieved
 			merged = {
-				"total_rows": 0,
+				"total_rows": 0, // new response object
 				"rows": []
 			},
 			merge = function(err, resp) {
 				if(resp) {
 					i++;
-					merged.total_rows += resp.total_rows;
-					merged.resp.rows.concat(resp.rows)
-					if(i == 2) {
-						_.shuffle(merged.rows);
-						res.send(merged);
+					merged.total_rows += resp['total_rows'];
+					merged.rows.concat(resp['rows']);
+					if(i == 2) { //if both lists have been merged in
+						_.shuffle(merged.rows); // shuffle rows
+						res.send(merged); // send response
 					}					
 				}
 			};
 			
-	db.view('hotair/democrats', {startKey: parseInt(startkey), limit: Math.ceil(limit/2)}, merge);
-	db.view('hotair/republican', {startKey: parseInt(startkey), limit: Math.ceil(limit/2)}, merge);
+	db.view('hotair/democrats', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
+	db.view('hotair/republican', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
 	
 }
 
 /**
-  Loads tweets from deomocrats
+  Loads tweets from democrats
 	@param {Number} startkey Start index
 	@param {Number} limit Number of responses to retrieve
  */
