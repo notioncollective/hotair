@@ -3,7 +3,7 @@ HA.twitter = function(ns, $, _, C) {
 	
 	// PRIVATE
 	var _options = {},
-			_defaults {
+			_defaults = {
 				user: 'tweetcongress',
 				d_list: 'democrats',
 				r_list: 'republican',
