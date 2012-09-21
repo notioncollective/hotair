@@ -1,7 +1,26 @@
 Crafty.scene("gameplay", function() {
 	console.log("Scene: gameplay "+ this);
 	
+	// TODO: Remove this, once better management of key binding is in place.
 	$(document).off();
+	
+	// Set up event subscriptions
+	Crafty.bind('KeyDown', function(e) {
+		if(e.key == Crafty.keys['ENTER']) {
+			if(!Crafty.isPaused()) {
+				HA.m.publish(HA.events.PAUSE_GAME);
+			} else {
+				HA.m.publish(HA.events.RESUME_GAME);
+			}
+		}
+		if(e.key == Crafty.keys['ESC']) {
+			console.log("Full scrn");
+			if(screenfull) {
+				screenfull.toggle();
+			}
+		}
+	});
+	
 	
 	Crafty.audio.play("whoosh");
 	Crafty.audio.play("game_music", -1, .8);
@@ -26,11 +45,6 @@ Crafty.scene("gameplay", function() {
 	messageDisplay.bind("SetLevel", function(e) {
 		Crafty.trigger("ShowMessage", {text: "Level "+e.level});
 	});
-	
-	
-	//HA.game = Crafty.e("Game");
-	// HA.game.setParty(HA.party);
-	
 	
 	//player entity
 	var player = Crafty.e("Player")

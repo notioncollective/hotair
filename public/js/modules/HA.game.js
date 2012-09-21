@@ -28,6 +28,9 @@ HA.game = function(ns, $, _, C) {
 		// Set up initial event subscriptions
 		HA.m.subscribe(HA.events.GAME_LOADED, _handleGameLoadedEvent);
 		HA.m.subscribe(HA.events.START_NEW_GAME, _handleStartNewGameEvent);
+		HA.m.subscribe(HA.events.PAUSE_GAME, _handlePauseGameEvent);
+		HA.m.subscribe(HA.events.RESUME_GAME, _handleResumeGameEvent);
+		
 		
 		
 		// Initialize Crafty
@@ -55,9 +58,9 @@ HA.game = function(ns, $, _, C) {
 	/**
     Pause gameplay (hooks into `Crafty.pause()`).
 		@private
-    @method _pauseGame
+    @method _handlePauseGameEvent
    */
-	var _pauseGame = function() {
+	var _handlePauseGameEvent = function(e) {
 		console.log("Pause game!");
 		if(!C.isPaused()) {
 			C.pause();
@@ -71,8 +74,8 @@ HA.game = function(ns, $, _, C) {
 			
 			// event handlers
 			// TODO: change to new event management system
-			$(document).on('click', "#pause-resume", _handleResumeGame);
-			$(document).on('click', "#pause-end-game", _handleNewGame);
+			$(document).on('click', "#pause-resume", _handleResumeGameEvent);
+			$(document).on('click', "#pause-end-game", _handleNewGameEvent);
 		}
 	};
 	
@@ -82,13 +85,13 @@ HA.game = function(ns, $, _, C) {
     @method _handleResumeGame
 		@param {Object} e Event object.
    */
-	var _handleResumeGame = function(e) {
+	var _handleResumeGameEvent = function(e) {
 		e.preventDefault();
 		console.log("Resume game!");
 		
 		// TODO: change to new event management system
-		$(document).off('click', "#pause-resume", _handleResumeGame);
-		$(document).off('click', "#pause-end-game", _handleNewGame);
+		$(document).off('click', "#pause-resume", _handleResumeGameEvent);
+		$(document).off('click', "#pause-end-game", _handleResumeGameEvent);
 		_partySelectMenu.destroy();
 		_unPauseGame();
 		return false;	
@@ -100,7 +103,7 @@ HA.game = function(ns, $, _, C) {
     @method _handleNewGame
 		@param {Object} e Event object.
    */
-	var _handleNewGame = function(e) {
+	var _handleNewGameEvent = function(e) {
 		e.preventDefault();
 		console.log("New game!");
 		_unPauseGame();
@@ -136,19 +139,16 @@ HA.game = function(ns, $, _, C) {
 			_pauseGame();
 		}
 	};
-
-	/**
-    Initialize `HA.enemyController` module.
-		@private
-    @method _createEnemyController
-   */	
-	var _createEnemyController = function() {
-		HA.enemyController.loadEnemySet(0, _getNumEnemiesPerLevel());
-		HA.enemyController.setSpeed(_getSpeed());
-		console.log(HA.enemyController.isProducing());
-		HA.enemyController.startProducing(true);
-		console.log(HA.enemyController.isProducing());
-	};
+	
+	function _showPauseScreenDisplay() {
+		console.log("PauseScreenDisplay: showPauseScreenDisplay");
+		$("#PauseDisplay").show();
+	}
+	
+	function _hidePauseScreenDisplay() {
+		console.log("PauseScreenDisplay: hidePauseScreenDisplay");
+		$("#PauseDisplay").hide();
+	}
 
 	/**
     Handle enemy hit event.
@@ -258,7 +258,7 @@ HA.game = function(ns, $, _, C) {
 		@public
     @method pauseGame
    */
-	ns.pauseGame = _pauseGame;
+	ns.pauseGame = _handlePauseGameEvent;
 	
 	/**
     UnPause gameplay.

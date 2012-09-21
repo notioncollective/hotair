@@ -27,7 +27,7 @@ HA.enemyController = function(ns, $, _, C) {
 	function _init() {
 		HA.m.subscribe(HA.events.START_NEW_GAME, _handleStartNewGameEvent);
 		HA.m.subscribe(HA.events.PAUSE_GAME, _handlePauseGameEvent);
-		HA.m.subscribe(HA.events.UNPAUSE_GAME, _handleUnPauseGameEvent);
+		HA.m.subscribe(HA.events.RESUME_GAME, _handleResumeGameEvent);
 	}
 
 	/**** EVENT HANDLERS *****/
@@ -41,7 +41,7 @@ HA.enemyController = function(ns, $, _, C) {
 		_stopProducing();
 	}
 	
-	function _handleUnPauseGameEvent(e) {
+	function _handleResumeGameEvent(e) {
 		_startProducing();
 	}
 	

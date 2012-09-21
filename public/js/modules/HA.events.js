@@ -43,11 +43,11 @@ HA.events = function(ns, $, _, C) {
 		PAUSE_GAME: "ha:pause_game",
 		
 		/**
-		 * Unpause the game
-		 * @property {string} UNPAUSE_GAME
+		 * Resume the game
+		 * @property {string} RESUME_GAME
 		 * @final
 		 */
-		UNPAUSE_GAME: "ha:pause_game"
+		RESUME_GAME: "ha:resume_game"
 	};
 	
 	return _events;
