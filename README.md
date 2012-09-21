@@ -27,3 +27,47 @@ NODE MODULES
  * q (0.8.8)
  * cron (1.0.1)
  * time (0.8.3) *
+ 
+
+ARCHITECTURE
+------------
+
+HA
+HA.game
+HA.player
+HA.mediator
+HA.enemyController
+HA.sceneManager
+HA.twitter
+
+HA
+ * namespace
+ 
+HA.game
+ * highScores
+ * player
+ * levels
+ * mediator
+ * enemyController
+ * sceneManager
+ * twitter
+
+HA.player
+ * name
+ * teamSelection
+ * score
+ * lives
+ 
+HA.mediator
+ * subscribe
+ * publish
+ * eventMap
+ 
+HA.enemyController
+ * start
+ * stop
+ * init (bindEvents)
+ * event handlers
+ 
+HA.sceneManager
+ * loadScene
