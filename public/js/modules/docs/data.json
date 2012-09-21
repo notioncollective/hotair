@@ -1,0 +1,95 @@
+{
+    "project": {
+        "name": "The HotAir API",
+        "description": "The HotAir API is a set of modules for working with the HotAir Game application",
+        "version": "0.0.1",
+        "url": "http://hotairgame.com/"
+    },
+    "files": {
+        "HA.js": {
+            "name": "HA.js",
+            "modules": {},
+            "classes": {
+                "HA": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "HA.mediator.js": {
+            "name": "HA.mediator.js",
+            "modules": {},
+            "classes": {
+                "HA.mediator": 1
+            },
+            "fors": {},
+            "namespaces": {
+                "HA": 1
+            }
+        }
+    },
+    "modules": {},
+    "classes": {
+        "HA": {
+            "name": "HA",
+            "shortname": "HA",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "HA.js",
+            "line": 1,
+            "description": "All modules related to the HotAir Game are contained within the HA root namespace."
+        },
+        "HA.mediator": {
+            "name": "HA.mediator",
+            "shortname": "HA.mediator",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "namespace": "HA",
+            "file": "HA.mediator.js",
+            "line": 1,
+            "description": "Provides a basic Mediator for global event aggregation.  Based on jQuery TinyPubSub."
+        }
+    },
+    "classitems": [
+        {
+            "file": "HA.js",
+            "line": 9,
+            "description": "Create a sub-namespace on the HA root object.",
+            "itemtype": "method",
+            "name": "namespace",
+            "class": "HA"
+        },
+        {
+            "file": "HA.mediator.js",
+            "line": 32,
+            "description": "Subscribe a handler to an event",
+            "itemtype": "method",
+            "name": "subscribe",
+            "class": "HA.mediator",
+            "namespace": "HA"
+        },
+        {
+            "file": "HA.mediator.js",
+            "line": 40,
+            "description": "Unsubscribe a handler from an event",
+            "itemtype": "method",
+            "name": "unsubscribe",
+            "class": "HA.mediator",
+            "namespace": "HA"
+        },
+        {
+            "file": "HA.mediator.js",
+            "line": 48,
+            "description": "Publish an event",
+            "itemtype": "method",
+            "name": "publish",
+            "class": "HA.mediator",
+            "namespace": "HA"
+        }
+    ]
+}

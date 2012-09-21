@@ -1,0 +1,9 @@
+{
+    "name": "The HotAir API",
+    "description": "The HotAir API is a set of modules for working with the HotAir Game application",
+    "version": "0.0.1",
+    "url": "http://hotairgame.com/",
+    "options": {
+        "outdir": "docs"
+    }
+}

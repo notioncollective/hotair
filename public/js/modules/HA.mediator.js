@@ -1,7 +1,7 @@
 /**
  * Provides a basic Mediator for global event aggregation.  Based on jQuery TinyPubSub.
- * @module HA
- * @submodule mediator
+ * @namespace HA
+ * @class mediator
  */
 HA.mediator = function(ns, $, _, C) {
 	
@@ -30,17 +30,25 @@ HA.mediator = function(ns, $, _, C) {
 	}
 
   /**
-    Subscribe to events 
+    Subscribe a handler to an event 
     @method subscribe
    */
   ns.subscribe = function() {
     o.on.apply(o, arguments);
   };
 
+  /**
+   * Unsubscribe a handler from an event
+   * @method unsubscribe
+   */
   ns.unsubscribe = function() {
     o.off.apply(o, arguments);
   };
 
+  /**
+   * Publish an event
+   * @method publish
+   */
   ns.publish = function() {
     o.trigger.apply(o, arguments);
   };
