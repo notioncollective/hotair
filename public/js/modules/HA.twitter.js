@@ -18,7 +18,7 @@ HA.twitter = function(ns, $, _, C) {
 		@private
     @method _init
    */		
-	var _init = function(options) {
+	function _init(options) {
 			console.log("test is null");
 			_load(_options.user, _options.d_list, 10, _page, {party:"d"});
 			_load(_options.user, _options.r_list, 10, _page, {party:"r"});
@@ -29,7 +29,7 @@ HA.twitter = function(ns, $, _, C) {
 			_handleLoad(REPUBLICANS_SAMPLE, {party: "r"}, this);
 			_handleLoad(DEMOCRATS_SAMPLE, {party: "d"}, this);
 		}
-	};
+	}
 	
 	/**
     Load twitter data.
@@ -42,7 +42,7 @@ HA.twitter = function(ns, $, _, C) {
 		@param {Object} o options (currently used to set party -- `{party: 'r'}`)
    */
 	// TODO: refactor this function! many arguments aren't even used!
-	var _load = function(u,l,c,p,o) {
+	function _load(u,l,c,p,o) {
 		console.log("HA.twitter._load()");
 		var that = this,
 				uri='http://localhost:3000/'+l+'?callback=?';
@@ -51,7 +51,7 @@ HA.twitter = function(ns, $, _, C) {
 			console.log("Twitter loaded");
 			// maybe change to use the "apply" method to manage scoping
 			_handleLoad(r, o, that);
-	});
+	})
 		
 	/**
     Load twitter data.
@@ -62,7 +62,7 @@ HA.twitter = function(ns, $, _, C) {
 		@param {Object} that Scoping variable _(shouldn't be necessary with module pattern)_
    */
 	// r = response, o = extra data (party, so far), that = HA.twitter
-	_handleLoad: function(r, o, that) {
+	function _handleLoad(r, o, that) {
 		console.log("Handling Load : "+o.party);
 		// $.each(r, function(index, value) {
 			// // value.party = o.party;
@@ -88,14 +88,14 @@ HA.twitter = function(ns, $, _, C) {
     @method _getTweetSet
    */	
 	// TODO: the passed variables should pull from the aggregate list, not separately from each list
-	var _getTweetSet = function(start, count) {
+	function _getTweetSet(start, count) {
 		var end = start+count,
 			r = _r.slice(start, end),
 			d = _d.slice(start, end);
 		var set = _.shuffle(r.concat(d));
 		console.log("getTweetSet", set);
 		return set;
-	};
+	}
 		
 	// PUBLIC	
 	/**
