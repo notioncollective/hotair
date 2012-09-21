@@ -1,4 +1,8 @@
-// HA.game namespace
+/**
+ * Handles gameplay, including levels, game pause/unpause, and initializing other HA modules.
+ * @class game
+ */
+
 HA.game = function(ns, $, _, C) {
 	
 	var _options = {},
@@ -20,6 +24,11 @@ HA.game = function(ns, $, _, C) {
 		// HA.twitter.init();
 	};
 	
+	/**
+    Pause gameplay (hooks into `Crafty.pause()`).
+		@private
+    @method _pauseGame
+   */
 	var _pauseGame = function() {
 		console.log("Pause game!");
 		if(!C.isPaused()) {
@@ -39,6 +48,12 @@ HA.game = function(ns, $, _, C) {
 		}
 	};
 	
+	/**
+    Handles the "resume game" selection from the pause screen.
+		@private
+    @method _handleResumeGame
+		@param {Object} e Event object.
+   */
 	var _handleResumeGame = function(e) {
 		e.preventDefault();
 		console.log("Resume game!");
@@ -51,6 +66,12 @@ HA.game = function(ns, $, _, C) {
 		return false;	
 	};
 	
+	/**
+    Handles the "new game" event from the pause screen.
+		@private
+    @method _handleNewGame
+		@param {Object} e Event object.
+   */
 	var _handleNewGame = function(e) {
 		e.preventDefault();
 		console.log("New game!");
@@ -60,6 +81,11 @@ HA.game = function(ns, $, _, C) {
 		return false;		
 	};
 	
+	/**
+    UnPause gameplay (hooks into `Crafty.pause()`).
+		@private
+    @method _unPauseGame
+   */
 	var _unPauseGame = function() {
 		if(C.isPaused()) {
 				C.pause();
@@ -70,6 +96,11 @@ HA.game = function(ns, $, _, C) {
 		}		
 	};
 	
+	/**
+    Toggle pause/unpause (hooks into `Crafty.pause()`).
+		@private
+    @method _togglePause
+   */	
 	var _togglePause = function() {
 		if(C.isPaused()) {
 			_unPauseGame();
@@ -77,7 +108,12 @@ HA.game = function(ns, $, _, C) {
 			_pauseGame();
 		}
 	};
-	
+
+	/**
+    Initialize `HA.enemyController` module.
+		@private
+    @method _createEnemyController
+   */	
 	var _createEnemyController = function() {
 		HA.enemyController.init();
 		HA.enemyController.loadEnemySet(0, _getNumEnemiesPerLevel());
@@ -86,7 +122,13 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.startProducing(true);
 		console.log(HA.enemyController.isProducing());
 	};
-	
+
+	/**
+    Handle enemy hit event.
+		@private
+    @method _handleEnemyHit
+		@param {Object} e Event object.
+   */	
 	var _handleEnemyHit = function(e) {
 		console.log("Game: handleEnemyHit");
 		if (e.tweet.party == _party) {
@@ -99,7 +141,13 @@ HA.game = function(ns, $, _, C) {
 			C.audio.play('hit_good');
 		}
 	};
-	
+
+	/**
+    Handle event when an enemy goes offscreen.
+		@private
+    @method _handleEnemyOffScreen
+		@param {Object} e Event object.
+   */	
 	var _handleEnemyOffScreen = function(e) {
 		console.log("Game: handleEnemyOffScreen");
 		if (e.tweet.party != _party) {
@@ -115,6 +163,12 @@ HA.game = function(ns, $, _, C) {
 		}
 	};
 	
+	/**
+    Handle level complete event.
+		@private
+    @method _handleLevelComplete
+		@param {Object} e Event object.
+   */
 	_handleLevelComplete = function(e) {
 		console.log("handleLevelComplete");
 		if(_perfectLevel) {
@@ -128,7 +182,13 @@ HA.game = function(ns, $, _, C) {
 			_incrementLevel();
 		}
 	};
-	
+
+	/**
+    Handle next level event.
+		@private
+    @method _handleNextLevel
+		@param {Object} e Event object.
+   */	
 	var _handleNextLevel = function(e) {
 		console.log("handleNextLevel");
 		C.audio.play("whoosh");
@@ -140,6 +200,11 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.startProducing(true);
 	};
 	
+	/**
+    Save score to high scores in database.
+		@private
+    @method _saveScore
+   */
 	var _saveScore = function() {
 		$.ajax({
 			url: "/highscore",
@@ -153,10 +218,41 @@ HA.game = function(ns, $, _, C) {
 	};
 	
 	// public methods
+	
+	/**
+    Initializer.
+		@public
+    @method init
+   */
 	ns.init = _init;
+	
+	/**
+    Pause gameplay.
+		@public
+    @method pauseGame
+   */
 	ns.pauseGame = _pauseGame;
+	
+	/**
+    UnPause gameplay.
+		@public
+    @method unPauseGame
+   */
 	ns.unPauseGame = _unPauseGame;
+	
+	/**
+    UnPause gameplay.
+		@public
+    @method getParty
+   */
 	ns.getParty = function() { return _party; };
+
+	/**
+    UnPause gameplay.
+		@public
+    @method setParty
+		@param {String} p String representing party affiliation ('r' or 'd')
+   */
 	ns.setParty = function(p) {
 		if(p == 'r' || p == 'd') {
 			_party = p;
