@@ -12,7 +12,12 @@ HA.twitter = function(ns, $, _, C) {
 			_r = [],
 			_page = 0,
 			_tweets = [];
-			
+	
+	/**
+    See public documentation for `init`
+		@private
+    @method _init
+   */		
 	var _init = function(options) {
 			console.log("test is null");
 			_load(_options.user, _options.d_list, 10, _page, {party:"d"});
@@ -26,6 +31,17 @@ HA.twitter = function(ns, $, _, C) {
 		}
 	};
 	
+	/**
+    Load twitter data.
+		@private
+    @method _load
+		@param {String} u endpoint uri _(not currently used!)_.
+		@param {String} l Twitter list name.
+		@param {String} c callback _(not currently used!)_.
+		@param {Number} p page?? _(not currently used!)_
+		@param {Object} o options (currently used to set party -- `{party: 'r'}`)
+   */
+	// TODO: refactor this function! many arguments aren't even used!
 	var _load = function(u,l,c,p,o) {
 		console.log("HA.twitter._load()");
 		var that = this,
@@ -34,10 +50,18 @@ HA.twitter = function(ns, $, _, C) {
 		$.getJSON(uri, function(r) {
 			console.log("Twitter loaded");
 			// maybe change to use the "apply" method to manage scoping
-			that._handleLoad(r, o, that);
+			_handleLoad(r, o, that);
 	});
 		
-	// r = response, o = extra data (party, so far), self = Crafty.Twitter
+	/**
+    Load twitter data.
+		@private
+    @method _load
+		@param {Object} r JSON response
+		@param {Object} o options (currently used to set party -- `{party: 'r'}`)
+		@param {Object} that Scoping variable _(shouldn't be necessary with module pattern)_
+   */
+	// r = response, o = extra data (party, so far), that = HA.twitter
 	_handleLoad: function(r, o, that) {
 		console.log("Handling Load : "+o.party);
 		// $.each(r, function(index, value) {
@@ -58,7 +82,12 @@ HA.twitter = function(ns, $, _, C) {
 		}
 	},
 	
-	
+	/**
+    See public method `getTweetSet'
+		@private
+    @method _getTweetSet
+   */	
+	// TODO: the passed variables should pull from the aggregate list, not separately from each list
 	var _getTweetSet = function(start, count) {
 		var end = start+count,
 			r = _r.slice(start, end),
@@ -69,7 +98,19 @@ HA.twitter = function(ns, $, _, C) {
 	};
 		
 	// PUBLIC	
+	/**
+    Initializer.
+		@public
+    @method init
+   */
 	ns.init = _init;
+	/**
+    Grabs a set of tweets based on the passed variables. Currently the `start` and `count` apply to each list (republican/democrat) independantly, the result count will be 2x the `count` value.
+		@public
+    @method getTweetSet
+		@param {Number} start Start index for each list
+		@param {Number} count Total responses desired from each list
+   */
 	ns.getTweetSet = _getTweetSet;
 			
 	return ns;
