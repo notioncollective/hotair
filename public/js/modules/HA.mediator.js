@@ -1,5 +1,8 @@
-// HA.mediator namespace
-HA.namespace("HA.mediator");
+/**
+ * Provides a basic Mediator for global event aggregation.  Based on jQuery TinyPubSub.
+ * @module HA
+ * @submodule mediator
+ */
 HA.mediator = function(ns, $, _, C) {
 	
 	var o = $({}), // empty jQuery object to manage events
@@ -26,6 +29,10 @@ HA.mediator = function(ns, $, _, C) {
 		_.extend(_options, options);
 	}
 
+  /**
+    Subscribe to events 
+    @method subscribe
+   */
   ns.subscribe = function() {
     o.on.apply(o, arguments);
   };

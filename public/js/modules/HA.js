@@ -1,8 +1,16 @@
-// namespace object
+/**
+ * Provides the root HA namespace.
+ * @module HA
+ */
+HA = {};
+
 HA = function(ns, $, _, C) {
 	var NAMESPACE_STR = "HA";
 	
 	// http://www.zachleat.com/web/yui-code-review-yahoonamespace/
+	/**
+	 * @method namespace
+	 */
 	ns.namespace = function() {
 	    var a=arguments, o=null, i, j, d;
 	    for (i=0; i<a .length; i=i+1) {
