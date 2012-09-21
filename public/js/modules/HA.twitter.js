@@ -19,6 +19,7 @@ HA.twitter = function(ns, $, _, C) {
     @method _init
    */		
 	var _init = function(options) {
+		if(test === undefined) {
 			console.log("test is null");
 			_load(_options.user, _options.d_list, 10, _page, {party:"d"});
 			_load(_options.user, _options.r_list, 10, _page, {party:"r"});
@@ -51,7 +52,8 @@ HA.twitter = function(ns, $, _, C) {
 			console.log("Twitter loaded");
 			// maybe change to use the "apply" method to manage scoping
 			_handleLoad(r, o, that);
-	});
+		});
+	}
 		
 	/**
     Load twitter data.
@@ -62,7 +64,7 @@ HA.twitter = function(ns, $, _, C) {
 		@param {Object} that Scoping variable _(shouldn't be necessary with module pattern)_
    */
 	// r = response, o = extra data (party, so far), that = HA.twitter
-	_handleLoad: function(r, o, that) {
+	var _handleLoad = function(r, o, that) {
 		console.log("Handling Load : "+o.party);
 		// $.each(r, function(index, value) {
 			// // value.party = o.party;
@@ -80,7 +82,7 @@ HA.twitter = function(ns, $, _, C) {
 			Crafty.scene("start");
 			return;
 		}
-	},
+	}
 	
 	/**
     See public method `getTweetSet'
@@ -95,7 +97,7 @@ HA.twitter = function(ns, $, _, C) {
 		var set = _.shuffle(r.concat(d));
 		console.log("getTweetSet", set);
 		return set;
-	};
+	}
 		
 	// PUBLIC	
 	/**
