@@ -3,10 +3,12 @@ HA.twitter = function(ns, $, _, C) {
 	
 	// PRIVATE
 	var _options = {},
-			_defaults {
+			_defaults = {
 				user: 'tweetcongress',
 				d_list: 'democrats',
 				r_list: 'republican',
+				protocol: 'http://',
+				domain: 'localhost:3000'
 			},
 			_d = [],
 			_r = [],
@@ -19,6 +21,8 @@ HA.twitter = function(ns, $, _, C) {
     @method _init
    */		
 	function _init(options) {
+		_options = _.extend(_options, _defaults, options);
+		if(test === undefined) {
 			console.log("test is null");
 			_load(_options.user, _options.d_list, 10, _page, {party:"d"});
 			_load(_options.user, _options.r_list, 10, _page, {party:"r"});
@@ -42,16 +46,33 @@ HA.twitter = function(ns, $, _, C) {
 		@param {Object} o options (currently used to set party -- `{party: 'r'}`)
    */
 	// TODO: refactor this function! many arguments aren't even used!
-	function _load(u,l,c,p,o) {
-		console.log("HA.twitter._load()");
-		var that = this,
-				uri='http://localhost:3000/'+l+'?callback=?';
+	function _load() {
+		var uri='http://'+_options.uri+'/'+l+'?callback=?';
 		console.log(uri);
-		$.getJSON(uri, function(r) {
+		$.getJSON('http://'++, function(r) {
 			console.log("Twitter loaded");
 			// maybe change to use the "apply" method to manage scoping
 			_handleLoad(r, o, that);
-	})
+		});
+	}
+	
+	
+	/**
+    Load twitter data.
+		@private
+    @method _load
+		@param {String} u endpoint uri _(not currently used!)_.
+		@param {String} l Twitter list name.
+		@param {String} c callback _(not currently used!)_.
+		@param {Number} p page?? _(not currently used!)_
+		@param {Object} o options (currently used to set party -- `{party: 'r'}`)
+   */
+	function _loadTwitterList(list) {
+		var uri = _options.protocol;
+		uri += _options.domain;
+		uri += list
+		$.getJSON()
+	}
 		
 	/**
     Load twitter data.
@@ -80,7 +101,7 @@ HA.twitter = function(ns, $, _, C) {
 			Crafty.scene("start");
 			return;
 		}
-	},
+	}
 	
 	/**
     See public method `getTweetSet'
