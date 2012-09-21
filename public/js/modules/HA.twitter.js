@@ -4,11 +4,11 @@ HA.twitter = function(ns, $, _, C) {
 	// PRIVATE
 	var _options = {},
 			_defaults = {
-				user: 'tweetcongress',
-				d_list: 'democrats',
+				democrats_endpoint: 'democrats',
 				r_list: 'republican',
 				protocol: 'http://',
-				domain: 'localhost:3000'
+				domain: 'localhost:3000',
+				load_tweets_endpoint: '/load_tweets'
 			},
 			_d = [],
 			_r = [],
