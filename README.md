@@ -4,6 +4,16 @@ Hot Air (Node.js project)
 An implementation of Hot Air using Node.js / CouchDB.
 
 
+DOCUMENTATION
+-------------
+
+The js docs are generated using YUIDoc.  First, install the yuidocjs npm package. Then, to generate the js docs for the modules, navigate to the public/js/modules directory and run:
+
+> yuidoc .
+
+The yuidoc.json config file is tracked in that folder, and contains a few settings that can be updated as needed.
+
+
 TODO (These should be added to Pivotal Tracker)
 -----------------------------------------------
 
