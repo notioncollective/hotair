@@ -10,7 +10,12 @@ HA.player = function(ns, $, _, C) {
 		_name = null;
 	
 	function _init() {
-		
+		HA.m.subscribe(HA.events.SET_PARTY, _handleSetPartyEvent);
+	}
+	
+	/**** EVENT HANDLERS ****/
+	function _handleSetPartyEvent(e, party) {
+		_setParty(party);
 	}
 	
 	function _getScore() {
@@ -101,13 +106,13 @@ HA.player = function(ns, $, _, C) {
 	 * Add a life to the player.
 	 * @method incrementLives
 	 */
-	ns.incrementLives = _incremenetLives;
+	ns.incrementLives = _incrementLives;
 	
 	/**
 	 * Remove a life from the player.
 	 * @method decrementLives
 	 */
-	ns.decrementLives = _incremenetLives;
+	ns.decrementLives = _decrementLives;
 	
 	/**
 	 * Get the player's name.

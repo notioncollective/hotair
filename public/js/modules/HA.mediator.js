@@ -2,7 +2,7 @@
  * Provides a basic Mediator for global event aggregation.  Based on jQuery TinyPubSub.
  * @class mediator
  */
-HA.mediator = function(ns, $, _, C) {
+HA.mediator = HA.m = function(ns, $, _, C) {
 	
 	var o = $({}), // empty jQuery object to manage events
 			_events = {}, // stores events
@@ -36,6 +36,8 @@ HA.mediator = function(ns, $, _, C) {
     @method subscribe
    */
   ns.subscribe = function() {
+  	console.log("subscribe");
+  	o.off.apply(o, arguments);
     o.on.apply(o, arguments);
   };
 
@@ -52,6 +54,7 @@ HA.mediator = function(ns, $, _, C) {
    * @method publish
    */
   ns.publish = function() {
+  	console.log("publish");
     o.trigger.apply(o, arguments);
   };
   

@@ -8,7 +8,11 @@ HA.sceneManager = function(ns, $, _, C) {
 	
 	
 	function _init() {
-	  
+	  HA.m.subscribe(HA.events.LOAD_SCENE, _handleLoadSceneEvent);
+	}
+	
+	function _handleLoadSceneEvent(e, scene) {
+		_loadScene(scene);
 	}
 	
 	/**

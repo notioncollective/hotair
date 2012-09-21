@@ -7,9 +7,9 @@ HA.twitter = function(ns, $, _, C) {
 				user: 'tweetcongress',
 				d_list: 'democrats',
 				r_list: 'republican',
+				d: [],
+				r: []
 			},
-			_d = [],
-			_r = [],
 			_page = 0,
 			_tweets = [];
 	
@@ -19,7 +19,12 @@ HA.twitter = function(ns, $, _, C) {
     @method _init
    */		
 	var _init = function(options) {
-		if(test === undefined) {
+		// force options obj
+		options = options || {};
+		_.extend(_options, options, _defaults);
+		
+		var test = "test" in _options ? true : false;
+		if(test === false) {
 			console.log("test is null");
 			_load(_options.user, _options.d_list, 10, _page, {party:"d"});
 			_load(_options.user, _options.r_list, 10, _page, {party:"r"});
@@ -27,8 +32,8 @@ HA.twitter = function(ns, $, _, C) {
 			console.log("loading test data");
 			// REPUBLICANS_SAMPLE = REPUBLICANS_SAMPLE.slice(0,1); 
 			// DEMOCRATS_SAMPLE = DEMOCRATS_SAMPLE.slice(0,1); 
-			_handleLoad(REPUBLICANS_SAMPLE, {party: "r"}, this);
-			_handleLoad(DEMOCRATS_SAMPLE, {party: "d"}, this);
+			_handleLoad(REPUBLICANS_SAMPLE, {party: "r"});
+			_handleLoad(DEMOCRATS_SAMPLE, {party: "d"});
 		}
 	};
 	
@@ -51,7 +56,7 @@ HA.twitter = function(ns, $, _, C) {
 		$.getJSON(uri, function(r) {
 			console.log("Twitter loaded");
 			// maybe change to use the "apply" method to manage scoping
-			_handleLoad(r, o, that);
+			_handleLoad(r, o);
 		});
 	}
 		
@@ -64,22 +69,18 @@ HA.twitter = function(ns, $, _, C) {
 		@param {Object} that Scoping variable _(shouldn't be necessary with module pattern)_
    */
 	// r = response, o = extra data (party, so far), that = HA.twitter
-	var _handleLoad = function(r, o, that) {
+	var _handleLoad = function(r, o) {
 		console.log("Handling Load : "+o.party);
-		// $.each(r, function(index, value) {
-			// // value.party = o.party;
-			// // self.tweets.push({raw: value, party: o.party, text: value.text, name: value.user.name, img: value.user.profile_image_url});
-		// });
 		
-		that[o.party] = _.map(r, function(tweet) {
+		_options[o.party] = _.map(r, function(tweet) {
 			return {id: tweet.key, name: tweet.value.name, screen_name: tweet.value.screen_name, party: tweet.value.party, text: tweet.value.text};
 		});
-		if(that.d.length > 0 && that.r.length > 0) {
+		if(_options.d.length > 0 && _options.r.length > 0) {
 			// merge the two arrays
-			that.tweets = _.shuffle(that.d.concat(that.r));
+			_tweets = _.shuffle(_options.d.concat(_options.r));
 			// self.callback(self.all);
 			// Crafty.scene("gameplay");
-			Crafty.scene("start");
+			// Crafty.scene("start");
 			return;
 		}
 	}
@@ -92,8 +93,8 @@ HA.twitter = function(ns, $, _, C) {
 	// TODO: the passed variables should pull from the aggregate list, not separately from each list
 	var _getTweetSet = function(start, count) {
 		var end = start+count,
-			r = _r.slice(start, end),
-			d = _d.slice(start, end);
+			r = _options.r.slice(start, end),
+			d = _options.d.slice(start, end);
 		var set = _.shuffle(r.concat(d));
 		console.log("getTweetSet", set);
 		return set;
