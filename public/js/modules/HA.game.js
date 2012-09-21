@@ -52,7 +52,7 @@ HA.game = function(ns, $, _, C) {
     Handles the "resume game" selection from the pause screen.
 		@private
     @method _handleResumeGame
-		@param {Object} [e] Event object.
+		@param {Object} e Event object.
    */
 	var _handleResumeGame = function(e) {
 		e.preventDefault();
@@ -70,6 +70,7 @@ HA.game = function(ns, $, _, C) {
     Handles the "new game" event from the pause screen.
 		@private
     @method _handleNewGame
+		@param {Object} e Event object.
    */
 	var _handleNewGame = function(e) {
 		e.preventDefault();
@@ -109,7 +110,7 @@ HA.game = function(ns, $, _, C) {
 	};
 
 	/**
-    Initialize {{#crossLink "enemyController"}}{{/crossLink}} module.
+    Initialize `HA.enemyController` module.
 		@private
     @method _createEnemyController
    */	
@@ -123,9 +124,10 @@ HA.game = function(ns, $, _, C) {
 	};
 
 	/**
-    Initialize {{#crossLink "enemyController"}}{{/crossLink}} module.
+    Handle enemy hit event.
 		@private
-    @method _createEnemyController
+    @method _handleEnemyHit
+		@param {Object} e Event object.
    */	
 	var _handleEnemyHit = function(e) {
 		console.log("Game: handleEnemyHit");
@@ -139,7 +141,13 @@ HA.game = function(ns, $, _, C) {
 			C.audio.play('hit_good');
 		}
 	};
-	
+
+	/**
+    Handle event when an enemy goes offscreen.
+		@private
+    @method _handleEnemyOffScreen
+		@param {Object} e Event object.
+   */	
 	var _handleEnemyOffScreen = function(e) {
 		console.log("Game: handleEnemyOffScreen");
 		if (e.tweet.party != _party) {
@@ -155,6 +163,12 @@ HA.game = function(ns, $, _, C) {
 		}
 	};
 	
+	/**
+    Handle level complete event.
+		@private
+    @method _handleLevelComplete
+		@param {Object} e Event object.
+   */
 	_handleLevelComplete = function(e) {
 		console.log("handleLevelComplete");
 		if(_perfectLevel) {
@@ -168,7 +182,13 @@ HA.game = function(ns, $, _, C) {
 			_incrementLevel();
 		}
 	};
-	
+
+	/**
+    Handle next level event.
+		@private
+    @method _handleNextLevel
+		@param {Object} e Event object.
+   */	
 	var _handleNextLevel = function(e) {
 		console.log("handleNextLevel");
 		C.audio.play("whoosh");
@@ -180,6 +200,11 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.startProducing(true);
 	};
 	
+	/**
+    Save score to high scores in database.
+		@private
+    @method _saveScore
+   */
 	var _saveScore = function() {
 		$.ajax({
 			url: "/highscore",
@@ -193,10 +218,41 @@ HA.game = function(ns, $, _, C) {
 	};
 	
 	// public methods
+	
+	/**
+    Initializer.
+		@public
+    @method init
+   */
 	ns.init = _init;
+	
+	/**
+    Pause gameplay.
+		@public
+    @method pauseGame
+   */
 	ns.pauseGame = _pauseGame;
+	
+	/**
+    UnPause gameplay.
+		@public
+    @method unPauseGame
+   */
 	ns.unPauseGame = _unPauseGame;
+	
+	/**
+    UnPause gameplay.
+		@public
+    @method getParty
+   */
 	ns.getParty = function() { return _party; };
+
+	/**
+    UnPause gameplay.
+		@public
+    @method setParty
+		@param {String} p String representing party affiliation ('r' or 'd')
+   */
 	ns.setParty = function(p) {
 		if(p == 'r' || p == 'd') {
 			_party = p;

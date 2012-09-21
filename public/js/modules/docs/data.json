@@ -15,6 +15,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "HA.game.js": {
+            "name": "HA.game.js",
+            "modules": {},
+            "classes": {
+                "game": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "HA.js": {
             "name": "HA.js",
             "modules": {},
@@ -47,6 +56,18 @@
             "file": "HA.enemyController.js",
             "line": 1,
             "description": "The enemyController is responsible for handling the generation of enemy balloons, and the user interaction."
+        },
+        "game": {
+            "name": "game",
+            "shortname": "game",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "HA.game.js",
+            "line": 1,
+            "description": "Handles gameplay, including levels, game pause/unpause, and initializing other HA modules."
         },
         "HA": {
             "name": "HA",
@@ -147,6 +168,83 @@
                 }
             ],
             "class": "enemyController"
+        },
+        {
+            "file": "HA.game.js",
+            "line": 27,
+            "description": "Pause gameplay (hooks into `Crafty.pause()`).",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_pauseGame",
+            "class": "game"
+        },
+        {
+            "file": "HA.game.js",
+            "line": 51,
+            "description": "Handles the \"resume game\" selection from the pause screen.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_handleResumeGame",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Event object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "game"
+        },
+        {
+            "file": "HA.game.js",
+            "line": 69,
+            "description": "Handles the \"new game\" event from the pause screen.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_handleNewGame",
+            "class": "game"
+        },
+        {
+            "file": "HA.game.js",
+            "line": 83,
+            "description": "UnPause gameplay (hooks into `Crafty.pause()`).",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_unPauseGame",
+            "class": "game"
+        },
+        {
+            "file": "HA.game.js",
+            "line": 98,
+            "description": "Toggle pause/unpause (hooks into `Crafty.pause()`).",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_togglePause",
+            "class": "game"
+        },
+        {
+            "file": "HA.game.js",
+            "line": 111,
+            "description": "Initialize {{#crossLink \"enemyController\"}}HA.enemyController{{/crossLink}} module.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_createEnemyController",
+            "class": "game"
+        },
+        {
+            "file": "HA.game.js",
+            "line": 125,
+            "description": "Handle enemy hit event.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_handleEnemyHit",
+            "class": "game"
         },
         {
             "file": "HA.js",
