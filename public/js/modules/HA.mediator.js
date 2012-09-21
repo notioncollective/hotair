@@ -1,6 +1,5 @@
 /**
  * Provides a basic Mediator for global event aggregation.  Based on jQuery TinyPubSub.
- * @namespace HA
  * @class mediator
  */
 HA.mediator = function(ns, $, _, C) {

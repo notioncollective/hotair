@@ -6,6 +6,15 @@
         "url": "http://hotairgame.com/"
     },
     "files": {
+        "HA.enemyController.js": {
+            "name": "HA.enemyController.js",
+            "modules": {},
+            "classes": {
+                "enemyController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "HA.js": {
             "name": "HA.js",
             "modules": {},
@@ -19,16 +28,26 @@
             "name": "HA.mediator.js",
             "modules": {},
             "classes": {
-                "HA.mediator": 1
+                "mediator": 1
             },
             "fors": {},
-            "namespaces": {
-                "HA": 1
-            }
+            "namespaces": {}
         }
     },
     "modules": {},
     "classes": {
+        "enemyController": {
+            "name": "enemyController",
+            "shortname": "enemyController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "HA.enemyController.js",
+            "line": 1,
+            "description": "The enemyController is responsible for handling the generation of enemy balloons, and the user interaction."
+        },
         "HA": {
             "name": "HA",
             "shortname": "HA",
@@ -41,21 +60,94 @@
             "line": 1,
             "description": "All modules related to the HotAir Game are contained within the HA root namespace."
         },
-        "HA.mediator": {
-            "name": "HA.mediator",
-            "shortname": "HA.mediator",
+        "mediator": {
+            "name": "mediator",
+            "shortname": "mediator",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "namespace": "HA",
             "file": "HA.mediator.js",
             "line": 1,
             "description": "Provides a basic Mediator for global event aggregation.  Based on jQuery TinyPubSub."
         }
     },
     "classitems": [
+        {
+            "file": "HA.enemyController.js",
+            "line": 170,
+            "description": "Start producing enemies.  Sets _timer interval.",
+            "itemtype": "method",
+            "name": "startProducing",
+            "params": [
+                {
+                    "name": "firstGo",
+                    "description": "If true, indicates that the _produceEnemy method should be invoked immediately.",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "enemyController"
+        },
+        {
+            "file": "HA.enemyController.js",
+            "line": 182,
+            "description": "Stop producing enemies.  Clears _timer interval.",
+            "itemtype": "method",
+            "name": "stopProducing",
+            "class": "enemyController"
+        },
+        {
+            "file": "HA.enemyController.js",
+            "line": 192,
+            "description": "Destroys all of the existing enemy entities.",
+            "itemtype": "method",
+            "name": "destroyAllEnemies",
+            "class": "enemyController"
+        },
+        {
+            "file": "HA.enemyController.js",
+            "line": 202,
+            "description": "Determine whether or not the enemy controller is currently producing.",
+            "itemtype": "method",
+            "name": "isProducing",
+            "class": "enemyController"
+        },
+        {
+            "file": "HA.enemyController.js",
+            "line": 210,
+            "description": "Set the speed at which the enemies move.",
+            "itemtype": "method",
+            "name": "setSpeed",
+            "params": [
+                {
+                    "name": "speed",
+                    "description": "The y velocity.",
+                    "type": "Number"
+                }
+            ],
+            "class": "enemyController"
+        },
+        {
+            "file": "HA.enemyController.js",
+            "line": 220,
+            "description": "Load an set of tweets from the Twitter module.",
+            "itemtype": "method",
+            "name": "loadEnemySet",
+            "params": [
+                {
+                    "name": "start",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "count",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "enemyController"
+        },
         {
             "file": "HA.js",
             "line": 9,
@@ -66,30 +158,27 @@
         },
         {
             "file": "HA.mediator.js",
-            "line": 32,
+            "line": 31,
             "description": "Subscribe a handler to an event",
             "itemtype": "method",
             "name": "subscribe",
-            "class": "HA.mediator",
-            "namespace": "HA"
+            "class": "mediator"
         },
         {
             "file": "HA.mediator.js",
-            "line": 40,
+            "line": 39,
             "description": "Unsubscribe a handler from an event",
             "itemtype": "method",
             "name": "unsubscribe",
-            "class": "HA.mediator",
-            "namespace": "HA"
+            "class": "mediator"
         },
         {
             "file": "HA.mediator.js",
-            "line": 48,
+            "line": 47,
             "description": "Publish an event",
             "itemtype": "method",
             "name": "publish",
-            "class": "HA.mediator",
-            "namespace": "HA"
+            "class": "mediator"
         }
     ]
 }
