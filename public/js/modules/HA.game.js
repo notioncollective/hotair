@@ -23,6 +23,8 @@ HA.game = function(ns, $, _, C) {
 		// TODO decide where twitter module needs to be initialized
 		// HA.twitter.init();
 		
+		
+		
 		// Load the first scene
 		C.init();
 		HA.sceneManager.loadScene("loading");

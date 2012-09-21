@@ -28,7 +28,7 @@ Crafty.scene("start", function() {
 		console.log('begin game!');
 		$('.start-scene').hide();
 		var party = $(this).data('party');
-		HA.party = party;
+		HA.game.setParty(party);
 		Crafty.scene("gameplay");
 		// Crafty.Twitter.init(true);
 		return false;

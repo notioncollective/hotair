@@ -1,11 +1,9 @@
 Crafty.scene("gameplay", function() {
 	console.log("Scene: gameplay "+ this);
-	Crafty.background('rgb(140, 208, 255)');
 	
-	// $(document).off();
+	$(document).off();
 	
 	Crafty.audio.play("whoosh");
-	Crafty.audio.stop("start_music");
 	Crafty.audio.play("game_music", -1, .8);
 	
 	// draw some clouds	
@@ -30,8 +28,8 @@ Crafty.scene("gameplay", function() {
 	});
 	
 	
-	HA.game = Crafty.e("Game");
-	HA.game.setParty(HA.party);
+	//HA.game = Crafty.e("Game");
+	// HA.game.setParty(HA.party);
 	
 	
 	//player entity
