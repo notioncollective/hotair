@@ -1,4 +1,8 @@
-// HA.game namespace
+/**
+ * Handles gameplay, including levels, game pause/unpause, and initializing other HA modules.
+ * @class game
+ */
+
 HA.game = function(ns, $, _, C) {
 	
 	var _options = {},
@@ -20,6 +24,11 @@ HA.game = function(ns, $, _, C) {
 		// HA.twitter.init();
 	};
 	
+	/**
+    Pause gameplay (hooks into `Crafty.pause()`).
+		@private
+    @method _pauseGame
+   */
 	var _pauseGame = function() {
 		console.log("Pause game!");
 		if(!C.isPaused()) {
@@ -39,6 +48,12 @@ HA.game = function(ns, $, _, C) {
 		}
 	};
 	
+	/**
+    Handles the "resume game" selection from the pause screen.
+		@private
+    @method _handleResumeGame
+		@param {Object} [e] Event object.
+   */
 	var _handleResumeGame = function(e) {
 		e.preventDefault();
 		console.log("Resume game!");
@@ -51,6 +66,11 @@ HA.game = function(ns, $, _, C) {
 		return false;	
 	};
 	
+	/**
+    Handles the "new game" event from the pause screen.
+		@private
+    @method _handleNewGame
+   */
 	var _handleNewGame = function(e) {
 		e.preventDefault();
 		console.log("New game!");
@@ -60,6 +80,11 @@ HA.game = function(ns, $, _, C) {
 		return false;		
 	};
 	
+	/**
+    UnPause gameplay (hooks into `Crafty.pause()`).
+		@private
+    @method _unPauseGame
+   */
 	var _unPauseGame = function() {
 		if(C.isPaused()) {
 				C.pause();
@@ -70,6 +95,11 @@ HA.game = function(ns, $, _, C) {
 		}		
 	};
 	
+	/**
+    Toggle pause/unpause (hooks into `Crafty.pause()`).
+		@private
+    @method _togglePause
+   */	
 	var _togglePause = function() {
 		if(C.isPaused()) {
 			_unPauseGame();
@@ -77,7 +107,12 @@ HA.game = function(ns, $, _, C) {
 			_pauseGame();
 		}
 	};
-	
+
+	/**
+    Initialize {{#crossLink "enemyController"}}{{/crossLink}} module.
+		@private
+    @method _createEnemyController
+   */	
 	var _createEnemyController = function() {
 		HA.enemyController.init();
 		HA.enemyController.loadEnemySet(0, _getNumEnemiesPerLevel());
@@ -86,7 +121,12 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.startProducing(true);
 		console.log(HA.enemyController.isProducing());
 	};
-	
+
+	/**
+    Initialize {{#crossLink "enemyController"}}{{/crossLink}} module.
+		@private
+    @method _createEnemyController
+   */	
 	var _handleEnemyHit = function(e) {
 		console.log("Game: handleEnemyHit");
 		if (e.tweet.party == _party) {
