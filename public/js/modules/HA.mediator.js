@@ -42,4 +42,4 @@ HA.mediator = function(ns, $, _, C) {
 	
 	return ns;
 	
-}(HA.mediator, jQuery, _, Crafty);
+}(HA.namespace("HA.mediator"), jQuery, _, Crafty);
