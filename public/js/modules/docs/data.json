@@ -32,6 +32,15 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "HA.sceneManager.js": {
+            "name": "HA.sceneManager.js",
+            "modules": {},
+            "classes": {
+                "sceneManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {},
@@ -71,6 +80,18 @@
             "file": "HA.mediator.js",
             "line": 1,
             "description": "Provides a basic Mediator for global event aggregation.  Based on jQuery TinyPubSub."
+        },
+        "sceneManager": {
+            "name": "sceneManager",
+            "shortname": "sceneManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "HA.sceneManager.js",
+            "line": 1,
+            "description": "The scene manager is currently just a wrapper for Crafty's scene implementation."
         }
     },
     "classitems": [
@@ -179,6 +200,31 @@
             "itemtype": "method",
             "name": "publish",
             "class": "mediator"
+        },
+        {
+            "file": "HA.sceneManager.js",
+            "line": 9,
+            "description": "See public loadScene method",
+            "itemtype": "method",
+            "name": "_loadScene",
+            "access": "private",
+            "tagname": "",
+            "class": "sceneManager"
+        },
+        {
+            "file": "HA.sceneManager.js",
+            "line": 18,
+            "description": "Wrapper for Crafty's scene method.  Loads a previously defined scene.",
+            "itemtype": "method",
+            "name": "loadScene",
+            "params": [
+                {
+                    "name": "scene",
+                    "description": "The ID of the scene to be loaded.",
+                    "type": "String"
+                }
+            ],
+            "class": "sceneManager"
         }
     ]
 }

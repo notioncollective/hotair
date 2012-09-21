@@ -3,7 +3,8 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "HA",
         "enemyController",
-        "mediator"
+        "mediator",
+        "sceneManager"
     ],
     "modules": [],
     "allModules": []
