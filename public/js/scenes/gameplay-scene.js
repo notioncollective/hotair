@@ -2,7 +2,7 @@ Crafty.scene("gameplay", function() {
 	console.log("Scene: gameplay "+ this);
 	Crafty.background('rgb(140, 208, 255)');
 	
-	$(document).off();
+	// $(document).off();
 	
 	Crafty.audio.play("whoosh");
 	Crafty.audio.stop("start_music");
@@ -45,19 +45,11 @@ Crafty.scene("gameplay", function() {
 	
 	HA.game.createEnemyController();
 	
-	//load enemies
-	// var numEnemies = Crafty.Twitter.tweets.length;
-	// HA.enemies = enemyFactory = new Crafty.EnemyFactory(numEnemies);
-	// console.log(enemyFactory.isProducing());
-	// enemyFactory.startFactory(true);
-	// console.log(enemyFactory.isProducing());
-	
-	console.log("End Scene Creation : gameplay");
-	
 }, function() {
 	console.log("Scene: gameplay - uninit");
 	Crafty.audio.stop("game_music");
 	HA.game.enemyController.destroyAllEnemies();
+	HA.game.enemyController.stopProducing();
 	HA.game.destroy();
 	HA.tweetDisplay.hide();
 	HA.tweetDisplay.destroy();

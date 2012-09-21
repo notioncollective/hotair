@@ -57,6 +57,21 @@ html(lang="en")
 			#TweetDisplay
 				.content
 
+			// GAMEOVER DISPLAY
+			#GameOverDisplay
+				h1 Game Over
+				#NewHighscore
+					h3 New High Score!
+					label Enter your initials:
+						input#gameover-name(type="text") test
+					a#SaveHighscore(href="#done") Done
+				#GameOverOptions
+					ul.list-inline
+						li
+							a#gameover-start(href="#gameover-start") Start Screen
+						li
+							a#gameover-again(href="#gameover-again") Play Again
+							
 			// FULL SCREEN
 			#FullScreenPrompt
 				.prompt Press Esc for Fullscreen Mode
