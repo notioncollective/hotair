@@ -123,8 +123,8 @@ exports.reset = function(rew, res) {
 /*
 * This action hits the twitter API
 */
-exports.load_tweets = function(req, res) {
-	console.log("load_tweets");
+exports.fetch_tweets = function(req, res) {
+	console.log("fetch_tweets");
 	
 	
 	// Check if database is populated, if so use since_id
@@ -189,6 +189,41 @@ exports.all = function(req, res) {
 	});
 }
 
+/**
+  Loads merged tweets (both dem + republican).
+	@param {Number} startkey Start index
+	@param {Number} limit Number of responses to retrieve
+*/
+exports.load_tweets = function(req, res) {
+	var startkey = req.query.startkey || 0,
+			limit = req.query.limit || 100,
+			i = 0, // counts the number of lists recieved
+			merged = {
+				"total_rows": 0,
+				"rows": []
+			},
+			merge = function(err, resp) {
+				if(resp) {
+					i++;
+					merged.total_rows += resp.total_rows;
+					merged.resp.rows.concat(resp.rows)
+					if(i == 2) {
+						_.shuffle(merged.rows);
+						res.send(merged);
+					}					
+				}
+			};
+			
+	db.view('hotair/democrats', {startKey: parseInt(startkey), limit: Math.ceil(limit/2)}, merge);
+	db.view('hotair/republican', {startKey: parseInt(startkey), limit: Math.ceil(limit/2)}, merge);
+	
+}
+
+/**
+  Loads tweets from deomocrats
+	@param {Number} startkey Start index
+	@param {Number} limit Number of responses to retrieve
+ */
 exports.democrats = function(req, res) {
 	var startkey = req.query.startkey || 0,
 		limit = req.query.limit || 100;
@@ -196,18 +231,19 @@ exports.democrats = function(req, res) {
 	db.view('hotair/democrats', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
 	   	// console.log("resp", resp);
 		var out = [];
-	    if(resp) {
+	  if(resp) {
 			res.send(resp);
 			return;
-			resp.forEach(function(row) {
-		   	  out.push(row);	
-		   	});
+			// resp.forEach(function(row) {
+			// 		   	  out.push(row);	
+			// 		   	});
 		}
-	   	console.log("out", out);
-		res.send(out);
+		// 	   	console.log("out", out);
+		// res.send(out);
 	});
 }
 
+// TODO: change to 'republicans'
 exports.republican = function(req, res) {
 	var startkey = req.query.startkey || 0,
 		limit = req.query.limit || 100;
@@ -215,15 +251,15 @@ exports.republican = function(req, res) {
 	db.view('hotair/republican', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
 	   	// console.log("resp", resp);
 		var out = [];
-	    if(resp) {
+	  if(resp) {
 			res.send(resp);
 			return;
-			resp.forEach(function(row) {
-		   	  out.push(row);	
-		   	});
+			// resp.forEach(function(row) {
+			// 		   	  out.push(row);	
+			// 		   	});
 		}
-	   	console.log("out", out);
-		res.send(out);
+		// 	   	console.log("out", out);
+		// res.send(out);
 	});
 }
 
