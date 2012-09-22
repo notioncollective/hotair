@@ -36,7 +36,7 @@ Crafty.c("Enemy", {
 			this.showScore(e.dScore);
 		});
 		
-		Crafty.trigger("EnemyHit", {tweet: this.tweet});
+		Crafty.trigger("EnemyHit", {tweet: this.tweet.value});
 	},
 	_setParty: function(party) {
 		this.party = party;
@@ -111,17 +111,17 @@ Crafty.c("Enemy", {
 							.setScore(score);							
 	},
 	showTweetPerson: function() {
-		console.log("====== showTweetPerson: ", this.tweet.name);
+		console.log("====== showTweetPerson: ", this.tweet.value.name);
 		var tweet_person = Crafty.e('TweetPerson')
 				.attr({
 					x: this.x+20,
 					y: this.y+70
 				})
-				.setTweetPersonParty(this.tweet.party);
+				.setTweetPersonParty(this.tweet.value.party);
 		var yv = tweet_person.yv;
 		var tweet_person_info = Crafty.e("TweetPersonInfo")
 				.attr({
-					tweet: this.tweet,
+					tweet: this.tweet.value,
 					x: this.x+90,
 					y: this.y+100,
 					yv: yv
@@ -133,7 +133,7 @@ Crafty.c("Enemy", {
 		this.selected = true;
 		// this.css("border", "solid 5px #ffffff");
 		this.stop().animate("selected", 30, -1);
-		Crafty.trigger('SelectTweet', {tweet: this.tweet.text});
+		Crafty.trigger('SelectTweet', {tweet: this.tweet.value.text});
 	},
 	unselect: function() {
 		this.selected = false;

@@ -2,7 +2,7 @@
  * The events module returns a simple map of all game events.
  * @class events
  */
-HA.events = function(ns, $, _, C) {
+HA.events = HA.e = function(ns, $, _, C) {
 	
 	var _events = {
 		/**
@@ -47,7 +47,14 @@ HA.events = function(ns, $, _, C) {
 		 * @property {string} UNPAUSE_GAME
 		 * @final
 		 */
-		UNPAUSE_GAME: "ha:pause_game"
+		UNPAUSE_GAME: "ha:pause_game",
+		
+		/**
+		 * Tweets loaded into twitter module
+		 * @property {string} TWEETS_LOADED
+		 * @final
+		 */
+		TWEETS_LOADED: "ha:tweets_loaded",		
 	};
 	
 	return _events;

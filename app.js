@@ -14,7 +14,7 @@ var express = require('express')
 // Cron Job to go grab new tweets every 5 minutes.
 new cronJob('0 */12 * * * *', function(){
     console.log('CRON - fetching tweets.');
-    routes.load_tweets();
+    routes.fetch_tweets();
 }, null, true, "America/New_York");;
 
 var app = express();
