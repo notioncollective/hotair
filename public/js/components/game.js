@@ -15,19 +15,19 @@ Crafty.c("Game", {
 			Crafty.scene("gameover");
 		});
 		// Pause handler
-		this.bind('KeyDown', function(e) {
-			if(e.key == Crafty.keys['ENTER']) {
-				if(!Crafty.isPaused()) {
-					this.pauseGame();
-				}
-			}
-			if(e.key == Crafty.keys['ESC']) {
-				console.log("Full scrn");
-				if(screenfull) {
-					screenfull.toggle();
-				}
-			}
-		});
+		// this.bind('KeyDown', function(e) {
+			// if(e.key == Crafty.keys['ENTER']) {
+				// if(!Crafty.isPaused()) {
+					// this.pauseGame();
+				// }
+			// }
+			// if(e.key == Crafty.keys['ESC']) {
+				// console.log("Full scrn");
+				// if(screenfull) {
+					// screenfull.toggle();
+				// }
+			// }
+		// });
 
 		this.bind('EnemyHit', function(e) {
 			this.handleEnemyHit(e);

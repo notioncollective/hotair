@@ -1,5 +1,6 @@
 Crafty.c("LevelDisplay", {
 	init: function() {
+		_.bindAll(this);
 		this.addComponent("2D, DOM, Color, Text");
 		this.w = 200;
 		this.x = Crafty.DOM.window.width/2-this.w/2;
@@ -11,6 +12,8 @@ Crafty.c("LevelDisplay", {
 			this.text("Level "+e.level);
 			this.flashLevel();
 		});
+		
+		
 		
 		// this.bind("NextLevel", function(e) {
 			// this.text("Level "+e.level);

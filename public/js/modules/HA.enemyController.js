@@ -4,13 +4,7 @@
  */
 HA.enemyController = function(ns, $, _, C) {
 
-	// C.bind("Pause", function(e) {
-		// _stopProducing();
-	// });
-	// C.bind("UnPause", function(e) {
-		// _startProducing();
-	// });
-	
+
 	C.bind("KeyDown", function(e) {
 		_selectEnemy(e);
 	});
@@ -20,14 +14,19 @@ HA.enemyController = function(ns, $, _, C) {
 	C.bind("GameOver", function(e) {
 		_stopProducing();
 	});
-	
 	// Private Scoped Members
 	var _producing = false, _curEnemy = 0, _numEnemies = 0, _numEnemiesLeft = null, _timer = null, _interval = 5000, _speed = 1, _selectedEnemy = null, _tweets = [], _enemies = [];
 
 	function _init() {
 		HA.m.subscribe(HA.events.START_NEW_GAME, _handleStartNewGameEvent);
+		HA.m.subscribe(HA.events.GAME_OVER, _handleGameOverEvent);
 		HA.m.subscribe(HA.events.PAUSE_GAME, _handlePauseGameEvent);
-		HA.m.subscribe(HA.events.UNPAUSE_GAME, _handleUnPauseGameEvent);
+		HA.m.subscribe(HA.events.RESUME_GAME, _handleResumeGameEvent);
+		// HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
+		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, _handleEnemyHitCompleteEvent);
+		// HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
+		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, _handleEnemyOffScreenCompleteEvent);
+		HA.m.subscribe(HA.e.ENEMY_DESTROYED, _handleEnemyDestroyedEvent);
 	}
 
 	/**** EVENT HANDLERS *****/
@@ -36,26 +35,57 @@ HA.enemyController = function(ns, $, _, C) {
 		_loadEnemySet(0, 2);
 		_startProducing(true);
 	}
-	
+
 	function _handlePauseGameEvent(e) {
 		_stopProducing();
 	}
-	
-	function _handleUnPauseGameEvent(e) {
+
+	function _handleResumeGameEvent(e) {
 		_startProducing();
 	}
 	
+	/**
+	 * Handle GAME_OVER event.  Stops production, destroys all enemies, clears out _enemies array.
+	 * @private _handleGameOverEvent
+	 */
+	function _handleGameOverEvent(e) {
+		_stopProducing();
+		_destroyAllEnemies();
+	}
+	
+	function _handleEnemyHitStartEvent(e, enemy) {
+		console.log('HA.enemyController _handleEnemyHitStartEvent');
+		
+	}
+	
+	function _handleEnemyHitCompleteEvent(e, enemy) {
+		console.log('HA.enemyController _handleEnemyHitCompleteEvent');
+		_destroyEnemy(enemy);
+	}
+	
+	function _handleEnemyOffScreenCompleteEvent(e, enemy) {
+		console.log('HA.enemyController _handleEnemyOffScreenEvent');
+		_destroyEnemy(enemy);
+	}
+	
+	function _handleEnemyDestroyedEvent(e, enemy) {
+		console.log('HA.enemyController _handleEnemyDestroyedEvent');
+		
+	}
+
+	/***** PRIVATE METHODS *****/
+
 	function _loadEnemySet(start, count) {
 		_tweets = HA.twitter.getTweetSet(start, count);
 		_curEnemy = 0;
 		_numEnemies = _numEnemiesLeft = _tweets.length;
 	}
-	
+
 	function _setSpeed(speed) {
 		console.log("setSpeed");
 		_speed = speed;
 	}
-	
+
 	function _startProducing(firstGo) {
 		console.log("startProducing");
 		if(firstGo)
@@ -63,7 +93,7 @@ HA.enemyController = function(ns, $, _, C) {
 		_producing = true;
 		_timer = setInterval(_produceEnemy, _interval);
 	}
-	
+
 	function _stopProducing() {
 		console.log("stopProducing");
 		_producing = false;
@@ -100,7 +130,7 @@ HA.enemyController = function(ns, $, _, C) {
 			console.log("game.selectedEnemy: " + _selectedEnemy);
 		}
 	}
-	
+
 	function _selectNextEnemy() {
 		_setSelectedEnemy();
 		if(_selectedEnemy < _enemies.length - 1) {
@@ -137,21 +167,14 @@ HA.enemyController = function(ns, $, _, C) {
 		});
 	}
 
-	var _destroyEnemy = function(e) {
-		var index = _.indexOf(_enemies, e.enemy);
-		console.log("Removing Visible Enemy: " + e.enemy);
+	function _destroyEnemy(enemy) {
+		var index = _.indexOf(_enemies, enemy);
+		console.log("Removing Visible Enemy: " + enemy);
 		if(index !== -1) {
-			// game.VisibleEnemies[index].doHit();
-
-			// _enemies.splice(index, 1);
-			// if(_enemies[0] !== undefined) {
-			// _selectedEnemy = 0;
-			// _enemies[0].select();
-			// }
 
 			console.log("000000000 _selectedEnemy: ", _selectedEnemy);
 
-			if(_enemies[_selectedEnemy] === e.enemy) {
+			if(_enemies[_selectedEnemy] === enemy) {
 				console.log("000000000 selected enemy destroyed");
 				_enemies.splice(index, 1);
 				if(_enemies[0] !== undefined) {
@@ -163,14 +186,23 @@ HA.enemyController = function(ns, $, _, C) {
 				console.log("000000000 unselected enemy destroyed");
 			}
 			_numEnemiesLeft -= 1;
-			console.log(_enemies.length);
-			e.enemy.destroy();
+			// console.log(_enemies.length);
+			// enemy.destroy();		// This should happen from within the enemy entity itself
 		}
 		if(_numEnemiesLeft === 0) {
 			// last enemy is gone, player isn't dead... go to next level!
-			C.trigger("LevelComplete");
+			HA.m.publish(HA.e.LEVEL_COMPLETE);
+			// C.trigger("LevelComplete");
 		}
 	}
+	
+	function _destroyAllEnemies() {
+		_.each(_enemies, function(enemy) {
+			enemy.destroy();
+		});
+		_enemies = [];
+	}
+	
 	// Public interface
 
 	/**
@@ -194,11 +226,7 @@ HA.enemyController = function(ns, $, _, C) {
 	 * Destroys all of the existing enemy entities.
 	 * @method destroyAllEnemies
 	 */
-	ns.destroyAllEnemies = function() {
-		_.each(_enemies, function(enemy) {
-			enemy.destroy();
-		});
-	};
+	ns.destroyAllEnemies = _destroyAllEnemies;
 	/**
 	 * Determine whether or not the enemy controller is currently producing.
 	 * @method isProducing

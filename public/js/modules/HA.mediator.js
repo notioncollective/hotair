@@ -36,7 +36,6 @@ HA.mediator = HA.m = function(ns, $, _, C) {
     @method subscribe
    */
   ns.subscribe = function() {
-  	console.log("subscribe");
   	o.off.apply(o, arguments);
     o.on.apply(o, arguments);
   };
@@ -54,7 +53,7 @@ HA.mediator = HA.m = function(ns, $, _, C) {
    * @method publish
    */
   ns.publish = function() {
-  	console.log("publish");
+  	console.log("publish", arguments[0]);
     o.trigger.apply(o, arguments);
   };
   
