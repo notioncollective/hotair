@@ -61,7 +61,7 @@ Crafty.c("Enemy", {
 		// });
 		
 		// HA.m.publish(HA.e.ENEMY_HIT, [this]);
-		
+			
 	},
 	_setParty: function(party) {
 		this.party = party;
