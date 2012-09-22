@@ -27,7 +27,12 @@ HA.player = function(ns, $, _, C) {
 	}
 	
 	function _addToScore(points) {
+		// console.log("HA.player._addToScore", points);
 		_score = _score + points;
+		if(_score < 0) {
+			_score = 0;
+		}
+		HA.m.publish(HA.e.UPDATE_SCORE, [_score]);
 	}
 	
 	function _getParty() {
@@ -44,10 +49,15 @@ HA.player = function(ns, $, _, C) {
 	
 	function _incrementLives() {
 		_lives = _lives+1;
+		HA.m.publish(HA.e.UPDATE_LIVES, [_lives]);
 	}
 	
 	function _decrementLives() {
 		_lives = _lives-1;
+		HA.m.publish(HA.e.UPDATE_LIVES, [_lives]);
+		if(_lives === 0) {
+			HA.m.publish(HA.e.GAME_OVER);
+		}
 	}
 	
 	function _getName() {

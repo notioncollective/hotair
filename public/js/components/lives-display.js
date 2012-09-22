@@ -1,6 +1,7 @@
 Crafty.c("LivesDisplay", {
 	_lives: 3,
 	init: function(party) {
+		_.bindAll(this);
 		console.log("Lives: init()");
 		this.addComponent("2D, DOM, Color, Text");
 		this.x = 60;
@@ -13,12 +14,16 @@ Crafty.c("LivesDisplay", {
 		
 		this.updateLivesBackground();
 		
-		this.bind("UpdateLives", function(e) {
-			console.log("Lives Component : Updating Lives: "+e.lives);
-			// draw new score
-			this.updateLivesDisplay(e.lives);
-			// this.text(e.lives);
-		});
+		// this.bind("UpdateLives", function(e) {
+			// console.log("Lives Component : Updating Lives: "+e.lives);
+			// // draw new score
+			// this.updateLivesDisplay(e.lives);
+			// // this.text(e.lives);
+		// });
+		HA.m.subscribe(HA.e.UPDATE_LIVES, this._handleUpdateLivesEvent);
+	},
+	_handleUpdateLivesEvent: function(e, lives) {
+		this.updateLivesDisplay(lives);
 	},
 	updateLivesDisplay: function(lives) {
 		this.text('x '+lives);

@@ -8,8 +8,14 @@ Crafty.c("Dart", {
 		this.ay = .2;
 		
 		this.color("rgb(0, 0, 0)");
+		
+		/**
+		 * Trigger the ENEMY_HIT event.
+		 */
 		this.onHit("Enemy", function(e) {
-			e[0].obj.doHit();
+			// e[0].obj.doHit();
+			e[0].obj.registerHitCompleteEvent();
+			HA.m.publish(HA.e.ENEMY_HIT_START, [e[0].obj]);
 			this.destroy();
 		});
 		

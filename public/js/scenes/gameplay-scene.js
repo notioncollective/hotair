@@ -36,15 +36,16 @@ Crafty.scene("gameplay", function() {
 	tweetDisplay.show();
 	var scoreDisplay = Crafty.e("ScoreDisplay");
 	var livesDisplay = Crafty.e("LivesDisplay");
-	// var levelDisplay = Crafty.e("LevelDisplay");
+	
 	var messageDisplay = Crafty.e("MessageDisplay");
 	
-	messageDisplay.bind("NextLevel", function(e) {
-		Crafty.trigger("ShowMessage", {text: "Level "+e.level});
-	});
-	messageDisplay.bind("SetLevel", function(e) {
-		Crafty.trigger("ShowMessage", {text: "Level "+e.level});
-	});
+	// messageDisplay.bind("NextLevel", function(e) {
+		// Crafty.trigger("ShowMessage", {text: "Level "+e.level});
+	// });
+// 	
+	// messageDisplay.bind("SetLevel", function(e) {
+		// Crafty.trigger("ShowMessage", {text: "Level "+e.level});
+	// });
 	
 	//player entity
 	var player = Crafty.e("Player")
@@ -61,10 +62,10 @@ Crafty.scene("gameplay", function() {
 }, function() {
 	console.log("Scene: gameplay - uninit");
 	Crafty.audio.stop("game_music");
-	HA.game.enemyController.destroyAllEnemies();
-	HA.game.enemyController.stopProducing();
-	HA.game.destroy();
-	HA.tweetDisplay.hide();
-	HA.tweetDisplay.destroy();
-	clearInterval(HA.enemyTimer);
+	// HA.game.enemyController.destroyAllEnemies();
+	// HA.game.enemyController.stopProducing();
+	// HA.game.destroy();
+	// HA.tweetDisplay.hide();
+	// HA.tweetDisplay.destroy();
+	// clearInterval(HA.enemyTimer);
 });

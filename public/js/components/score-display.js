@@ -1,6 +1,7 @@
 Crafty.c("ScoreDisplay", {
 	SCORE_DIGITS: 6,
 	init: function() {
+		_.bindAll(this);
 		console.log("ScoreDisplay: init()");
 		this.addComponent("2D, DOM, Color, Text");
 		this.w = 180;
@@ -13,15 +14,19 @@ Crafty.c("ScoreDisplay", {
 		this.updateScoreBackground();
 		
 		// bind to UpdateScore event
-		this.bind("UpdateScore", function(e) {
-			// draw new score
-			this.updateScoreDisplay(e.score);
-			console.log("Score Component : Updating Score Display: "+e.score);
-		});
+		// this.bind("UpdateScore", function(e) {
+			// // draw new score
+			// this.updateScoreDisplay(e.score);
+			// console.log("Score Component : Updating Score Display: "+e.score);
+		// });
+		
+		HA.m.subscribe(HA.e.UPDATE_SCORE, this._handleUpdateScoreEvent);
 	},
-	updateScoreDisplay: function(score) {
+	
+	_handleUpdateScoreEvent: function(e, score) {
 		this.text(this.formatScore(score));
 	},
+	
 	updateScoreBackground: function() {
 		var y = Crafty.DOM.window.height-80,
 			w = this.w,
