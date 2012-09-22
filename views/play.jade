@@ -28,6 +28,11 @@ html(lang="en")
 		// sprites
 		script(src="js/sprites/sprites.js", type="text/javascript", charset="utf-8")
 
+		// modules
+		- var scn = ['HA', 'HA.game', 'HA.enemyController', 'HA.mediator', 'HA.player', 'HA.sceneManager', 'HA.twitter', 'HA.events'];
+		- for (var i=0;i<scn.length;i++)
+			script(src="js/modules/#{scn[i]}.js", type="text/javascript", charset="utf-8")
+
 		// main js
 		script(src="js/main.js", type="text/javascript", charset="utf-8")
 

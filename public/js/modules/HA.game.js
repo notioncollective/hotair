@@ -18,11 +18,39 @@ HA.game = function(ns, $, _, C) {
 		
 		HA.player.init();
 		HA.mediator.init();
-		_createEnemyController();
+		HA.enemyController.init();
 		HA.sceneManager.init();
 		// TODO decide where twitter module needs to be initialized
-		// HA.twitter.init();
+		HA.twitter.init({test: undefined});
+		
+		
+		
+		// Set up initial event subscriptions
+		HA.m.subscribe(HA.events.GAME_LOADED, _handleGameLoadedEvent);
+		HA.m.subscribe(HA.events.START_NEW_GAME, _handleStartNewGameEvent);
+		
+		
+		// Initialize Crafty
+		C.init();
+		// Load the first scene
+		HA.m.publish(HA.events.LOAD_SCENE, ["loading"]);
+		
 	};
+	
+	/***** EVENT HANDLERS *****/
+	
+	/**
+	 * Handles GAME_LOADED event, after Crafty assets are loaded.
+	 * @param {object} e
+	 */
+	function _handleGameLoadedEvent(e) {
+		console.log("_handleGameLoaded");
+		HA.sceneManager.loadScene("start");
+	}
+	
+	function _handleStartNewGameEvent(e) {
+		
+	}
 	
 	/**
     Pause gameplay (hooks into `Crafty.pause()`).
@@ -115,7 +143,6 @@ HA.game = function(ns, $, _, C) {
     @method _createEnemyController
    */	
 	var _createEnemyController = function() {
-		HA.enemyController.init();
 		HA.enemyController.loadEnemySet(0, _getNumEnemiesPerLevel());
 		HA.enemyController.setSpeed(_getSpeed());
 		console.log(HA.enemyController.isProducing());
@@ -261,6 +288,13 @@ HA.game = function(ns, $, _, C) {
 		}
 	};
 
+	/**
+	 * Event map
+	 */
+	ns.events = {
+		GAME_LOADED: "ha:game:loaded"
+	};
+	
 	return ns;
 	
 }(HA.namespace("HA.game"), jQuery, _, Crafty);

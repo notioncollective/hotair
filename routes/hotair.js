@@ -198,22 +198,24 @@ exports.load_tweets = function(req, res) {
 	var startkey = req.query.startkey || 0,
 			limit = req.query.limit || 100,
 			i = 0, // counts the number of lists recieved
-			merged = {
-				"total_rows": 0, // new response object
+			merged = { // new response object
+				"total_rows": 0, 
 				"rows": []
 			},
+			// handle merging data
 			merge = function(err, resp) {
 				if(resp) {
 					i++;
-					merged.total_rows += resp['total_rows'];
-					merged.rows.concat(resp['rows']);
+					merged.total_rows += resp.total_rows;
+					merged.rows = merged.rows.concat(resp.rows);
 					if(i == 2) { //if both lists have been merged in
-						_.shuffle(merged.rows); // shuffle rows
+						merged.rows = _.shuffle(merged.rows); // shuffle rows
 						res.send(merged); // send response
 					}					
 				}
 			};
-			
+
+	// query database
 	db.view('hotair/democrats', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
 	db.view('hotair/republican', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
 	

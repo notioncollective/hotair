@@ -28,8 +28,11 @@ Crafty.scene("start", function() {
 		console.log('begin game!');
 		$('.start-scene').hide();
 		var party = $(this).data('party');
-		HA.party = party;
-		Crafty.scene("gameplay");
+		HA.m.publish(HA.events.SET_PARTY, [party]);
+		
+		// HA.player.setParty(party);
+		HA.m.publish(HA.events.LOAD_SCENE, ["gameplay"]);
+		// Crafty.scene("gameplay");
 		// Crafty.Twitter.init(true);
 		return false;
 	});

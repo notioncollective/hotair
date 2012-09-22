@@ -6,6 +6,15 @@ HA.sceneManager = function(ns, $, _, C) {
 	
 	var _currentScene = null;
 	
+	
+	function _init() {
+	  HA.m.subscribe(HA.events.LOAD_SCENE, _handleLoadSceneEvent);
+	}
+	
+	function _handleLoadSceneEvent(e, scene) {
+		_loadScene(scene);
+	}
+	
 	/**
    * See public loadScene method
    * @method _loadScene
@@ -22,6 +31,7 @@ HA.sceneManager = function(ns, $, _, C) {
 	 */
 	ns.loadScene = _loadScene;
 	
+	ns.init = _init;
 	return ns;
 	
 }(HA.namespace("HA.sceneManager"), jQuery, _, Crafty);
