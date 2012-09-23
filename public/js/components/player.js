@@ -1,11 +1,10 @@
 Crafty.c("Player", {
 	init: function() {
-		this.addComponent("2D, DOM, Color, Multiway, Keyboard, Mouse, Score");
+		this.addComponent("2D, DOM, Color, Multiway, Keyboard, Mouse, Score, Party");				
+		this.setPartySpriteTemplate('%p_avatarx2');
 		
-		console.log("Player party: "+HA.party);
-		
-		if(HA.party == 'r') { this.addComponent("r_avatarx2"); }
-		else { this.addComponent("d_avatarx2"); }
+		// if(HA.party == 'r') { this.addComponent("r_avatarx2"); }
+		// else { this.addComponent("d_avatarx2"); }
 		
 		this.bind("KeyDown", function(e) {
 			if (e.keyCode === Crafty.keys.SPACE || e.keyCode === Crafty.keys.A) {
@@ -33,6 +32,7 @@ Crafty.c("Player", {
 		console.log("Player : dropDart()");
 		Crafty.audio.play('drop');
 		Crafty.e("Dart")
+			.setParty(this.getParty())
 			.attr({x: this.x+(this.w/4), y: this.y, dy: 4});
 	}
 });

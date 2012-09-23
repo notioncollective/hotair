@@ -1,14 +1,25 @@
+/**
+ * Dart component. Sets color based on player party.
+ * @class dart
+ */
+
 Crafty.c("Dart", {
+	_party: null,
+	/**
+	 Initialize dart component
+	 @private
+	 @method init
+	 @param {Object} e Event object.
+	 */
 	init: function() {
-		this.addComponent("2D, DOM, Color, Collision, "+HA.party+"_dartx2");
+		this.addComponent("2D, DOM, Color, Collision, Party");
+		this.setPartySpriteTemplate('%p_dartx2');
 		
 		this.w = 40;
 		this.h = 40;
 		this.dy = 1;
 		this.ay = .2;
-		
-		this.color("rgb(0, 0, 0)");
-		
+				
 		/**
 		 * Trigger the ENEMY_HIT event.
 		 */
@@ -23,5 +34,12 @@ Crafty.c("Dart", {
 			this.y += this.dy;
 			this.dy = this.dy+this.ay;
 		});
-	}
+	},
+	
+	// setParty: function(party) {
+	// 	if(party === 'r' || party === 'd' ) {
+	// 		this._party = party;
+	// 		this.addComponent(this._party+'_dartx2');
+	// 	} else { throw "Party must be set to either 'd' or 'r'"; }
+	// }
 });

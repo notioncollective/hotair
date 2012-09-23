@@ -92,6 +92,13 @@ HA.events = HA.e = function(ns, $, _, C) {
 		 */
 		NEXT_LEVEL: "ha:next_level",
 		
+		/**
+		 * Tweets loaded into twitter module
+		 * @property {string} TWEETS_LOADED
+		 * @final
+		 */
+		TWEETS_LOADED: "ha:tweets_loaded",
+		
 		
 		/********************************/
 		/**		PLAYER EVENTS
@@ -125,7 +132,7 @@ HA.events = HA.e = function(ns, $, _, C) {
 		 * @param {object} enemy The related enemy entity.  
 		 */
 		ENEMY_HIT_COMPLETE: "ha:enemy:hit_complete",
-		
+
 		/**
 		 * An enemy has gone off the screen.
 		 * @property {string} ENEMY_OFF_SCREEN_START
@@ -148,8 +155,7 @@ HA.events = HA.e = function(ns, $, _, C) {
 		 * @final
 		 * @param {object} enemy The related enemy entity.  
 		 */
-		ENEMY_DESTROYED: "ha:enemy:destroyed",
-		
+		ENEMY_DESTROYED: "ha:enemy:destroyed"
 	};
 	
 	return _events;

@@ -105,7 +105,7 @@ HA.enemyController = function(ns, $, _, C) {
 		if(_curEnemy < _numEnemies) {
 			if( tweet = _tweets[_curEnemy]) {
 				console.log("tweet: ", tweet);
-				_enemies.push(C.e("Enemy").setTweet(tweet).setSpeed(_speed));
+				_enemies.push(C.e("Enemy").setTweet(tweet).setSpeed(_speed).setParty(tweet.value.party));
 			}
 			if(_curEnemy === 0 || _enemies.length === 1) {
 				//select the first enemy

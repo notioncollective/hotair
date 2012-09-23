@@ -50,7 +50,9 @@ Crafty.c("LivesDisplay", {
 			x += sprite_w;
 		}
 		
-		Crafty.e('2D, DOM, '+HA.party+'_emblemx2')
+		Crafty.e('2D, DOM, Party')
+			.setPartySpriteTemplate('%p_emblemx2')
+			.setParty(HA.player.getParty())
 			.attr({x:10, y:y+28});
 	},	
 });

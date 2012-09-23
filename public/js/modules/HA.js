@@ -11,10 +11,11 @@ HA = function(ns, $, _, C) {
 	/**
 	 * Create a sub-namespace on the HA root object.
 	 * @method namespace
+	 * @param {String} ns_str String for the new sub-namespace
 	 */
-	ns.namespace = function() {
+	ns.namespace = function(ns_str) {
 	    var a=arguments, o=null, i, j, d;
-	    for (i=0; i<a .length; i=i+1) {
+	    for (i=0; i<a.length; i=i+1) {
 	        d=a[i].split(".");
 	        o=ns;
 

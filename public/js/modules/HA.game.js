@@ -5,10 +5,18 @@
 
 HA.game = function(ns, $, _, C) {
 
-	var _options = {}, _defaults = {}, _scoreIncrement = 100, _level = 0, _party, _perfectLevel, _numEnemiesPerLevel = 2, _partySelectMenu;
+	var _options = {},
+			_defaults = {},
+			_scoreIncrement = 100,
+			_level = 0,
+			_party,
+			_perfectLevel,
+			_numEnemiesPerLevel = 2,
+			_partySelectMenu;
 
 	// private methods
 	function _init(options) {
+		options = options || {};
 		_.extend(_options, _defaults, options);
 
 		HA.player.init();
@@ -18,7 +26,7 @@ HA.game = function(ns, $, _, C) {
 		
 		// TODO decide where twitter module needs to be initialized
 		HA.twitter.init({
-			test : undefined
+			test : true
 		});
 
 		// Set up initial event subscriptions
@@ -47,6 +55,7 @@ HA.game = function(ns, $, _, C) {
 	/**
 	 * Handles GAME_LOADED event, after Crafty assets are loaded.
 	 * @private
+	 * @method _handleGameLoadedEvent
 	 * @param {object} e
 	 */
 	function _handleGameLoadedEvent(e) {
@@ -57,6 +66,7 @@ HA.game = function(ns, $, _, C) {
 	/**
 	 * Handles START_NEW_GAME event.
 	 * @private
+	 * @method _handleStartNewGameEvent
 	 * @param {object} e
 	 */
 	function _handleStartNewGameEvent(e) {
@@ -66,6 +76,7 @@ HA.game = function(ns, $, _, C) {
 	/**
 	 * Handles GAME_OVER event.
 	 * @private
+	 * @method _handleGameOverEvent
 	 * @param {object} e
 	 */
 	function _handleGameOverEvent(e) {
@@ -140,6 +151,7 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleEnemyHitStartEvent(e, enemy) {
 		if(enemy.hit) return;
+		console.log("Enemy: ", enemy);
 		console.log("Game: handleEnemyHitStart", enemy.tweet.party, HA.player.getParty());
 		var scoreInc = _getScoreIncrement();
 		if(enemy.tweet.party == HA.player.getParty()) {

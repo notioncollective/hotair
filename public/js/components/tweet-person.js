@@ -1,14 +1,13 @@
 Crafty.c("TweetPerson", {
 	init: function() {
-		this.addComponent("2D, DOM, SpriteAnimation, parachutex2");
+		// _.bindAll(this)
+		this.addComponent("2D, DOM, SpriteAnimation, Party, parachutex2");
 		this. xv = 0;
 		this.yv = Math.random()*.5+.5;
 
 		this.w = 80;
 		this.h = 80;
 		
-		this.party = null;
-
 		// set up animation states
 		this
 			.animate("r", 0, 0, 7)		
@@ -36,8 +35,8 @@ Crafty.c("TweetPerson", {
 	
 	// set party to 'r' or 'd'
 	setTweetPersonParty: function(party) {
-		this.party = party;
-		this.animate(party, 15, -1);
+		this.setParty(party);
+		this.animate(this.getParty(), 15, -1);
 		return this;
 	}
 });

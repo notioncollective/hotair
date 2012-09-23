@@ -14,7 +14,7 @@ var express = require('express')
 // Cron Job to go grab new tweets every 5 minutes.
 new cronJob('0 */12 * * * *', function(){
     console.log('CRON - fetching tweets.');
-    routes.load_tweets();
+    routes.fetch_tweets();
 }, null, true, "America/New_York");;
 
 var app = express();
@@ -49,12 +49,12 @@ app.configure('production', function(){
 app.get('/', routes.home);
 app.get('/play', auth, routes.play)
 app.get('/reset', auth, routes.reset);
-app.get('/load_tweets', routes.load_tweets);
-app.get('/all', routes.all);
-app.get('/democrats', routes.democrats);
-app.get('/republican', routes.republican);
-
-app.post('/highscore', routes.highscore);
+app.get('/fetch_tweets', auth, routes.load_tweets);
+app.get('/all', auth, routes.all);
+app.get('/democrats', auth, routes.democrats);
+app.get('/republican', auth, routes.republican);
+app.get('/load_tweets', auth, routes.load_tweets);
+app.post('/highscore', auth, routes.highscore);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
