@@ -118,6 +118,13 @@ HA.events = HA.e = function(ns, $, _, C) {
 		/********************************/
 		
 		/**
+		 * An enemy has been selected.
+		 * @property {string} ENEMY_SELECTED
+		 * @final
+		 */
+		ENEMY_SELECTED: "ha:enemy:selected",
+		
+		/**
 		 * An enemy has been hit by a dart.
 		 * @property {string} ENEMY_HIT_START
 		 * @final

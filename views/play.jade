@@ -21,7 +21,7 @@ html(lang="en")
 			script(src="js/crafty-extensions/#{ext[i]}.js", type="text/javascript", charset="utf-8")
 
 		// game components
-		- var com = ['oscillate', 'start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'button', 'message-display'];
+		- var com = ['html-template', 'oscillate', 'start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'button', 'message-display'];
 		- for (var i=0;i<com.length;i++)
 			script(src="js/components/#{com[i]}.js", type="text/javascript", charset="utf-8")
 
@@ -62,8 +62,10 @@ html(lang="en")
 					li: a#pause-end-game(href='#pause-end-game') End Game
 
 			// TWEET DISPLAY
-			#TweetDisplay
-				.content
+			script(id='TweetDisplayTemplate',type='text/template')
+				| <div id="TweetDisplay">
+				|		<div class='content'><%= text %></div>
+				| </div>
 
 			// GAMEOVER DISPLAY
 			#GameOverDisplay

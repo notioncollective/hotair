@@ -31,9 +31,19 @@ Crafty.scene("gameplay", function() {
 		Crafty.e("Cloud");
 	}
 	
+	var player = Crafty.e("Player")
+		// .setPartySpriteTemplate('%p_avatarx2')
+		.setParty(HA.player.getParty())
+		.attr({move: {left: false, right: false, up: false, down: false}, xspeed: 0, yspeed: 0, decay: 0.5, 
+			x: (Crafty.viewport.width / 2), y: 50, w: 80, h: 80})
+		.origin("center")
+		.color("#00F")
+		.multiway(5, {RIGHT_ARROW: 0, LEFT_ARROW: 180})
+		.oscillate({speed: 75, y_amp: 5});
+
+	
 	// Display Entities
 	var tweetDisplay = Crafty.e("TweetDisplay");
-	tweetDisplay.show();
 	var scoreDisplay = Crafty.e("ScoreDisplay");
 	var livesDisplay = Crafty.e("LivesDisplay");
 	
@@ -47,15 +57,6 @@ Crafty.scene("gameplay", function() {
 		// Crafty.trigger("ShowMessage", {text: "Level "+e.level});
 	// });
 	
-	//player entity
-	var player = Crafty.e("Player")
-		.setParty(HA.player.getParty())
-		.attr({move: {left: false, right: false, up: false, down: false}, xspeed: 0, yspeed: 0, decay: 0.5, 
-			x: (Crafty.viewport.width / 2), y: 50, w: 80, h: 80})
-		.origin("center")
-		.color("#00F")
-		.multiway(5, {RIGHT_ARROW: 0, LEFT_ARROW: 180})
-		.oscillate({speed: 75, y_amp: 5});
 	
 	// HA.game.createEnemyController();
 	

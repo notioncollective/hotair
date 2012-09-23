@@ -94,9 +94,9 @@ ul.list-inline li a {
 	line-height: 2;
 }
 
-#TweetDisplay {
-	display: none;
-	z-index: 100;
+#TweetDisplay, .tweet-display {
+/*	display: none;*/
+	z-index: 1000;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -125,7 +125,7 @@ ul.list-inline li a {
 	line-height: 2;	
 }
 
-#TweetDisplay .content {
+#TweetDisplay .content, .tweet-display .content {
 	margin: 10px 20px 20px 20px;
 	height: 40px;
 }
