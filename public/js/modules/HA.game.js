@@ -55,6 +55,7 @@ HA.game = function(ns, $, _, C) {
 	/**
 	 * Handles GAME_LOADED event, after Crafty assets are loaded.
 	 * @private
+	 * @method _handleGameLoadedEvent
 	 * @param {object} e
 	 */
 	function _handleGameLoadedEvent(e) {
@@ -65,6 +66,7 @@ HA.game = function(ns, $, _, C) {
 	/**
 	 * Handles START_NEW_GAME event.
 	 * @private
+	 * @method _handleStartNewGameEvent
 	 * @param {object} e
 	 */
 	function _handleStartNewGameEvent(e) {
@@ -74,6 +76,7 @@ HA.game = function(ns, $, _, C) {
 	/**
 	 * Handles GAME_OVER event.
 	 * @private
+	 * @method _handleGameOverEvent
 	 * @param {object} e
 	 */
 	function _handleGameOverEvent(e) {
