@@ -177,10 +177,10 @@ HA.game = function(ns, $, _, C) {
 	 @param {object} enemy The related enemy entity.
 	 */
 	function _handleEnemyOffScreenStartEvent(e, enemy) {
-		if(enemy.hit) return;
-		console.log("Game: handleEnemyOffScreenStart");
+		console.log("Game: handleEnemyOffScreenStart", enemy.hit);
+		// if(enemy.hit) return;
 		var scoreInc = _getScoreIncrement(), whoops = false;
-		if(enemy.tweet.party != HA.player.getParty()) {
+		if(enemy.getParty() != HA.player.getParty()) {
 			if(HA.player.getScore() > 0) {
 				scoreInc = -scoreInc;
 				HA.player.addToScore(scoreInc);

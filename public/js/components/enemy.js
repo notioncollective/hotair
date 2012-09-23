@@ -148,9 +148,8 @@ Crafty.c("Enemy", {
 	select: function() {
 		if(!this.selected) Crafty.audio.play("select", 1, .5);
 		this.selected = true;
-		// this.css("border", "solid 5px #ffffff");
 		this.stop().animate("selected", 30, -1);
-		Crafty.trigger('SelectTweet', {tweet: this.tweet.text});
+		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
 	},
 	unselect: function() {
 		this.selected = false;

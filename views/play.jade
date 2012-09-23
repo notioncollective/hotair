@@ -21,7 +21,7 @@ html(lang="en")
 			script(src="js/crafty-extensions/#{ext[i]}.js", type="text/javascript", charset="utf-8")
 
 		// game components
-		- var com = ['start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'button', 'message-display'];
+		- var com = ['start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'button', 'html-template', 'message-display'];
 		- for (var i=0;i<com.length;i++)
 			script(src="js/components/#{com[i]}.js", type="text/javascript", charset="utf-8")
 
@@ -63,8 +63,8 @@ html(lang="en")
 
 			// TWEET DISPLAY
 			script(id='TweetDisplayTemplate',type='text/template')
-				| <div id="#TweetDisplay">
-				|		<div class='content'></div>
+				| <div id="TweetDisplay">
+				|		<div class='content'><%= text %></div>
 				| </div>
 
 			// GAMEOVER DISPLAY

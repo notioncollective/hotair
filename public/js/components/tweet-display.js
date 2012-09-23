@@ -1,23 +1,13 @@
 Crafty.c("TweetDisplay", {
 	init: function() {
-		this.addComponent("2D, DOM, Color, HTML, Text");
+		_.bindAll(this);
+		this.addComponent("HTMLTemplate");
+		this.setTemplate($("#TweetDisplayTemplate").html());
+		this.w = Crafty.DOM.window.width;
 		
-		// this.w = Crafty.DOM.window.width;
-		// this.h = 100;
-		// this.x = 0;
-		// this.y = Crafty.DOM.window.height - 100;
-		// this.css("text-align", "center");
-		// this.css("padding", "20px");
-		// this.color("#CCCCCC");
-		
-		this.bind("SelectTweet", function(e) {
-			$("#TweetDisplay .content").html(e.tweet);
-		});
+		HA.m.subscribe(HA.e.ENEMY_SELECTED, this._handleEnemySelectedEvent)
 	},
-	show: function() {
-		$("#TweetDisplay").fadeIn();
-	},
-	hide: function() {
-		$("#TweetDisplay").hide();
+	_handleEnemySelectedEvent: function(e, enemy) {
+		this.updateContent({text: enemy.tweet.text});
 	}
 });
