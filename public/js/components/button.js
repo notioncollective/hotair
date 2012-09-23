@@ -1,3 +1,7 @@
+/**
+ * Handles gameplay, including levels, game pause/unpause, and initializing other HA modules.
+ * @class Button
+ */
 Crafty.c("Button", {
 	score: 0,
 	init: function() {

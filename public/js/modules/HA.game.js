@@ -5,10 +5,18 @@
 
 HA.game = function(ns, $, _, C) {
 
-	var _options = {}, _defaults = {}, _scoreIncrement = 100, _level = 0, _party, _perfectLevel, _numEnemiesPerLevel = 2, _partySelectMenu;
+	var _options = {},
+			_defaults = {},
+			_scoreIncrement = 100,
+			_level = 0,
+			_party,
+			_perfectLevel,
+			_numEnemiesPerLevel = 2,
+			_partySelectMenu;
 
 	// private methods
 	function _init(options) {
+		options = options || {};
 		_.extend(_options, _defaults, options);
 
 		HA.player.init();
@@ -140,6 +148,7 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleEnemyHitStartEvent(e, enemy) {
 		if(enemy.hit) return;
+		console.log("Enemy: ", enemy);
 		console.log("Game: handleEnemyHitStart", enemy.tweet.party, HA.player.getParty());
 		var scoreInc = _getScoreIncrement();
 		if(enemy.tweet.party == HA.player.getParty()) {
