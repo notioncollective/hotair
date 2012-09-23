@@ -47,6 +47,9 @@ Crafty.c("Enemy", {
 		this.destroy();
 	},
 	
+	/**
+	 * This is called from the hit complete event handler
+	 */
 	doHit: function(dScore) {
 		if(this.hit) return;
 		this.hit = true;
@@ -56,19 +59,10 @@ Crafty.c("Enemy", {
 		
 		this.showTweetPerson();
 		this.showScore(dScore);
-		// this.bind("UpdateScore", function(e) {
-			// this.showScore(e.dScore);
-		// });
-		
-		// HA.m.publish(HA.e.ENEMY_HIT, [this]);
 			
 	},
-	// _setParty: function(party) {
-	// 	this.setParty(party);
-	// },
 	setSpeed: function(speed) {
 		console.log("speed: ", speed);
-		// this.dy = ((Math.random()*.5)*speed)+.3; // speed
 		this.dy = (speed); // speed
 		console.log("this.dy: ", this.dy);
 		return this;
@@ -81,7 +75,6 @@ Crafty.c("Enemy", {
 		this
 			.unbind("EnterFrame", this._risingCallback)
 			.bind("EnterFrame", this._fallingCallback);
-		// this.animate("falling", 10, -1);
 	},
 	_fallingCallback: function(e) {
 		// added test for isPlaying, otherwise this was causing errors on re-init
@@ -97,8 +90,6 @@ Crafty.c("Enemy", {
 				.unbind("EnterFrame")
 				.unbind("UpdateScore")
 				.destroy();
-			// HA.m.publish(HA.e.ENEMY_DESTROYED, [this]);
-			//Crafty.trigger("DestroyEnemy", {enemy: this});
 			console.log("++++++ DESTROYED ENEMY ENTITY");
 		}
 	},
@@ -117,7 +108,7 @@ Crafty.c("Enemy", {
 	},
 	showScore: function(score, offset) {
 		if(!_.isNumber(offset)) offset = -40;
-		console.log("******** showScore");
+		// console.log("******** showScore");
 		var hit_score = Crafty.e("HitScore")
 							.attr({
 								x: this.x,
@@ -126,7 +117,7 @@ Crafty.c("Enemy", {
 							.setScore(score);							
 	},
 	showTweetPerson: function() {
-		console.log("====== showTweetPerson: ", this.tweet.name);
+		// console.log("====== showTweetPerson: ", this.tweet.name);
 		var party = this.getParty();
 		var tweet_person = Crafty.e('TweetPerson')
 				.attr({
@@ -153,7 +144,6 @@ Crafty.c("Enemy", {
 	},
 	unselect: function() {
 		this.selected = false;
-		// this.css("border", "none");
 		this.stop().animate("normal", 30, -1);
 	}
 });
