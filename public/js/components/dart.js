@@ -13,14 +13,13 @@ Crafty.c("Dart", {
 	 */
 	init: function() {
 		this.addComponent("2D, DOM, Color, Collision, Party");
+		this.setPartySpriteTemplate('%p_dartx2');
 		
 		this.w = 40;
 		this.h = 40;
 		this.dy = 1;
 		this.ay = .2;
-		
-		this.color("rgb(0, 0, 0)");
-		
+				
 		/**
 		 * Trigger the ENEMY_HIT event.
 		 */

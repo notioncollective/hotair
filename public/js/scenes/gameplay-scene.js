@@ -49,7 +49,8 @@ Crafty.scene("gameplay", function() {
 	
 	//player entity
 	var player = Crafty.e("Player")
-		.setParty(HA.player.getParty());
+		// .setPartySpriteTemplate('%p_avatarx2')
+		.setParty(HA.player.getParty())
 		.attr({move: {left: false, right: false, up: false, down: false}, xspeed: 0, yspeed: 0, decay: 0.5, 
 			x: (Crafty.viewport.width / 2), y: 50, w: 80, h: 80})
 		.origin("center")
