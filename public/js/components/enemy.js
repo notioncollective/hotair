@@ -2,7 +2,7 @@ Crafty.c("Enemy", {
 	init: function() {
 		console.log("Enemy : init");
 		_.bindAll(this);
-		this.addComponent("2D, DOM, Color, Collision, Text, Tweet, SpriteAnimation, balloonx2");
+		this.addComponent("2D, DOM, Color, Collision, Text, Tweet, SpriteAnimation, Party, balloonx2");
 		this.color("#0F0");
 		this.w = 120;
 		this.h = 120;
@@ -63,9 +63,9 @@ Crafty.c("Enemy", {
 		// HA.m.publish(HA.e.ENEMY_HIT, [this]);
 			
 	},
-	_setParty: function(party) {
-		this.party = party;
-	},
+	// _setParty: function(party) {
+	// 	this.setParty(party);
+	// },
 	setSpeed: function(speed) {
 		console.log("speed: ", speed);
 		// this.dy = ((Math.random()*.5)*speed)+.3; // speed
@@ -127,12 +127,13 @@ Crafty.c("Enemy", {
 	},
 	showTweetPerson: function() {
 		console.log("====== showTweetPerson: ", this.tweet.name);
+		var party = this.getParty();
 		var tweet_person = Crafty.e('TweetPerson')
 				.attr({
 					x: this.x+20,
 					y: this.y+70
 				})
-				.setTweetPersonParty(this.tweet.party);
+				.setTweetPersonParty(party);
 		var yv = tweet_person.yv;
 		var tweet_person_info = Crafty.e("TweetPersonInfo")
 				.attr({
@@ -141,6 +142,7 @@ Crafty.c("Enemy", {
 					y: this.y+100,
 					yv: yv
 				})
+				.setParty(party)
 				.drawInfo();
 	},
 	select: function() {
