@@ -59,8 +59,10 @@ html(lang="en")
 					li: a#pause-end-game(href='#pause-end-game') End Game
 
 			// TWEET DISPLAY
-			#TweetDisplay
-				.content
+			script(id='TweetDisplayTemplate',type='text/template')
+				| <div id="#TweetDisplay">
+				|		<div class='content'></div>
+				| </div>
 
 			// GAMEOVER DISPLAY
 			#GameOverDisplay

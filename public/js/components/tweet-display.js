@@ -1,6 +1,6 @@
 Crafty.c("TweetDisplay", {
 	init: function() {
-		this.addComponent("2D, DOM, Color, Text");
+		this.addComponent("2D, DOM, Color, HTML, Text");
 		
 		// this.w = Crafty.DOM.window.width;
 		// this.h = 100;
