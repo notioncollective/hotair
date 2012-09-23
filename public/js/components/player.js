@@ -1,11 +1,13 @@
 Crafty.c("Player", {
 	init: function() {
-		this.addComponent("2D, DOM, Color, Multiway, Keyboard, Mouse, Score");
+		this.addComponent("2D, DOM, Color, Multiway, Keyboard, Mouse, Score, Party");
 		
 		console.log("Player party: "+HA.party);
 		
-		if(HA.party == 'r') { this.addComponent("r_avatarx2"); }
-		else { this.addComponent("d_avatarx2"); }
+		this.setPartySpriteTemplate('%p_avatarx2');
+		
+		// if(HA.party == 'r') { this.addComponent("r_avatarx2"); }
+		// else { this.addComponent("d_avatarx2"); }
 		
 		this.bind("KeyDown", function(e) {
 			if (e.keyCode === Crafty.keys.SPACE || e.keyCode === Crafty.keys.A) {
