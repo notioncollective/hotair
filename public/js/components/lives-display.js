@@ -8,10 +8,10 @@ Crafty.c("LivesDisplay", {
 		this.y = Crafty.DOM.window.height-30;
 		this.w = 150;
 		this.h = 30;
-		this.text("3");
 		this.css({"text-align": "left"});
 		// this.css({"padding": "20px"});
 		
+		this.updateLivesDisplay(this._lives);
 		this.updateLivesBackground();
 		
 		// this.bind("UpdateLives", function(e) {

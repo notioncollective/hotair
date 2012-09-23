@@ -32,7 +32,7 @@ HA.enemyController = function(ns, $, _, C) {
 	/**** EVENT HANDLERS *****/
 
 	function _handleStartNewGameEvent(e) {
-		_loadEnemySet(0, 2);
+		_loadEnemySet(0, 4);
 		_startProducing(true);
 	}
 
