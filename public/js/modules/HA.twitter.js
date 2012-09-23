@@ -10,7 +10,8 @@ HA.twitter = function(ns, $, _, C) {
 				protocol: 'http://',
 				domain: 'localhost:3000',
 				load_tweets_endpoint: '/load_tweets',
-				tweet_limit: 100
+				tweet_limit: 100,
+				test: false
 			},
 			_tweets = [];
 	
@@ -24,7 +25,11 @@ HA.twitter = function(ns, $, _, C) {
 		// force options obj
 		options = options || {};
 		_.extend(_options, options, _defaults);
-		_loadTweets({ startKey: 0, limit: _options.tweet_limit });
+		if(!_options.test) {
+			_loadTweets({ startKey: 0, limit: _options.tweet_limit });
+		} else {
+			_handleLoadTweets(LOAD_TWEETS_SAMPLE);
+		}
 	}
 	
 	/**
@@ -47,7 +52,6 @@ HA.twitter = function(ns, $, _, C) {
 	}
 	
 	
-
 	/**
     Handle loaded twitter data
 		@private

@@ -26,7 +26,7 @@ HA.game = function(ns, $, _, C) {
 		
 		// TODO decide where twitter module needs to be initialized
 		HA.twitter.init({
-			test : undefined
+			test : true
 		});
 
 		// Set up initial event subscriptions
