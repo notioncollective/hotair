@@ -71,6 +71,28 @@ ul.list-inline li a {
 	outline: none;
 }
 
+div.list-nav {
+	position: absolute;
+	text-transform: uppercase;
+	text-align: center;
+	bottom: 80px;
+	left: 0px;
+	width: 100%;
+	height: 30px;
+	z-index: 1010;
+	line-height: 2;
+}
+
+div.list-nav span {
+	margin: 20px;
+	padding: 5px;
+	color: #FFF;
+}
+
+div.list-nav span.active {
+	border-bottom: 5px solid #000;
+}
+
 /*#StartScreenGraphics {
 	position:absolute;
 	top:0;
@@ -81,7 +103,28 @@ ul.list-inline li a {
 	z-index: -100;
 }
 */
-#StartDisplay, #PartySelectDisplay, #PauseDisplay, #GameOverDisplay {
+
+div.modal {
+	display: none;
+	position: absolute;
+	text-align: left;
+	width: 500px;
+	margin-left: -250px;
+	margin-top: -250px;
+	top: 50%;
+	left: 50%;
+	background: transparent url(../img/pause_bg.png) 0 0 repeat;
+	padding: 20px;
+	border: solid 5px #fff;
+	z-index: 1000;
+}
+
+div.modal-inner p {
+	margin: 20px 0px;
+	line-height: 1.4;
+}
+
+#PauseDisplay, #GameOverDisplay {
 	display: none;
 	text-transform: uppercase;
 	text-align: center;

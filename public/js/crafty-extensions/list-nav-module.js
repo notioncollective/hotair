@@ -18,10 +18,8 @@ Crafty.extend({
 		var _selectNextMenuItem = function() {
 			Crafty.audio.play("select");
 			if(_selectedIndex < _numMenuItems-1) {
-				console.log($menuItems);
 				_selectedIndex += 1;
 				$menuItems.eq(_selectedIndex).find('a').focus();
-				console.log($menuItems.eq(_selectedIndex).find('a'));
 			}
 		};
 		

@@ -21,7 +21,7 @@ html(lang="en")
 			script(src="js/crafty-extensions/#{ext[i]}.js", type="text/javascript", charset="utf-8")
 
 		// game components
-		- var com = ['html-template', 'oscillate', 'start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'button', 'message-display'];
+		- var com = ['html-template', 'oscillate', 'start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'list-nav', 'message-display'];
 		- for (var i=0;i<com.length;i++)
 			script(src="js/components/#{com[i]}.js", type="text/javascript", charset="utf-8")
 
@@ -40,19 +40,14 @@ html(lang="en")
 		script(src="js/main.js", type="text/javascript", charset="utf-8")
 
 		.start-wrap
-			// START DISPLAY
-			#StartDisplay.start-scene
-				ul.list-inline
-					li: a#new-game(href='#new-game') New Game
-					li: a(href='#instructions') Instructions
-					li: a(href='#about') About
-					li: a(href='#high-scores') High Scores
-
-			// PARTY SELECT DISPLAY
-			#PartySelectDisplay.start-scene
-				ul.list-inline
-					li: a#select-democrats(href='#democrats', class='party-select', data-party='d') Democrats
-					li: a#select-republicans(href='#republicans', class='party-select', data-party='r') Republicans
+		
+			// Instructions Display
+			#InstructionsDisplay.modal
+				h1 Instructions
+				.modal-inner
+					p Your player is at the top.  Hot air balloons ascend from the bottom, each associated with a tweet.  It is your job to determine which tweets are associated with your team, and which are on the opposite team!
+					p Select balloons using the up and down arrows.  Move your player using the left and right arrows.  Shoot using the space bar (or letter 'a' key).  Pause by pressing Enter.
+					p Have fun!
 
 			// PAUSE DISPLAY
 			#PauseDisplay

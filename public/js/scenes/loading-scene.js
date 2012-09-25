@@ -49,6 +49,9 @@ Crafty.scene("loading", function() {
 		select: [
 			"/snd/select.wav"
 		],
+		choose: [
+			"/snd/select2.wav"
+		],
 		addLife: [
 			"/snd/addLife.wav"
 		]

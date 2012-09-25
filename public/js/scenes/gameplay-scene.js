@@ -2,7 +2,7 @@ Crafty.scene("gameplay", function() {
 	console.log("Scene: gameplay "+ this);
 	
 	// TODO: Remove this, once better management of key binding is in place.
-	$(document).off();
+	// $(document).off();
 	
 	// Set up event subscriptions
 	Crafty.bind('KeyDown', function(e) {
