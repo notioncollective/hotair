@@ -1,4 +1,5 @@
 Crafty.c("Enemy", {
+	BALLOON_DURATION: 128,
 	init: function() {
 		console.log("Enemy : init");
 		_.bindAll(this);
@@ -16,11 +17,12 @@ Crafty.c("Enemy", {
 		this.TERMINAL_VELOCITY = 10; // for falling, max dy
 		
 		this
-			.animate("hit", 0, 3, 4)		
-			.animate("falling", 0, 0, 1)		
-			.animate("selected", 0, 1, 3)		
-			.animate("normal", 0, 2, 3)		
-			.animate("normal", 30, -1)			
+			.animate("hit_d", 0, 3, 4)		
+			.animate("hit_r", 5, 3, 9)		
+			.animate("falling_d", 0, 0, 1)		
+			.animate("falling_r", 2, 0, 3)		
+			.animate("normal", 0, 2, 15)		
+			.animate("normal", this.BALLOON_DURATION, -1)			
 
 		this.startMovement();
 		
@@ -54,7 +56,7 @@ Crafty.c("Enemy", {
 		if(this.hit) return;
 		this.hit = true;
 		this
-			.animate("hit", 30, 0)
+			.animate("hit_"+this.getParty(), 30, 0)
 			.startFalling();
 		
 		this.showTweetPerson();
@@ -79,7 +81,7 @@ Crafty.c("Enemy", {
 	_fallingCallback: function(e) {
 		// added test for isPlaying, otherwise this was causing errors on re-init
 		if(typeof this.isPlaying === 'function' && !this.isPlaying('hit')) {
-			this.animate("falling", 10, -1);
+			this.animate("falling_"+this.getParty(), 10, -1);
 		}
 		this.y += this.dy;
 		if(this.dy < this.TERMINAL_VELOCITY) {
@@ -137,13 +139,13 @@ Crafty.c("Enemy", {
 				.drawInfo();
 	},
 	select: function() {
-		if(!this.selected) Crafty.audio.play("select", 1, .5);
+		// if(!this.selected) Crafty.audio.play("select", 1, .5);
 		this.selected = true;
-		this.stop().animate("selected", 30, -1);
-		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
+		// this.stop().animate("selected", this.BALLOON_DURATION, -1);
+		// HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
 	},
 	unselect: function() {
 		this.selected = false;
-		this.stop().animate("normal", 30, -1);
+		// this.stop().animate("normal", this.BALLOON_DURATION, -1);
 	}
 });
