@@ -46,6 +46,7 @@ Crafty.c("Enemy", {
 			this.showScore(dScore, 0);
 		}
 		HA.m.unsubscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
+		this.unselect();
 		this.destroy();
 	},
 	
@@ -58,7 +59,7 @@ Crafty.c("Enemy", {
 		this
 			.animate("hit_"+this.getParty(), 30, 0)
 			.startFalling();
-		
+		if(typeof this.selection !== 'undefined') this.selection.destroy();
 		this.showTweetPerson();
 		this.showScore(dScore);
 			
@@ -141,11 +142,19 @@ Crafty.c("Enemy", {
 	select: function() {
 		if(!this.selected) Crafty.audio.play("select", 1, .5);
 		this.selected = true;
+		this.selection = Crafty.e('EnemySelection')
+						.attr({
+							x:this.x,
+							y:this.y,
+							enemyParent: this
+						})
+
 		// this.stop().animate("selected", this.BALLOON_DURATION, -1);
 		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
 	},
 	unselect: function() {
 		this.selected = false;
+		if(typeof this.selection !== 'undefined') this.selection.destroy();			
 		// this.stop().animate("normal", this.BALLOON_DURATION, -1);
 	}
 });
