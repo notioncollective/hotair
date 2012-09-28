@@ -21,7 +21,7 @@ Crafty.scene("start", function() {
 
 	function createCloseMenu() {
 		closeMenuNav = Crafty.e('ListNav')
-			.attr({z:1010, wrappingId: "CloseListNav"});
+			.attr({wrappingId: "CloseListNav"});
 			
 		closeMenuNav.addListItem({
 			text: "Ok!",
@@ -36,7 +36,7 @@ Crafty.scene("start", function() {
 
 	function createMainStartMenu() {
 		startMenuNav = Crafty.e('ListNav')
-			.attr({z:100, wrappingId: "StartListNav"});
+			.attr({wrappingId: "StartListNav"});
 	
 		startMenuNav.addListItem({
 			text: "New Game",
@@ -92,7 +92,7 @@ Crafty.scene("start", function() {
 		console.log("party select menu...");
 		
 		partySelectNav = Crafty.e('ListNav')
-		.attr({z:100, wrappingId: "PartySelectNav"});
+		.attr({wrappingId: "PartySelectNav"});
 	
 		partySelectNav.addListItem({
 			text: "Democrats",

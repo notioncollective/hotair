@@ -36,12 +36,12 @@ HA.game = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.GAME_OVER, _handleGameOverEvent);
 		HA.m.subscribe(HA.events.PAUSE_GAME, _handlePauseGameEvent);
 		HA.m.subscribe(HA.events.RESUME_GAME, _handleResumeGameEvent);
+		HA.m.subscribe(HA.events.END_GAME, _handleEndGameEvent);
 		HA.m.subscribe(HA.events.LEVEL_COMPLETE, _handleLevelCompleteEvent);
 		HA.m.subscribe(HA.events.NEXT_LEVEL, _handleNextLevelEvent);
 		
 		HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
 		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
-		// HA.m.subscribe(HA.e.ENEMY_DESTROYED, _handleEnemyDestroyedEvent);
 
 		// Initialize Crafty
 		C.init();
@@ -88,21 +88,23 @@ HA.game = function(ns, $, _, C) {
 
 
 	/**
-	 Pause gameplay (hooks into `Crafty.pause()`).
+	 Handle a PAUSE_GAME event.
 	 @private
 	 @method _handlePauseGameEvent
 	 */
 	function _handlePauseGameEvent(e) {
 		console.log("Pause game!");
 		if(!C.isPaused()) {
-			// _partySelectMenu = new C.ListNav($('#PauseDisplay li'));
+			// remove event bindings from Gameplay
 			_unbindGameplayKeyboardEvents();
-			_pauseDisplay = C.e("PauseDisplay")
 			
+			// Create the pause display entity
+			_pauseDisplay = C.e("PauseDisplay");
 			
+			// Create the pause nav entity
 			_pauseMenu = C.e("ListNav")
 				.attr({wrappingId: "PauseNav"});
-// 			
+			
 			_pauseMenu.addListItem({
 				text: "Resume",
 				callback: function(arg) {
@@ -115,21 +117,27 @@ HA.game = function(ns, $, _, C) {
 			_pauseMenu.addListItem({
 				text: "End Game",
 				callback: function(arg) {
-					console.log("End Game..."); 
+					console.log("End Game...");
 					HA.m.publish(HA.e.END_GAME);
 				}
 			});
 			
-			// C.audio.mute();
-
-			// _showPauseScreenDisplay();
+			// Pause the music, but leave other sounds alone.
+			C.audio.pause("game_music");
 			C.audio.play('pause');
-		
+			
+			// Do the actual frame pause on following frame.
 			Crafty.bind("EnterFrame", _doPause);
 			
 		}
 	};
 	
+	/**
+	 * Perform the actual pause of the draw loop via Crafty.pause();
+	 * Also displays the PauseDisplay and pause menu entities.
+	 * @private
+	 * @method _doPause(); 
+	 */
 	function _doPause() {
 		_pauseDisplay.showPauseScreenDisplay();
 		_pauseMenu.renderListNav();
@@ -146,30 +154,34 @@ HA.game = function(ns, $, _, C) {
 		e.preventDefault();
 		console.log("Resume game!");
 		if(C.isPaused()) {
+			C.audio.unPause("game_music");
 			_pauseDisplay.destroy();
 			_pauseMenu.destroy();
 			Crafty.unbind("EnterFrame", _doPause);
 			_bindGameplayKeyboardEvents();
-			// C.audio.mute();
 			C.pause();
-			// _hidePauseScreenDisplay();
 			C.audio.play('pause');
 		}
 		return false;
 	};
 
 	/**
-	 Handles the "new game" event from the pause screen.
+	 Handles the "end game" event from the pause screen.
 	 @private
-	 @method _handleNewGame
+	 @method _handleEndGame
 	 @param {Object} e Event object.
 	 */
-	function _handleNewGameEvent(e) {
+	function _handleEndGameEvent(e) {
 		e.preventDefault();
-		console.log("New game!");
-		_unPauseGame();
-		HA.enemyController.stopProducing();
-		C.scene("start");
+		console.log("End game!");
+		if(C.isPaused()) {
+			_pauseDisplay.destroy();
+			_pauseMenu.destroy();
+			Crafty.unbind("EnterFrame", _doPause);
+			C.pause();
+			C.audio.play('pause');
+			C.scene("start");
+		}
 		return false;
 	};
 
@@ -224,34 +236,6 @@ HA.game = function(ns, $, _, C) {
 		}
 		HA.m.publish(HA.e.ENEMY_OFF_SCREEN_COMPLETE, [enemy, scoreInc, whoops]);
 	};
-
-	/**
-	 UnPause gameplay (hooks into `Crafty.pause()`).
-	 @private
-	 @method _unPauseGame
-	 */
-	var _unPauseGame = function() {
-		if(C.isPaused()) {
-			C.pause();
-			_hidePauseScreenDisplay();
-			C.audio.play('pause');
-			C.audio.mute();
-			C.trigger("UnPause");
-		}
-	};
-	
-	/**
-	 Toggle pause/unpause (hooks into `Crafty.pause()`).
-	 @private
-	 @method _togglePause
-	 */
-	var _togglePause = function() {
-		if(C.isPaused()) {
-			_unPauseGame();
-		} else {
-			_pauseGame();
-		}
-	};
 	
 	/**
 	 Handle level complete event.
@@ -295,6 +279,11 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.startProducing(true);
 	};
 	
+	/**
+	 * Bind the ENTER and ESC keys to the pause and full screen functionality.
+	 * @private
+	 * @method _bindGameplayKeyboardEvents
+	 */
 	function _bindGameplayKeyboardEvents() {
 		_unbindGameplayKeyboardEvents();
 		$(document).on("keydown", function(e) {
@@ -313,19 +302,33 @@ HA.game = function(ns, $, _, C) {
 		});
 	}
 	
+	/**
+	 * Unbind the ENTER and ESC keys to the pause and full screen functionality.
+	 * @private
+	 * @method _unbindGameplayKeyboardEvents
+	 */
 	function _unbindGameplayKeyboardEvents() {
 		$(document).off("keydown");
 	}
 	
-	
+	/**
+	 * Increment the level.
+	 * @private
+	 * @method _incrementLevel
+	 */
 	function _incrementLevel() {
 		_level += 1;
 		_perfectLevel = true;
 		HA.m.publish(HA.e.NEXT_LEVEL, [_level]);
 		HA.m.publish(HA.e.SHOW_MESSAGE, ["Level "+_level]);
-		// Crafty.trigger("NextLevel", {level: this._level});
 	}
 	
+	/**
+	 * Set the game to a specific level directly.
+	 * @private
+	 * @method _setLevel
+	 * @param {number} level The level to set the game to.
+	 */
 	function _setLevel(level) {
 		_level = level;
 		// Crafty.trigger("ShowMessage", {text: "Level "+e.level});

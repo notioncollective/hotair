@@ -22,6 +22,7 @@ HA.enemyController = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.GAME_OVER, _handleGameOverEvent);
 		HA.m.subscribe(HA.events.PAUSE_GAME, _handlePauseGameEvent);
 		HA.m.subscribe(HA.events.RESUME_GAME, _handleResumeGameEvent);
+		HA.m.subscribe(HA.events.END_GAME, _handleEndGameEvent);
 		// HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
 		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, _handleEnemyHitCompleteEvent);
 		// HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
@@ -42,6 +43,11 @@ HA.enemyController = function(ns, $, _, C) {
 
 	function _handleResumeGameEvent(e) {
 		_startProducing();
+	}
+	
+	function _handleEndGameEvent(e) {
+		_stopProducing();
+		_destroyAllEnemies();
 	}
 	
 	/**

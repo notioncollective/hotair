@@ -7965,6 +7965,7 @@ Crafty.c("Particles", {
         },
         volume:1, //Global Volume
         muted:false,
+        paused:false,
         /**
          * Function to setup supported formats
          **/
@@ -7991,7 +7992,7 @@ Crafty.c("Particles", {
         * #Crafty.audio.add
         * @comp Crafty.audio
         * @sign public this Crafty.audio.add(String id, String url)
-        * @param id - A string to reffer to sounds
+        * @param id - A string to refer to sounds
         * @param url - A string pointing to the sound file
         * @sign public this Crafty.audio.add(String id, Array urls)
         * @param urls - Array of urls pointing to different format of the same sound, selecting the first that is playable
@@ -8052,7 +8053,8 @@ Crafty.c("Particles", {
                             Crafty.asset(path, audio); 
                             this.sounds[i] = {
                                 obj:audio,
-                                played:0
+                                played:0,
+                                volume:Crafty.audio.volume
                             } 
                         }
                         
@@ -8072,7 +8074,8 @@ Crafty.c("Particles", {
                         Crafty.asset(url, audio);  
                         this.sounds[id] = {
                             obj:audio,
-                            played:0
+                            played:0,
+                            volume:Crafty.audio.volume
                         } 
                        
                     }
@@ -8092,7 +8095,8 @@ Crafty.c("Particles", {
                             Crafty.asset(path, audio);   
                             this.sounds[id] = {
                                 obj:audio,
-                                played:0
+                                played:0,
+                                volume:Crafty.audio.volume
                             } 
                         }
                        
@@ -8110,7 +8114,7 @@ Crafty.c("Particles", {
         * @sign public this Crafty.audio.play(String id)
         * @sign public this Crafty.audio.play(String id, Number repeatCount)
         * @sign public this Crafty.audio.play(String id, Number repeatCount,Number volume)
-        * @param id - A string to reffer to sounds
+        * @param id - A string to refer to sounds
         * @param repeatCount - Repeat count for the file, where -1 stands for repeat forever.
         * @param volume - volume can be a number between 0.0 and 1.0
         * 
@@ -8131,8 +8135,9 @@ Crafty.c("Particles", {
         play:function(id,repeat,volume){
             if(repeat == 0 || !Crafty.support.audio || !this.sounds[id]) return;
             var s = this.sounds[id];
-            s.obj.volume = volume || Crafty.audio.volume ;   
+            s.volume = s.obj.volume = volume || Crafty.audio.volume ;   
             if(s.obj.currentTime) s.obj.currentTime = 0;   
+            if(this.muted) s.obj.volume = 0;
             s.obj.play(); 
             s.played ++;
             s.obj.addEventListener("ended", function(){
@@ -8147,7 +8152,7 @@ Crafty.c("Particles", {
         * #Crafty.audio.stop
         * @sign public this Crafty.audio.stop([Number ID])
         * 
-        * Stops any playnig sound. if id is not set, stop all sounds which are playing
+        * Stops any playing sound. if id is not set, stop all sounds which are playing
         * 
         * @example
         * ~~~
@@ -8169,9 +8174,24 @@ Crafty.c("Particles", {
             s = this.sounds[id];
             if(!s.obj.paused) s.obj.pause();
         },
+        /**
+        * #Crafty.audio._mute
+        * @sign public this Crafty.audio._mute([Boolean mute])
+        * 
+        * Mute or unmute every Audio instance that is playing.
+        */
+        _mute:function(mute){
+            if(!Crafty.support.audio) return;
+            var s;
+            for(var i in this.sounds){
+                s = this.sounds[i];
+                s.obj.volume = mute ? 0 : s.volume;
+            }
+            this.muted = mute;
+        },
         /**@
-        * #Crafty.audio.mute
-        * @sign public this Crafty.audio.mute([Boolean mute])
+        * #Crafty.audio.toggleMute
+        * @sign public this Crafty.audio.toggleMute()
         * 
         * Mute or unmute every Audio instance that is playing. Toggles between
         * pausing or playing depending on the state.
@@ -8179,28 +8199,107 @@ Crafty.c("Particles", {
         * @example
         * ~~~
         * //toggle mute and unmute depending on current state
+        * Crafty.audio.toggleMute();
+        * ~~~
+        */
+        toggleMute:function(){
+            if (!this.muted) {
+                this._mute(true);
+            } else {
+                this._mute(false);
+            }
+
+        },
+        /**@
+        * #Crafty.audio.mute
+        * @sign public this Crafty.audio.mute()
+        * 
+        * Mute every Audio instance that is playing.
+        *
+        * @example
+        * ~~~
         * Crafty.audio.mute();
         * ~~~
         */
         mute:function(){
-            if(!Crafty.support.audio) return;
-            var s;
-            if(!this.muted){
-                for(var i in this.sounds){
-                    s = this.sounds[i];
-                    s.obj.pause();
-                }
-                this.muted = true;
-            }else{
-                for(var i in this.sounds){
-                    s = this.sounds[i];
-                    if(s.obj.currentTime && s.obj.currentTime > 0) 
-                        this.sounds[i].obj.play();
-                }
-                this.muted = false; 
-            }
-         
+            this._mute(true);
+        },
+        /**@
+        * #Crafty.audio.unmute
+        * @sign public this Crafty.audio.unmute()
+        * 
+        * Unmute every Audio instance that is playing. 
+        * 
+        * @example
+        * ~~~
+        * Crafty.audio.unmute();
+        * ~~~
+        */
+        unmute:function(){
+            this._mute(false);
+        },
+        
+        /**@
+         * #Crafty.audio.pause
+         * @sign public this Crafty.audio.pause(string ID)
+         * 
+         * Pause the Audio instance specified by id param.
+         * 
+         * @example
+         * ~~~
+         * Crafty.audio.pause('music');
+         * ~~~
+         * 
+         * @param {string} id The id of the audio object to pause
+         */
+        pause:function(id) {
+        	if(!Crafty.support.audio || !id || !this.sounds[id]) return;
+          var s = this.sounds[id];
+          if(!s.obj.paused) s.obj.pause();
+        },
+        
+        /**@
+         * #Crafty.audio.unPause
+         * @sign public this Crafty.audio.unPause(string ID)
+         * 
+         * Resume playing the Audio instance specified by id param.
+         * 
+         * @example
+         * ~~~
+         * Crafty.audio.unPause('music');
+         * ~~~
+         * 
+         * @param {string} id The id of the audio object to unPause
+         */
+        unPause:function(id) {
+        	if(!Crafty.support.audio || !id || !this.sounds[id]) return;
+          var s = this.sounds[id];
+          if(s.obj.paused) s.obj.play();
+        },
+        
+        /**@
+         * #Crafty.audio.togglePause
+         * @sign public this Crafty.audio.togglePause(string ID)
+         * 
+         * Toggle the pause status of the Audio instance specified by id param.
+         * 
+         * @example
+         * ~~~
+         * Crafty.audio.togglePause('music');
+         * ~~~
+         * 
+         * @param {string} id The id of the audio object to pause/unPause
+         */
+        togglePause:function(id) {
+        	if(!Crafty.support.audio || !id || !this.sounds[id]) return;
+          var s = this.sounds[id];
+          if(s.obj.paused) {
+          	s.obj.play();
+          } else {
+          	s.obj.pause();
+          }
         }
+
     } 
 }); /**@
 * #Text

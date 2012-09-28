@@ -1,52 +1,6 @@
 Crafty.scene("gameplay", function() {
 	console.log("Scene: gameplay "+ this);
 	
-	// TODO: Remove this, once better management of key binding is in place.
-	// $(document).off();
-	
-	
-	
-	// function _handlePauseEvent(e) {
-// 		
-	// }
-	// function _bindKeyboardEvents() {
-		// _unbindKeyboardEvents();
-		// Crafty.bind('KeyDown', function(e) {
-			// if(e.key == Crafty.keys['ENTER']) {
-				// if(!Crafty.isPaused()) {
-					// HA.m.publish(HA.events.PAUSE_GAME);
-					// _unbindKeyboardEvents();
-				// }
-			// }
-			// if(e.key == Crafty.keys['ESC']) {
-				// console.log("Full scrn");
-				// if(screenfull) {
-					// screenfull.toggle();
-				// }
-			// }
-		// });		
-	// }
-// 	
-	// function _unbindKeyboardEvents() {
-		// Crafty.unbind("KeyDown");
-	// }
-// 	
-	// _bindKeyboardEvents();
-	
-	
-	// Set up event subscriptions
-// 	
-	// $(document).on("keydown", function(e) {
-		// if(e.keyCode == Crafty.keys['ENTER']) {
-			// if(!Crafty.isPaused()) {
-				// HA.m.publish(HA.events.PAUSE_GAME);
-			// }
-		// }
-	// });
-	
-
-	
-	
 	Crafty.audio.play("whoosh");
 	Crafty.audio.play("game_music", -1, .8);
 	
@@ -71,7 +25,6 @@ Crafty.scene("gameplay", function() {
 	var tweetDisplay = Crafty.e("TweetDisplay");
 	var scoreDisplay = Crafty.e("ScoreDisplay");
 	var livesDisplay = Crafty.e("LivesDisplay");
-	
 	var messageDisplay = Crafty.e("MessageDisplay");
 	
 	HA.m.publish(HA.events.START_NEW_GAME);
@@ -79,6 +32,11 @@ Crafty.scene("gameplay", function() {
 }, function() {
 	console.log("Scene: gameplay - uninit");
 	Crafty.audio.stop("game_music");
+	// player.destroy();
+	// tweetDisplay.destroy();
+	// scoreDisplay.destroy(); 
+	// livesDisplay.destroy();
+	// messageDisplay.destroy();
 	// HA.game.enemyController.destroyAllEnemies();
 	// HA.game.enemyController.stopProducing();
 	// HA.game.destroy();
