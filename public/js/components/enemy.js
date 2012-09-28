@@ -80,7 +80,7 @@ Crafty.c("Enemy", {
 	},
 	_fallingCallback: function(e) {
 		// added test for isPlaying, otherwise this was causing errors on re-init
-		if(typeof this.isPlaying === 'function' && !this.isPlaying('hit')) {
+		if(typeof this.isPlaying === 'function' && !this.isPlaying('hit_r') && !this.isPlaying('hit_d')) {
 			this.animate("falling_"+this.getParty(), 10, -1);
 		}
 		this.y += this.dy;
@@ -139,10 +139,10 @@ Crafty.c("Enemy", {
 				.drawInfo();
 	},
 	select: function() {
-		// if(!this.selected) Crafty.audio.play("select", 1, .5);
+		if(!this.selected) Crafty.audio.play("select", 1, .5);
 		this.selected = true;
 		// this.stop().animate("selected", this.BALLOON_DURATION, -1);
-		// HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
+		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
 	},
 	unselect: function() {
 		this.selected = false;
