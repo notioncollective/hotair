@@ -1,17 +1,21 @@
 Crafty.c("PauseDisplay", {
 	init: function() {
-		this.addComponent('2D', 'DOM');
-		// this.template = _.template($("#PauseDisplay").html());
+		console.log("pause display added");
+		this.addComponent('HTMLTemplate');
+		this.setTemplate($("#PauseDisplayTemplate").html());
+		this.x = 0;
+		this.y = 0;
+		this.w = Crafty.DOM.window.width;
+		this.h = Crafty.DOM.window.height;
+		this.updateContent();
 	},
 	/**
 	 * 
 	 */
 	showPauseScreenDisplay: function() {
-		console.log("PauseScreenDisplay: showPauseScreenDisplay");
 		$("#PauseDisplay").show();
 	},
 	hidePauseScreenDisplay: function() {
-		console.log("PauseScreenDisplay: hidePauseScreenDisplay");
 		$("#PauseDisplay").hide();
 	}
 });

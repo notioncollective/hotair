@@ -4,22 +4,47 @@ Crafty.scene("gameplay", function() {
 	// TODO: Remove this, once better management of key binding is in place.
 	// $(document).off();
 	
+	
+	
+	// function _handlePauseEvent(e) {
+// 		
+	// }
+	// function _bindKeyboardEvents() {
+		// _unbindKeyboardEvents();
+		// Crafty.bind('KeyDown', function(e) {
+			// if(e.key == Crafty.keys['ENTER']) {
+				// if(!Crafty.isPaused()) {
+					// HA.m.publish(HA.events.PAUSE_GAME);
+					// _unbindKeyboardEvents();
+				// }
+			// }
+			// if(e.key == Crafty.keys['ESC']) {
+				// console.log("Full scrn");
+				// if(screenfull) {
+					// screenfull.toggle();
+				// }
+			// }
+		// });		
+	// }
+// 	
+	// function _unbindKeyboardEvents() {
+		// Crafty.unbind("KeyDown");
+	// }
+// 	
+	// _bindKeyboardEvents();
+	
+	
 	// Set up event subscriptions
-	Crafty.bind('KeyDown', function(e) {
-		if(e.key == Crafty.keys['ENTER']) {
-			if(!Crafty.isPaused()) {
-				HA.m.publish(HA.events.PAUSE_GAME);
-			} else {
-				HA.m.publish(HA.events.RESUME_GAME);
-			}
-		}
-		if(e.key == Crafty.keys['ESC']) {
-			console.log("Full scrn");
-			if(screenfull) {
-				screenfull.toggle();
-			}
-		}
-	});
+// 	
+	// $(document).on("keydown", function(e) {
+		// if(e.keyCode == Crafty.keys['ENTER']) {
+			// if(!Crafty.isPaused()) {
+				// HA.m.publish(HA.events.PAUSE_GAME);
+			// }
+		// }
+	// });
+	
+
 	
 	
 	Crafty.audio.play("whoosh");
@@ -48,17 +73,6 @@ Crafty.scene("gameplay", function() {
 	var livesDisplay = Crafty.e("LivesDisplay");
 	
 	var messageDisplay = Crafty.e("MessageDisplay");
-	
-	// messageDisplay.bind("NextLevel", function(e) {
-		// Crafty.trigger("ShowMessage", {text: "Level "+e.level});
-	// });
-// 	
-	// messageDisplay.bind("SetLevel", function(e) {
-		// Crafty.trigger("ShowMessage", {text: "Level "+e.level});
-	// });
-	
-	
-	// HA.game.createEnemyController();
 	
 	HA.m.publish(HA.events.START_NEW_GAME);
 	

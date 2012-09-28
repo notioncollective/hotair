@@ -48,13 +48,26 @@ html(lang="en")
 					p Your player is at the top.  Hot air balloons ascend from the bottom, each associated with a tweet.  It is your job to determine which tweets are associated with your team, and which are on the opposite team!
 					p Select balloons using the up and down arrows.  Move your player using the left and right arrows.  Shoot using the space bar (or letter 'a' key).  Pause by pressing Enter.
 					p Have fun!
+					
+			#AboutDisplay.modal
+				h1 About
+				.modal-inner
+					p Hot Air uses live twitter data from the @tweetcongress lists "republican" and "democrats".  
+					p The Notion Collective is a 4.5-person art-making group based in Brooklyn, NY.
+					
+			#HighScoresDisplay.modal
+				h1 High Scores!
+				.modal-inner
+					ul
+						li JB  10400
+						li AMD 9300
+						li JW  4900 
 
 			// PAUSE DISPLAY
-			#PauseDisplay
-				h1 Paused
-				ul.list-inline
-					li: a#pause-resume(href='#pause-resume') Resume
-					li: a#pause-end-game(href='#pause-end-game') End Game
+			script(id='PauseDisplayTemplate',type='text/template')
+				| <div id="PauseDisplay">
+				|		<h1>Paused</h1>
+				|	</div>
 
 			// TWEET DISPLAY
 			script(id='TweetDisplayTemplate',type='text/template')

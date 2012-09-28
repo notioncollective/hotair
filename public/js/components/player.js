@@ -9,6 +9,7 @@ Crafty.c("Player", {
 		
 		
 		this.bind("KeyDown", function(e) {
+			if(Crafty.isPaused()) return;
 			if (e.keyCode === Crafty.keys.SPACE || e.keyCode === Crafty.keys.A) {
 				console.log("Player : Space Pressed");
 				this.dropDart();

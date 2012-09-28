@@ -33,6 +33,13 @@ HA.events = HA.e = function(ns, $, _, C) {
 		START_NEW_GAME: "ha:start_new_game",
 		
 		/**
+		 * End a game
+		 * @property {string} END_GAME
+		 * @final
+		 */
+		END_GAME: "ha:end_game",
+		
+		/**
 		 * Game over.
 		 * @property {string} GAME_OVER
 		 * @final

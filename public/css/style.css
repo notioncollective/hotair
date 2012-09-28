@@ -87,10 +87,15 @@ div.list-nav span {
 	margin: 20px;
 	padding: 5px;
 	color: #FFF;
+	cursor: pointer;
 }
 
 div.list-nav span.active {
 	border-bottom: 5px solid #000;
+}
+
+div.list-nav span:hover {
+	border-bottom: 5px solid #333;
 }
 
 /*#StartScreenGraphics {
@@ -108,9 +113,9 @@ div.modal {
 	display: none;
 	position: absolute;
 	text-align: left;
-	width: 500px;
-	margin-left: -250px;
-	margin-top: -250px;
+	width: 600px;
+	margin-left: -310px;
+	margin-top: -310px;
 	top: 50%;
 	left: 50%;
 	background: transparent url(../img/pause_bg.png) 0 0 repeat;
@@ -124,17 +129,26 @@ div.modal-inner p {
 	line-height: 1.4;
 }
 
+
+div#PauseNav {
+	bottom: 50%;
+}
+
+div#PauseNav span {
+	color: #000;
+}
+
+
 #PauseDisplay, #GameOverDisplay {
 	display: none;
 	text-transform: uppercase;
 	text-align: center;
 	position: absolute;
-	bottom: 60px;
-	left: 0px;
-	width: 100%;
-	height: 30px;
-	z-index: 100;
 	line-height: 2;
+}
+
+#GameOverDisplay {
+	display: none;
 }
 
 #TweetDisplay, .tweet-display {

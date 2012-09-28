@@ -12,7 +12,8 @@ HA.game = function(ns, $, _, C) {
 			_party,
 			_perfectLevel,
 			_numEnemiesPerLevel = 2,
-			_partySelectMenu;
+			_partySelectMenu,
+			_pauseDisplay;
 
 	// private methods
 	function _init(options) {
@@ -71,6 +72,7 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleStartNewGameEvent(e) {
 		_setLevel(1);
+		_bindGameplayKeyboardEvents();
 	}
 	
 	/**
@@ -93,21 +95,46 @@ HA.game = function(ns, $, _, C) {
 	function _handlePauseGameEvent(e) {
 		console.log("Pause game!");
 		if(!C.isPaused()) {
-			C.pause();
-			_partySelectMenu = new C.ListNav($('#PauseDisplay li'));
+			// _partySelectMenu = new C.ListNav($('#PauseDisplay li'));
+			_unbindGameplayKeyboardEvents();
+			_pauseDisplay = C.e("PauseDisplay")
+			
+			
+			_pauseMenu = C.e("ListNav")
+				.attr({wrappingId: "PauseNav"});
+// 			
+			_pauseMenu.addListItem({
+				text: "Resume",
+				callback: function(arg) {
+					console.log("Resume", this );
+					HA.m.publish(HA.e.RESUME_GAME);
+					this.destroy();
+				}
+			});
+			
+			_pauseMenu.addListItem({
+				text: "End Game",
+				callback: function(arg) {
+					console.log("End Game..."); 
+					HA.m.publish(HA.e.END_GAME);
+				}
+			});
+			
+			// C.audio.mute();
 
-			_showPauseScreenDisplay();
+			// _showPauseScreenDisplay();
 			C.audio.play('pause');
-			C.audio.mute();
-			C.trigger("Pause");
-			_partySelectMenu.init();
-
-			// event handlers
-			// TODO: change to new event management system
-			$(document).on('click', "#pause-resume", _handleResumeGameEvent);
-			$(document).on('click', "#pause-end-game", _handleNewGameEvent);
+		
+			Crafty.bind("EnterFrame", _doPause);
+			
 		}
 	};
+	
+	function _doPause() {
+		_pauseDisplay.showPauseScreenDisplay();
+		_pauseMenu.renderListNav();
+		C.pause();
+	}
 
 	/**
 	 Handles the "resume game" selection from the pause screen.
@@ -118,12 +145,16 @@ HA.game = function(ns, $, _, C) {
 	function _handleResumeGameEvent(e) {
 		e.preventDefault();
 		console.log("Resume game!");
-
-		// TODO: change to new event management system
-		$(document).off('click', "#pause-resume", _handleResumeGameEvent);
-		$(document).off('click', "#pause-end-game", _handleResumeGameEvent);
-		_partySelectMenu.destroy();
-		_unPauseGame();
+		if(C.isPaused()) {
+			_pauseDisplay.destroy();
+			_pauseMenu.destroy();
+			Crafty.unbind("EnterFrame", _doPause);
+			_bindGameplayKeyboardEvents();
+			// C.audio.mute();
+			C.pause();
+			// _hidePauseScreenDisplay();
+			C.audio.play('pause');
+		}
 		return false;
 	};
 
@@ -208,6 +239,7 @@ HA.game = function(ns, $, _, C) {
 			C.trigger("UnPause");
 		}
 	};
+	
 	/**
 	 Toggle pause/unpause (hooks into `Crafty.pause()`).
 	 @private
@@ -221,26 +253,6 @@ HA.game = function(ns, $, _, C) {
 		}
 	};
 	
-	/**
-	 * Show the pause screen display
-	 * @private
-	 * @method _showPauseScreenDisplay
-	 */
-	function _showPauseScreenDisplay() {
-		console.log("PauseScreenDisplay: showPauseScreenDisplay");
-		$("#PauseDisplay").show();
-	}
-
-	/**
-	 * Hide the pause screen display
-	 * @private
-	 * @method _hidePauseScreenDisplay
-	 */
-	function _hidePauseScreenDisplay() {
-		console.log("PauseScreenDisplay: hidePauseScreenDisplay");
-		$("#PauseDisplay").hide();
-	}
-
 	/**
 	 Handle level complete event.
 	 @private
@@ -272,7 +284,7 @@ HA.game = function(ns, $, _, C) {
 	 @method _handleNextLevelEvent
 	 @param {Object} e Event object.
 	 */
-	var _handleNextLevelEvent = function(e) {
+	function _handleNextLevelEvent(e) {
 		console.log("handleNextLevel");
 		C.audio.play("whoosh");
 		var numEnemiesPerLevel = _getNumEnemiesPerLevel();
@@ -282,6 +294,28 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.setSpeed(_getLevel() / 1.5);
 		HA.enemyController.startProducing(true);
 	};
+	
+	function _bindGameplayKeyboardEvents() {
+		_unbindGameplayKeyboardEvents();
+		$(document).on("keydown", function(e) {
+			if(e.keyCode == Crafty.keys['ENTER']) {
+				if(!Crafty.isPaused()) {
+					HA.m.publish(HA.events.PAUSE_GAME);
+					_unbindGameplayKeyboardEvents();
+				}
+			}
+			if(e.keyCode == Crafty.keys['ESC']) {
+				console.log("Full scrn");
+				if(screenfull) {
+					screenfull.toggle();
+				}
+			}
+		});
+	}
+	
+	function _unbindGameplayKeyboardEvents() {
+		$(document).off("keydown");
+	}
 	
 	
 	function _incrementLevel() {
@@ -324,7 +358,7 @@ HA.game = function(ns, $, _, C) {
 	 @private
 	 @method _saveScore
 	 */
-	var _saveScore = function() {
+	function _saveScore() {
 		$.ajax({
 			url : "/highscore",
 			type : "post",

@@ -17,10 +17,10 @@ Crafty.c("ListNav", {
 		this.wrappingId = "";
 		this.selectSnd = "select";
 		this.chooseSelectionSnd = "choose";
-		this.chooseSelectionKeys = [Crafty.keys.SPACE, Crafty.keys.A];
+		this.chooseSelectionKeys = [Crafty.keys.ENTER, Crafty.keys.SPACE, Crafty.keys.A];
 		
 		this.bind("KeyDown", function(e) {
-			console.log("selecting...", e.key);
+			// console.log("selecting...", e.key);
 			if (e.key === Crafty.keys.LEFT_ARROW) {
 				this.selectPrevItem();
 			} else if(e.key === Crafty.keys.RIGHT_ARROW) {
@@ -37,6 +37,10 @@ Crafty.c("ListNav", {
 		
 	},
 	
+	unInit: function() {
+		_unbindClickEvents();
+	},
+	
 	setTemplate: function(templateString) {
 		this.template = _.template(templateString);
 	},
@@ -50,19 +54,33 @@ Crafty.c("ListNav", {
 	 * Note that the callback function will be called in the context of the ListNav entity from which it is called.
 	 */
 	addListItem: function(listNavItem) {
-		console.log("addListItem");
+		// console.log("addListItem");
 		this.listNavItems.push(listNavItem);
 	},
 	
 	renderListNav: function() {
-		console.log("rending list nav");
 		var output = "", that = this, active;
 		_.each(this.listNavItems, function(item, index) {
 			active = (index === that.selectedItem) ? "active" : '';
-			output += "<span class='"+active+"'>"+item.text+"</span>";
+			output += "<span class='"+active+"' data-index='"+index+"'>"+item.text+"</span>";
 		});
 		this.replace("<div id='"+this.wrappingId+"'class='"+this.wrappingClass+"'>"+output+"</div>");
+		this._bindClickEvents();
 	},
+	
+	_unbindClickEvents: function() {
+		$(document).off("click", "."+this.wrappingClass+" span");
+	},
+	
+	_bindClickEvents: function() {
+		var that = this;
+		this._unbindClickEvents();
+		$(document).on("click", "."+this.wrappingClass+" span", function(e) {
+			that.selectedItem = $(this).data("index");
+			that.chooseSelectedListItem();
+		});	
+	},
+	
 	selectNextItem: function() {
 		if(this.selectedItem < this.listNavItems.length-1) {
 			Crafty.audio.play(this.selectSnd);

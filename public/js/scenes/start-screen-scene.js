@@ -62,13 +62,25 @@ Crafty.scene("start", function() {
 		
 		startMenuNav.addListItem({
 			text: "About",
-			callback: function(arg) { console.log("list item callback says: "+arg); closeModals(); },
+			callback: function(arg) { 
+				console.log("list item callback says: "+arg);
+				closeModals();
+				openModal("AboutDisplay"); 
+				this.destroy();
+				createCloseMenu();
+			},
 			args: ["About!!"]
 		});
 		
 		startMenuNav.addListItem({
 			text: "High Scores",
-			callback: function(arg) { console.log("list item callback says: "+arg); closeModals(); },
+			callback: function(arg) { 
+				console.log("list item callback says: "+arg);
+				closeModals();
+				openModal("HighScoresDisplay"); 
+				this.destroy();
+				createCloseMenu(); 
+			},
 			args: ["High Scores!"]
 		});
 		
