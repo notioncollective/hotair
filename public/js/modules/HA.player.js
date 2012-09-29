@@ -6,7 +6,7 @@ HA.player = function(ns, $, _, C) {
 	
 	var _score = 0,
 		_party = null,
-		_lives = 1,
+		_lives = 3,
 		_name = null;
 	
 	function _init() {
