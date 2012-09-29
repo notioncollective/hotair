@@ -6,7 +6,7 @@ HA.player = function(ns, $, _, C) {
 	
 	var _score = 0,
 		_party = null,
-		_lives = 3,
+		_lives = 1,
 		_name = null;
 	
 	function _init() {
@@ -55,7 +55,7 @@ HA.player = function(ns, $, _, C) {
 	function _decrementLives() {
 		_lives = _lives-1;
 		HA.m.publish(HA.e.UPDATE_LIVES, [_lives]);
-		if(_lives === 0) {
+		if(_lives <= 0) {
 			HA.m.publish(HA.e.GAME_OVER);
 		}
 	}

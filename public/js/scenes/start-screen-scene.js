@@ -2,15 +2,6 @@ Crafty.scene("start", function() {
 	console.log("Scene: start");
 	
 	var startMenuNav, partySelectNav, closeMenuNav;
-	// Crafty.background('rgb(140, 208, 255)');
-	
-	// TODO: Audio needs to load first, so this doesn't work...
-	// Crafty.audio.play("start_music", -1, .5);
-	// $("#StartDisplay").show();
-	// var $startMenu = $("#StartDisplay li");
-	// var startMenu = new Crafty.ListNav($startMenu);
-	// startMenu.init();
-//
 
 	function closeModals() {
 		$(".modal").hide();		

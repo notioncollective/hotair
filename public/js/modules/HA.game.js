@@ -11,7 +11,7 @@ HA.game = function(ns, $, _, C) {
 			_level = 0,
 			_party,
 			_perfectLevel,
-			_numEnemiesPerLevel = 2,
+			_numEnemiesPerLevel = 1,
 			_partySelectMenu,
 			_pauseDisplay,
 			_state = 0;
@@ -100,6 +100,9 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleGameOverEvent(e) {
 		// TODO: Possibly perform extra cleanup here, maybe clear out the mediator?
+		_unbindGameplayKeyboardEvents();
+		// _pauseDisplay.destroy();
+		// _pauseMenu.destroy();
 		HA.m.publish(HA.e.LOAD_SCENE, "gameover");
 		_state = 2;
 	}
