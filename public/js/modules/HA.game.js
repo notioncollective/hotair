@@ -13,7 +13,8 @@ HA.game = function(ns, $, _, C) {
 			_perfectLevel,
 			_numEnemiesPerLevel = 2,
 			_partySelectMenu,
-			_pauseDisplay;
+			_pauseDisplay,
+			_state = 0;
 
 	// private methods
 	function _init(options) {
@@ -40,11 +41,26 @@ HA.game = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.LEVEL_COMPLETE, _handleLevelCompleteEvent);
 		HA.m.subscribe(HA.events.NEXT_LEVEL, _handleNextLevelEvent);
 		
+		// For window blur, when changing browser windows or application
+		C.bind("Pause", function(e) {
+			if(_state !== 1) return;
+			C.audio.pause("game_music");
+			HA.enemyController.stopProducing();
+		});
+		C.bind("Unpause", function(e) {
+			if(_state !== 1) return;
+			if(!C.isPaused()) return;
+			C.audio.unpause("game_music");
+			if(!HA.enemyController.isProducing()) HA.enemyController.startProducing();
+		});
+		
 		HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
 		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
 
 		// Initialize Crafty
 		C.init();
+		C.settings.modify("autoPause", true);
+		
 		// Load the first scene
 		HA.m.publish(HA.events.LOAD_SCENE, ["loading"]);
 
@@ -73,6 +89,7 @@ HA.game = function(ns, $, _, C) {
 	function _handleStartNewGameEvent(e) {
 		_setLevel(1);
 		_bindGameplayKeyboardEvents();
+		_state = 1;
 	}
 	
 	/**
@@ -84,6 +101,7 @@ HA.game = function(ns, $, _, C) {
 	function _handleGameOverEvent(e) {
 		// TODO: Possibly perform extra cleanup here, maybe clear out the mediator?
 		HA.m.publish(HA.e.LOAD_SCENE, "gameover");
+		_state = 2;
 	}
 
 
@@ -141,6 +159,7 @@ HA.game = function(ns, $, _, C) {
 	function _doPause() {
 		_pauseDisplay.showPauseScreenDisplay();
 		_pauseMenu.renderListNav();
+		C.settings.modify("autoPause", false);
 		C.pause();
 	}
 
@@ -154,13 +173,14 @@ HA.game = function(ns, $, _, C) {
 		e.preventDefault();
 		console.log("Resume game!");
 		if(C.isPaused()) {
-			C.audio.unPause("game_music");
+			C.audio.unpause("game_music");
 			_pauseDisplay.destroy();
 			_pauseMenu.destroy();
 			Crafty.unbind("EnterFrame", _doPause);
 			_bindGameplayKeyboardEvents();
 			C.pause();
 			C.audio.play('pause');
+			C.settings.modify("autoPause", true);
 		}
 		return false;
 	};
@@ -180,7 +200,8 @@ HA.game = function(ns, $, _, C) {
 			Crafty.unbind("EnterFrame", _doPause);
 			C.pause();
 			C.audio.play('pause');
-			C.scene("start");
+			HA.sceneManager.loadScene("start");
+			_state = 0;
 		}
 		return false;
 	};
@@ -386,21 +407,7 @@ HA.game = function(ns, $, _, C) {
 	ns.init = _init;
 
 	/**
-	 Pause gameplay.
-	 @public
-	 @method pauseGame
-	 */
-	ns.pauseGame = _handlePauseGameEvent;
-
-	/**
-	 UnPause gameplay.
-	 @public
-	 @method unPauseGame
-	 */
-	ns.unPauseGame = _unPauseGame;
-
-	/**
-	 UnPause gameplay.
+	 Unpause gameplay.
 	 @public
 	 @method getParty
 	 */

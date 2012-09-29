@@ -93,20 +93,20 @@ HA.enemyController = function(ns, $, _, C) {
 	}
 
 	function _startProducing(firstGo) {
-		console.log("startProducing");
-		if(firstGo)
-			_produceEnemy();
+		console.log("startProducing", _timer);
+		if(firstGo) _produceEnemy();
 		_producing = true;
 		_timer = setInterval(_produceEnemy, _interval);
 	}
 
 	function _stopProducing() {
-		console.log("stopProducing");
+		console.log("stopProducing", _timer);
 		_producing = false;
 		clearInterval(_timer);
 	}
 
 	function _produceEnemy() {
+		console.log("_produceEnemy", _timer);
 		var tweet;
 		if(_curEnemy < _numEnemies) {
 			if( tweet = _tweets[_curEnemy]) {
@@ -123,7 +123,6 @@ HA.enemyController = function(ns, $, _, C) {
 			clearInterval(_timer);
 		}
 		_curEnemy += 1;
-		console.log("_produceEnemy");
 	}
 
 	function _selectEnemy(e) {
