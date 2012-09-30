@@ -1,18 +1,18 @@
 {
   "name": "hotair",
   "description": "A game for gasbags.",
-  "version": "0.0.1-12",
+  "version": "0.0.1-17",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
     "express": "3.0.0rc1",
-    "jade": "0.27.x",
-    "cradle": "0.6.x",
-    "path": "0.4.x",
+    "jade": "0.27.2",
+    "cradle": "0.6.4",
+    "path": "0.4.9",
     "twit": "0.1.8",
-    "lodash": "0.6.x",
+    "lodash": "0.7.0",
     "q": "0.8.8",
     "cron": "1.0.1",
     "time": "0.8.3"
