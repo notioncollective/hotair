@@ -100,7 +100,7 @@ exports.home = function(req, res){
 };
 
 exports.play = function(req, res) {
-	res.render('Play', { title: 'Hot Air' });
+	res.render('play', { title: 'Hot Air' });
 }
 
 exports.reset = function(rew, res) {
