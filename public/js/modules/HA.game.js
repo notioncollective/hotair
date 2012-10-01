@@ -88,6 +88,7 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleStartNewGameEvent(e) {
 		_setLevel(1);
+		HA.player.setLives(3);
 		_bindGameplayKeyboardEvents();
 		_state = 1;
 	}
@@ -198,13 +199,13 @@ HA.game = function(ns, $, _, C) {
 		e.preventDefault();
 		console.log("End game!");
 		if(C.isPaused()) {
+			_state = 0;
 			_pauseDisplay.destroy();
 			_pauseMenu.destroy();
-			Crafty.unbind("EnterFrame", _doPause);
+			C.unbind("EnterFrame", _doPause);
 			C.pause();
 			C.audio.play('pause');
 			HA.sceneManager.loadScene("start");
-			_state = 0;
 		}
 		return false;
 	};
