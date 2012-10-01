@@ -49,7 +49,10 @@ HA.twitter = function(ns, $, _, C) {
 		// ping the server for twitter data
 		$.getJSON(uri, params)
 			.done(_handleLoadTweets)
-			.fail(function(){ throw "Error loading tweet data."; });
+			.fail(function(){
+				console.log("Error loading tweets!");
+				throw new Error("Error loading tweet data.");
+			});
 	}
 	
 	

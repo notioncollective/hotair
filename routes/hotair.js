@@ -33,7 +33,7 @@ function _getTweets(params) {
 		
 		// if there's an error, return false
 		if(err) {
-			console.log(err);
+			console.error("Error getting tweets from Twitter API", err);
 			return false;
 		}
 		
@@ -82,7 +82,7 @@ function _getSinceId() {
 	}
 	db.view('hotair/since_id', { group: false }, function(err, resp) {
 		if(err) {
-			console.log(err);
+			console.error("Error retrieving since_id", err);
 			dfd.reject(new Error(err));
 			return;
 		}
@@ -141,17 +141,15 @@ exports.fetch_tweets = function(req, res) {
 		.then(function(value) {
 			_getTweets(_params_r)
 		}, function(err) {
-			log(err);
+			console.log("Error fetching republican tweets", err);
 		})
 		.then(function(value) {
 			_getTweets(_params_d)
 		}, function(err) {
-			log(err);
+			console.error("Error fetching democratic tweets", err);
 		})
-		.fail(function(value) {
-			log('_getSinceId failed(), maybe db is empty? Goint to try and get tweets anyways.');
-			_getTweets(_params_r);
-			_getTweets(_params_d);
+		.fail(function(err) {
+			console.error("getSinceId() failed", error);
 		});
 	
 	// _getTweets(_params_r);
@@ -217,6 +215,9 @@ exports.load_tweets = function(req, res) {
 			},
 			// handle merging data
 			merge = function(err, resp) {
+				if(err) {
+					console.error("Error loading tweets from db", err);
+				}
 				if(resp) {
 					i++;
 					merged.total_rows += resp.total_rows;
@@ -287,6 +288,7 @@ exports.highscore = function(req, res) {
 		respBody = {};
 	db.save(data, function(db_err, db_res) {
 		if (db_err) {
+			console.lerror("Error saving high score", db_err)
 			respBody.error = db_err;
 		} else {
 			respBody.success = true;

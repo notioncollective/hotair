@@ -35,6 +35,10 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public'), {maxAge:  86400000}));
+  app.use(function(err, req, res, next){
+  	console.error(err.stack);
+  	res.send(500, 'Something broke!');
+  });
 });
 
 app.configure('development', function(){
