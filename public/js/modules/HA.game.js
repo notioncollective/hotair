@@ -26,6 +26,13 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.init();
 		HA.sceneManager.init();
 		
+		$.ajaxSetup({
+			beforeSend: function(xhr) {
+				var token = _getCsrfToken();
+				xhr.setRequestHeader('X-CSRF-Token', token);
+			}
+		});
+		
 		// TODO decide where twitter module needs to be initialized
 		HA.twitter.init();
 
@@ -98,8 +105,11 @@ HA.game = function(ns, $, _, C) {
 	 * @param {object} e
 	 */
 	function _handleGameOverEvent(e) {
+		console.log("HA.game handleGameoverEvent");
 		// TODO: Possibly perform extra cleanup here, maybe clear out the mediator?
 		_unbindGameplayKeyboardEvents();
+		
+		_saveScore();
 		// _pauseDisplay.destroy();
 		// _pauseMenu.destroy();
 		HA.m.publish(HA.e.LOAD_SCENE, "gameover");
@@ -378,13 +388,15 @@ HA.game = function(ns, $, _, C) {
 	 @method _saveScore
 	 */
 	function _saveScore() {
+		console.log("save score");
+		var token = _getCsrfToken();
 		$.ajax({
 			url : "/highscore",
 			type : "post",
 			contentType : "application/json",
 			data : JSON.stringify({
 				user : "XXX",
-				score : _getScore(),
+				score : HA.player.getScore(),
 				party : _party
 			}),
 			success : function(resp) {
@@ -392,6 +404,17 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 	};
+	
+	/**
+	 * Get the CSRF token from the meta tag.
+	 * @private
+	 * @method _getCsrfToken
+	 * @return {string} The CSRF token.
+	 */
+	function _getCsrfToken() {
+		var token = $("meta[name='csrf-token']").attr("content");
+		return token;
+	}
 	// public methods
 
 	/**
