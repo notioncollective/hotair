@@ -49,7 +49,7 @@ app.configure('production', function(){
 app.get('/', routes.home);
 app.get('/play', auth, routes.play)
 app.get('/reset', auth, routes.reset);
-app.get('/fetch_tweets', auth, routes.load_tweets);
+app.get('/fetch_tweets', auth, routes.fetch_tweets);
 app.get('/all', auth, routes.all);
 app.get('/democrats', auth, routes.democrats);
 app.get('/republican', auth, routes.republican);
