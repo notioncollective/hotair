@@ -27,9 +27,7 @@ HA.game = function(ns, $, _, C) {
 		HA.sceneManager.init();
 		
 		// TODO decide where twitter module needs to be initialized
-		HA.twitter.init({
-			test : true
-		});
+		HA.twitter.init();
 
 		// Set up initial event subscriptions
 		HA.m.subscribe(HA.events.GAME_LOADED, _handleGameLoadedEvent);

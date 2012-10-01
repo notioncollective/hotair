@@ -47,12 +47,15 @@ function _getTweets(params) {
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
-			console.log("tweet.id", tweet.id);
+			console.log("Fetched tweet from API. ID:", tweet.id);
 		});
 		
 		// save to db
 		db.save(reply, function(err, resp) {
-			console.log('saved tweets');
+			if(err) {
+				console.error("Error saving tweets to db", err);
+			} else {
+				console.log('saved tweets');
 		});
 		
 		// update _since_id based on response
