@@ -33,7 +33,7 @@ function _getTweets(params) {
 		
 		// if there's an error, return false
 		if(err) {
-			console.log(err);
+			console.error("Error getting tweets from Twitter API", err);
 			return false;
 		}
 		
@@ -47,12 +47,16 @@ function _getTweets(params) {
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
-			console.log("tweet.id", tweet.id);
+			console.log("Fetched tweet from API. ID:", tweet.id);
 		});
 		
 		// save to db
 		db.save(reply, function(err, resp) {
-			console.log('saved tweets');
+			if(err) {
+				console.error("Error saving tweets to db", err);
+			} else {
+				console.log('saved tweets');	
+			}
 		});
 		
 		// update _since_id based on response
@@ -64,17 +68,25 @@ function _getTweets(params) {
 		*/
 	});
 }
-
+/**
+ * Get the id of the last tweet stored. Stores the value of this
+ * in the private variable `_since_id`
+ * @method _getSinceId
+ * @return {Object} promise object for ajax call to hotair/since_id
+ */
 function _getSinceId() {
 	console.log("_getSinceId", _since_id);
-	var dfd = Q.defer();
+	
+	var dfd = Q.defer(); // set up promise object
+	
+	// 
 	if(!_.isNull(_since_id)) {
 		dfd.resolve();
 		return dfd.promise;
 	}
 	db.view('hotair/since_id', { group: false }, function(err, resp) {
 		if(err) {
-			console.log(err);
+			console.error("Error retrieving since_id", err);
 			dfd.reject(new Error(err));
 			return;
 		}
@@ -100,7 +112,7 @@ exports.home = function(req, res){
 };
 
 exports.play = function(req, res) {
-	res.render('Play', { title: 'Hot Air' });
+	res.render('play', { title: 'Hot Air' });
 }
 
 exports.reset = function(rew, res) {
@@ -130,16 +142,19 @@ exports.fetch_tweets = function(req, res) {
 	// Check if database is populated, if so use since_id
 	
 	_getSinceId()
-			.then(function(value) {
-				_getTweets(_params_r)
-			}, function(err) {
-				log(err);
-			})
-			.then(function(value) {
-				_getTweets(_params_d)
-			}, function(err) {
-				log(err);
-			});
+		.then(function(value) {
+			_getTweets(_params_r)
+		}, function(err) {
+			console.log("Error fetching republican tweets", err);
+		})
+		.then(function(value) {
+			_getTweets(_params_d)
+		}, function(err) {
+			console.error("Error fetching democratic tweets", err);
+		})
+		.fail(function(err) {
+			console.error("getSinceId() failed", error);
+		});
 	
 	// _getTweets(_params_r);
 	// _getTweets(_params_d);
@@ -204,6 +219,9 @@ exports.load_tweets = function(req, res) {
 			},
 			// handle merging data
 			merge = function(err, resp) {
+				if(err) {
+					console.error("Error loading tweets from db", err);
+				}
 				if(resp) {
 					i++;
 					merged.total_rows += resp.total_rows;
@@ -274,6 +292,7 @@ exports.highscore = function(req, res) {
 		respBody = {};
 	db.save(data, function(db_err, db_res) {
 		if (db_err) {
+			console.lerror("Error saving high score", db_err)
 			respBody.error = db_err;
 		} else {
 			respBody.success = true;

@@ -35,21 +35,31 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public'), {maxAge:  86400000}));
+  app.use(function(err, req, res, next){
+  	console.error(err.stack);
+  	res.send(500, 'Something broke!');
+  });
 });
 
 app.configure('development', function(){
   app.use(express.errorHandler());
-	cradle.setup({ host: '127.0.0.1' });
+	cradle.setup({
+		host: '127.0.0.1',
+		port: 5984
+	});
 });
 
 app.configure('production', function(){
-	cradle.setup({ host: 'nodejitsudb198990392151.iriscouch.com' });
+	cradle.setup({
+		host: 'nodejitsudb198990392151.iriscouch.com',
+		port: 5984
+	});
 });
 
 app.get('/', routes.home);
 app.get('/play', auth, routes.play)
 app.get('/reset', auth, routes.reset);
-app.get('/fetch_tweets', auth, routes.load_tweets);
+app.get('/fetch_tweets', auth, routes.fetch_tweets);
 app.get('/all', auth, routes.all);
 app.get('/democrats', auth, routes.democrats);
 app.get('/republican', auth, routes.republican);
