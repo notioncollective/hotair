@@ -55,7 +55,8 @@ function _getTweets(params) {
 			if(err) {
 				console.error("Error saving tweets to db", err);
 			} else {
-				console.log('saved tweets');
+				console.log('saved tweets');	
+			}
 		});
 		
 		// update _since_id based on response
