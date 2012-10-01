@@ -210,12 +210,15 @@ HA.enemyController = function(ns, $, _, C) {
 	}
 
 	function _destroyEnemy(enemy) {
-		if(_.has(enemy, "destroy")) enemy.destroy();
+		if(_.has(enemy, "destroy")) {
+			enemy.unbindAllMediatorEvents();
+			enemy.destroy();
+		}
 	}
 	
 	function _removeAllEnemies() {
 		_.each(_enemies, function(enemy) {
-			HA.m.unsubscribe(HA.e.ENEMY_HIT_COMPLETE, enemy._handleHitCompleteEvent);
+			enemy.unbindAllMediatorEvents();
 			enemy.destroy();
 		});
 		_enemies = [];
@@ -223,6 +226,7 @@ HA.enemyController = function(ns, $, _, C) {
 	
 	function _destroyAllEnemies() {
 		_.each(_enemies, function(enemy) {
+			enemy.unbindAllMediatorEvents();
 			enemy.destroy();
 		});
 	}
