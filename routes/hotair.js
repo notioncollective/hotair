@@ -64,10 +64,18 @@ function _getTweets(params) {
 		*/
 	});
 }
-
+/**
+ * Get the id of the last tweet stored. Stores the value of this
+ * in the private variable `_since_id`
+ * @method _getSinceId
+ * @return {Object} promise object for ajax call to hotair/since_id
+ */
 function _getSinceId() {
 	console.log("_getSinceId", _since_id);
-	var dfd = Q.defer();
+	
+	var dfd = Q.defer(); // set up promise object
+	
+	// 
 	if(!_.isNull(_since_id)) {
 		dfd.resolve();
 		return dfd.promise;
@@ -130,16 +138,21 @@ exports.fetch_tweets = function(req, res) {
 	// Check if database is populated, if so use since_id
 	
 	_getSinceId()
-			.then(function(value) {
-				_getTweets(_params_r)
-			}, function(err) {
-				log(err);
-			})
-			.then(function(value) {
-				_getTweets(_params_d)
-			}, function(err) {
-				log(err);
-			});
+		.then(function(value) {
+			_getTweets(_params_r)
+		}, function(err) {
+			log(err);
+		})
+		.then(function(value) {
+			_getTweets(_params_d)
+		}, function(err) {
+			log(err);
+		})
+		.fail(function(value) {
+			log('_getSinceId failed(), maybe db is empty? Goint to try and get tweets anyways.');
+			_getTweets(_params_r);
+			_getTweets(_params_d);
+		});
 	
 	// _getTweets(_params_r);
 	// _getTweets(_params_d);
