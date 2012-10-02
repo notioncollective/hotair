@@ -10,7 +10,7 @@ HA.game = function(ns, $, _, C) {
 			_scoreIncrement = 100,
 			_level = 0,
 			_party,
-			_perfectLevel,
+			_perfectLevel = true,
 			_numEnemiesPerLevel = 2,
 			_partySelectMenu,
 			_pauseDisplay,
