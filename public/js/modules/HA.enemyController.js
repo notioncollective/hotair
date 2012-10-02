@@ -38,6 +38,7 @@ HA.enemyController = function(ns, $, _, C) {
 
 	function _handleStartNewGameEvent(e) {
 		_loadEnemySet(0, 4);
+		_setSpeed(1);
 		_startProducing(true);
 		_bindKeyboardEvents();
 	}
