@@ -7,7 +7,8 @@ var express = require('express')
   , routes = require('./routes/hotair')
   , http = require('http')
   , path = require('path')
-  , cradle = require('cradle')
+  // , cradle = require('cradle')
+  , nano = require('nano')
   , cronJob = require('cron').CronJob;
 
 
@@ -46,17 +47,21 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
   app.locals.pretty = true;
-	cradle.setup({
-		host: '127.0.0.1',
-		port: 5984
-	});
+  // app.set('couchdb host', '127.0.0.1');
+  // app.set('couchdb port', 5984);
+	// cradle.setup({
+		// host: '127.0.0.1',
+		// port: 5984
+	// });
 });
 
 app.configure('production', function(){
-	cradle.setup({
-		host: 'nodejitsudb198990392151.iriscouch.com',
-		port: 5984
-	});
+	// app.set('couchdb host', 'nodejitsudb198990392151.iriscouch.com');
+	// app.set('couchdb port', 5984);
+	// cradle.setup({
+		// host: 'nodejitsudb198990392151.iriscouch.com',
+		// port: 5984
+	// });
 });
 
 // simple middleware, could be moved to separate file
