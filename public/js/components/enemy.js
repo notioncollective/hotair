@@ -36,6 +36,11 @@ Crafty.c("Enemy", {
 		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, this._handleHitCompleteEvent);		
 	},
 	
+	unbindAllMediatorEvents: function() {
+		HA.m.unsubscribe(HA.e.ENEMY_HIT_COMPLETE, this._handleHitCompleteEvent);
+		HA.m.unsubscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);		
+	},
+	
 	_handleHitCompleteEvent: function(e, enemy, dScore) {
 		this.doHit(dScore);
 	},
@@ -45,8 +50,7 @@ Crafty.c("Enemy", {
 		if(whoops) {
 			this.showScore(dScore, 0);
 		}
-		HA.m.unsubscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
-		this.unselect();
+		this.unbindAllMediatorEvents();
 		this.destroy();
 	},
 	
@@ -89,11 +93,11 @@ Crafty.c("Enemy", {
 			this.dy = this.dy*1.1;
 		}
 		if(this.y > Crafty.DOM.window.height+20) {
+			this.unbindAllMediatorEvents();
 			this
-				.unbind("EnterFrame")
-				.unbind("UpdateScore")
+				.unbind("EnterFrame", this._fallingCallback)
 				.destroy();
-			console.log("++++++ DESTROYED ENEMY ENTITY");
+			console.log("++++++ DESTROYED ENEMY ENTITY", this.y);
 		}
 	},
 	_risingCallback: function(e) {

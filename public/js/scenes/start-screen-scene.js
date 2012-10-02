@@ -107,10 +107,11 @@ Crafty.scene("start", function() {
 		
 		partySelectNav.renderListNav();
 	}
+	
 
 	var startScreenMainGraphic = Crafty.e('StartScreenMainGraphic')
-		.attr({x:(Crafty.DOM.window.width/2)-256, y:(Crafty.DOM.window.height/2)-256, z:100});
-	
+		.attr({x:(Crafty.DOM.window.width/2)-256, y:(Crafty.DOM.window.height/2)-256});
+		
 	createMainStartMenu();
 	
 	// fullscreen mode

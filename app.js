@@ -32,8 +32,10 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
-  app.use(express.cookieParser('hotair'));
   app.use(express.methodOverride());
+  app.use(express.cookieParser('hotair'));
+  app.use(express.session({secret: 'hotair'}));
+  app.use(express.csrf());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public'), {maxAge:  86400000}));
   app.use(function(err, req, res, next){
@@ -44,6 +46,7 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler());
+  app.locals.pretty = true;
   app.set('couchdb host', '127.0.0.1');
   app.set('couchdb port', 5984);
 	// cradle.setup({
@@ -61,8 +64,15 @@ app.configure('production', function(){
 	// });
 });
 
+// simple middleware, could be moved to separate file
+function csrf(req, res, next) {
+	console.log(req.session);
+  res.locals.token = req.session._csrf;
+  next();
+}
+
 app.get('/', routes.home);
-app.get('/play', auth, routes.play)
+app.get('/play', auth, csrf, routes.play);
 app.get('/reset', auth, routes.reset);
 app.get('/fetch_tweets', auth, routes.fetch_tweets);
 app.get('/all', auth, routes.all);

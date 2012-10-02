@@ -24,8 +24,9 @@ Crafty.c("Dart", {
 		 * Trigger the ENEMY_HIT event.
 		 */
 		this.onHit("Enemy", function(e) {
-			// e[0].obj.doHit();
-			e[0].obj.registerHitCompleteEvent();
+			var enemy = e[0].obj;
+			if(enemy.y+enemy.h/3 < this.y) return;
+			enemy.registerHitCompleteEvent();
 			HA.m.publish(HA.e.ENEMY_HIT_START, [e[0].obj]);
 			this.destroy();
 		});
