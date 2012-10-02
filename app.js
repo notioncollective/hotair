@@ -67,7 +67,7 @@ function csrf(req, res, next) {
 }
 
 app.get('/', routes.home);
-app.get('/play', auth, csrf, routes.play)
+app.get('/play', auth, csrf, routes.play);
 app.get('/reset', auth, routes.reset);
 app.get('/fetch_tweets', auth, routes.fetch_tweets);
 app.get('/all', auth, routes.all);
