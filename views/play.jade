@@ -59,24 +59,31 @@ html(lang="en")
 			#HighScoresDisplay.modal
 				h1 High Scores!
 				.modal-inner
-					ul
-						li JB  10400
-						li AMD 9300
-						li JW  4900 
+					| loading...
+						
+			// HIGH SCORES TEMPLATE
+			script(id='HighScoresTemplate',type='text/template')
+				| <div id="HighScores">
+				|		<ul>
+				|		<% _.each(highscores, function(highscore) { %>
+				|			<li><%= highscore.score %> - <%= highscore.user %> (<%= highscore.party.toUpperCase() %>)
+				|		<% }); %>
+				|		</ul>
+				| </div>
 
-			// TWEET DISPLAY
+			// TWEET DISPLAY TEMPLATE
 			script(id='TweetDisplayTemplate',type='text/template')
 				| <div id="TweetDisplay">
 				|		<div class='content'><%= text %></div>
 				| </div>
 
-			// PAUSE DISPLAY
+			// PAUSE DISPLAY TEMPLATE
 			script(id='PauseDisplayTemplate',type='text/template')
 				| <div id="PauseDisplay">
 				|		<h1>Paused</h1>
 				|	</div>
 				
-			// GAMEOVER DISPLAY
+			// GAMEOVER DISPLAY TEMPLATE
 			script(id='GameOverDisplayTemplate',type='text/template')
 				| <div id="GameOverDisplay">
 				|		<h1>Game Over</h1>

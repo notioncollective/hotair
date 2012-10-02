@@ -74,6 +74,7 @@ app.get('/all', auth, routes.all);
 app.get('/democrats', auth, routes.democrats);
 app.get('/republican', auth, routes.republican);
 app.get('/load_tweets', auth, routes.load_tweets);
+app.get('/highscores', auth, routes.highscores);
 app.post('/highscore', auth, routes.highscore);
 
 http.createServer(app).listen(app.get('port'), function(){
