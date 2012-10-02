@@ -31,7 +31,7 @@ NODE MODULES
 ### Used in runtime ###
  * express (3.0.0rc1)
  * jade (0.27.2)
- * cradle (0.6.x)
+ * nono (3.3.2)
  * path (0.4.x)
  * twit (0.1.8)
  * lodash (0.6.x)
