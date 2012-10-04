@@ -282,7 +282,7 @@ HA.game = function(ns, $, _, C) {
 			// perfect level, add a life!
 			C.audio.play("addLife");
 			HA.player.incrementLives();
-			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { _incrementLevel(); } ]);
+			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { console.log("called back"); _incrementLevel(); }, this ]);
 		} else {
 			_incrementLevel();
 		}
@@ -347,6 +347,7 @@ HA.game = function(ns, $, _, C) {
 		_perfectLevel = true;
 		HA.m.publish(HA.e.NEXT_LEVEL, [_level]);
 		HA.m.publish(HA.e.SHOW_MESSAGE, ["Level "+_level]);
+		console.log("_incrementLevel", _level);
 	}
 	
 	/**
