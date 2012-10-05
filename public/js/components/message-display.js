@@ -19,11 +19,11 @@ Crafty.c("MessageDisplay", {
 		
 	},
 	
-	_handleShowMessageEvent: function(e, text, callback) {
-		this.flashMessage(text, callback);
+	_handleShowMessageEvent: function(e, text, callback, context) {
+		this.flashMessage(text, callback, context);
 	},
 	
-	flashMessage: function(text, callback) {
+	flashMessage: function(text, callback, context) {
 		var that = this,
 			blinkCount = that._blinkCount;
 		
@@ -31,7 +31,7 @@ Crafty.c("MessageDisplay", {
 		
 		function blinkOn() {
 			if(blinkCount === 0) {
-				if(_.isFunction(callback)) callback();
+				if(_.isFunction(callback)) callback.call(context);
 				return;
 			}
 			$(that._element).show();

@@ -38,6 +38,7 @@ HA.enemyController = function(ns, $, _, C) {
 
 	function _handleStartNewGameEvent(e) {
 		_loadEnemySet(0, 4);
+		_setSpeed(1);
 		_startProducing(true);
 		_bindKeyboardEvents();
 	}
@@ -102,11 +103,11 @@ HA.enemyController = function(ns, $, _, C) {
 	}
 
 	function _startProducing(firstGo) {
-		console.log("startProducing", _timer);
 		_producing = true;
 		clearInterval(_timer);
 		_timer = setInterval(_produceEnemy, _interval);
 		if(firstGo) _produceEnemy();
+		console.log("startProducing", _timer);
 	}
 
 	function _stopProducing() {

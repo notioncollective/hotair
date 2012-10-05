@@ -41,8 +41,7 @@ Crafty.scene("start", function() {
 		
 		startMenuNav.addListItem({
 			text: "Instructions",
-			callback: function(arg) { 
-				console.log("list item callback says: "+arg);
+			callback: function(arg) {
 				closeModals();
 				openModal("InstructionsDisplay"); 
 				this.destroy();
@@ -53,8 +52,7 @@ Crafty.scene("start", function() {
 		
 		startMenuNav.addListItem({
 			text: "About",
-			callback: function(arg) { 
-				console.log("list item callback says: "+arg);
+			callback: function(arg) {
 				closeModals();
 				openModal("AboutDisplay"); 
 				this.destroy();
@@ -63,14 +61,19 @@ Crafty.scene("start", function() {
 			args: ["About!!"]
 		});
 		
+		// TODO: This templating could probably get moved to an HTMLTemplate entity? 
 		startMenuNav.addListItem({
 			text: "High Scores",
-			callback: function(arg) { 
-				console.log("list item callback says: "+arg);
+			callback: function(arg) {
 				closeModals();
-				openModal("HighScoresDisplay"); 
+				openModal("HighScoresDisplay");
 				this.destroy();
-				createCloseMenu(); 
+				createCloseMenu();
+				$.getJSON('/highscores', function(resp) {
+					var temp = _.template($("#HighScoresTemplate").html());
+					var tempHtml = temp({highscores: resp.data});
+					$("#HighScoresDisplay .modal-inner").html(tempHtml); 
+				});
 			},
 			args: ["High Scores!"]
 		});

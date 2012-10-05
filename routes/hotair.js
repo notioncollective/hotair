@@ -291,6 +291,42 @@ exports.republican = function(req, res) {
 	});
 }
 
+/**
+ * Get a list of highscores
+ */
+exports.highscores = function(req, res) {
+	var highscores = {
+		data: [
+			{
+				user: "JRB",
+				party: "r",
+				score: 10500
+			},
+			{
+				user: "FES",
+				party: "d",
+				score: 10100
+			},
+			{
+				user: "MTG",
+				party: "r",
+				score: 8500
+			},
+			{
+				user: "LRS",
+				party: "d",
+				score: 6700
+			},
+			{
+				user: "PRW",
+				party: "d",
+				score: 1500
+			}
+		]
+	};
+	res.send(JSON.stringify(highscores));
+}
+
 /*
  * Save a highscore
  * POST
