@@ -9,6 +9,7 @@ function(doc) {
 // var cradle = require('cradle'),
 // var nano = require('nano')(app.get('couchdb host')+':'+app.get('couchdb port')),
 var nano_url = process.env.NODE_ENV === 'production' ? 'http://nodejitsudb198990392151.iriscouch.com:5984' : 'http://127.0.0.1:5984';
+console.log("Connecting to couchdb: ", nano_url);
 var nano = require('nano')(nano_url),
 	Twit = require('twit'),
 	_ = require('lodash'),
