@@ -3,79 +3,17 @@ Hot Air (Node.js project)
 
 An implementation of Hot Air using Node.js / CouchDB.
 
-
-Documentation
+Release Notes
 -------------
 
-The js docs are generated using YUIDoc.  First, install the yuidocjs npm package. Then, to generate the js docs for the modules, navigate to the public/js/modules directory and run:
+### 0.1: Private beta
 
-> yuidoc .
+- Major display bugs fixed
+- Game is playable
+- High scores are recorded
+- Basic analytics in place
+- Full gameplay cycle is operational
 
-The yuidoc.json config file is tracked in that folder, and contains a few settings that can be updated as needed.
-
-
-Node modules
-------------
-
-(*) Denotes compiled node modules
-
-### Used in runtime ###
- - express (3.0.0rc1)
- - jade (0.27.2)
- - nono (3.3.2)
- - path (0.4.x)
- - twit (0.1.8)
- - lodash (0.6.x)
- - q (0.8.8)
- - cron (1.0.1)
- - time (0.8.3) *
- 
-### Used only locally (not in package.js) ###
- - yuidoc (0.3.26)
- - grunt
-
-Architecture
-------------
-
- - HA
- - HA.game
- - HA.player
- - HA.mediator
- - HA.enemyController
- - HA.sceneManager
- - HA.twitter
-
-### HA ###
- - namespace
- 
-### HA.game ###
- - highScores
- - player
- - levels
- - mediator
- - enemyController
- - sceneManager
- - twitter
-
-### HA.player ###
- - name
- - teamSelection
- - score
- - lives
- 
-### HA.mediator ###
- - subscribe
- - publish
- - eventMap
- 
-### HA.enemyController ###
- - start
- - stop
- - init (bindEvents)
- - event handlers
- 
-### HA.sceneManager ###
- - loadScene
  
 Build
 -----
@@ -170,3 +108,76 @@ Requires glue, a python library for creating sprites:
  - Installation: http://glue.readthedocs.org/en/latest/installation.html#osx
  - Installing Python/pip on OS X: http://docs.python-guide.org/en/latest/starting/install/osx/#install-osx
 	
+
+Documentation
+-------------
+
+The js docs are generated using YUIDoc.  First, install the yuidocjs npm package. Then, to generate the js docs for the modules, navigate to the public/js/modules directory and run:
+
+> yuidoc .
+
+The yuidoc.json config file is tracked in that folder, and contains a few settings that can be updated as needed.
+
+
+Architecture
+------------
+
+ - HA
+ - HA.game
+ - HA.player
+ - HA.mediator
+ - HA.enemyController
+ - HA.sceneManager
+ - HA.twitter
+
+### HA ###
+ - namespace
+ 
+### HA.game ###
+ - highScores
+ - player
+ - levels
+ - mediator
+ - enemyController
+ - sceneManager
+ - twitter
+
+### HA.player ###
+ - name
+ - teamSelection
+ - score
+ - lives
+ 
+### HA.mediator ###
+ - subscribe
+ - publish
+ - eventMap
+ 
+### HA.enemyController ###
+ - start
+ - stop
+ - init (bindEvents)
+ - event handlers
+ 
+### HA.sceneManager ###
+ - loadScene
+
+Node modules
+------------
+
+(*) Denotes compiled node modules
+
+### Used in runtime ###
+ - express (3.0.0rc1)
+ - jade (0.27.2)
+ - nono (3.3.2)
+ - path (0.4.x)
+ - twit (0.1.8)
+ - lodash (0.6.x)
+ - q (0.8.8)
+ - cron (1.0.1)
+ - time (0.8.3) *
+ 
+### Used only locally (not in package.js) ###
+ - yuidoc (0.3.26)
+ - grunt
