@@ -151,7 +151,9 @@ Crafty.c("Enemy", {
 							x:this.x,
 							y:this.y,
 							enemyParent: this
-						})
+						});
+		this.balloon_select_arrow = Crafty.e('EnemySelectionArrow')
+						.attr({ x:this.x+((this.w/2)-30) });
 
 		// this.stop().animate("selected", this.BALLOON_DURATION, -1);
 		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
@@ -159,6 +161,7 @@ Crafty.c("Enemy", {
 	unselect: function() {
 		this.selected = false;
 		if(typeof this.selection !== 'undefined') this.selection.destroy();			
+		if(typeof this.balloon_select_arrow !== 'undefined') this.balloon_select_arrow.destroy();			
 		// this.stop().animate("normal", this.BALLOON_DURATION, -1);
 	}
 });

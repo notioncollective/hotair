@@ -201,6 +201,8 @@ HA.enemyController = function(ns, $, _, C) {
 				_enemies.splice(index, 1);
 				console.log("000000000 unselected enemy destroyed");
 			}
+			
+			_destroyEnemy(enemy);
 			_numEnemiesLeft -= 1;
 			if(_numEnemiesLeft === 0) {
 				// last enemy is gone, player isn't dead... go to next level!
@@ -211,24 +213,28 @@ HA.enemyController = function(ns, $, _, C) {
 	}
 
 	function _destroyEnemy(enemy) {
-		if(_.has(enemy, "destroy")) {
+		console.log("_destroyEnemy: ",enemy);
+		if(enemy.hasOwnProperty("destroy") || _.has(enemy, "destroy")) {
 			enemy.unbindAllMediatorEvents();
+			enemy.unselect();
 			enemy.destroy();
 		}
 	}
 	
 	function _removeAllEnemies() {
-		_.each(_enemies, function(enemy) {
-			enemy.unbindAllMediatorEvents();
-			enemy.destroy();
-		});
+		// _.each(_enemies, function(enemy) {
+			// enemy.unbindAllMediatorEvents();
+			// enemy.destroy();
+		// });
+		_destroyAllEnemies();
 		_enemies = [];
 	}
 	
 	function _destroyAllEnemies() {
 		_.each(_enemies, function(enemy) {
-			enemy.unbindAllMediatorEvents();
-			enemy.destroy();
+			_destroyEnemy(enemy);
+			// enemy.unbindAllMediatorEvents();
+			// enemy.destroy();
 		});
 	}
 	

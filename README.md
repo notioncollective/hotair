@@ -155,3 +155,18 @@ Once the frames are all created, they will need to be combined into a spriteshee
 
 To avoid confusion when sprites are added/removed, or if they are resized, ideally the image build would also export a Crafy.sprite definition that would fill in the necessary values. It may be necessary to modify the Crafty sprite component so that it is able to better manage different sprite sizes/locations in one sheet (will need to investigate this).
 
+#### Current Commonds
+
+This will only work on OX X, and it's still a quite shaky. It will create a directory called `frames` in the same directory as the psd file. The "frames" argument refers to the jsx script to execute (currently "frames" is the only one). _This example executes from the project root_
+
+	osascript script/scpt/jsx.scpt frames [path-to-psd]
+
+The following will output a png and css to the current dir ([sprite-frames-dir].png, [sprite-frames-dir].css). _This example executes from the PSDs diretory._
+
+	glue --ignore-filename-paddings --algorithm=horizontal [sprite-frames-dir] ./
+	
+Requires glue, a python library for creating sprites: 
+ - On github: https://github.com/jorgebastida/glue
+ - Installation: http://glue.readthedocs.org/en/latest/installation.html#osx
+ - Installing Python/pip on OS X: http://docs.python-guide.org/en/latest/starting/install/osx/#install-osx
+	

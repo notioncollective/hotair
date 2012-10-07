@@ -5,3 +5,6 @@ node_modules
 .project
 .settings
 *docs
+venv
+public/img/build/psd/*.png
+public/img/build//psd*.css

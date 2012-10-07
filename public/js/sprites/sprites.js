@@ -62,4 +62,7 @@ Crafty
 	})
 	.sprite(512, 'img/startscreen_basket.png', {
 		startscreen_basket: [0, 0]
+	})
+	.sprite(60, 'img/balloon_select_arrowx2.png', {
+		balloon_select_arrow: [0, 0]
 	});
