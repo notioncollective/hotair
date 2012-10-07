@@ -6,15 +6,20 @@ function(doc) {
 */
 
 
-var cradle = require('cradle'),
+// var cradle = require('cradle'),
+// var nano = require('nano')(app.get('couchdb host')+':'+app.get('couchdb port')),
+var nano_url = process.env.NODE_ENV === 'production' ? 'http://nodejitsudb198990392151.iriscouch.com:5984' : 'http://127.0.0.1:5984';
+console.log("Connecting to couchdb: ", nano_url);
+var nano = require('nano')(nano_url),
 	Twit = require('twit'),
 	_ = require('lodash'),
 	Q = require('q');
 
 
 
-var conn = new(cradle.Connection)(),
-	db = conn.database('hotair'),
+// var conn = new(cradle.Connection)(),
+	// db = conn.database('hotair'),
+var	db = nano.use('hotair'),
 	T = new Twit({
  	   consumer_key:         '5uH2QAOgqIVQfe2typ5w'
 	  , consumer_secret:      'PAjuPDFxLq3VCjup47nBLX0qiVT5fSyl0efUFHO47D4'
@@ -33,7 +38,7 @@ function _getTweets(params) {
 		
 		// if there's an error, return false
 		if(err) {
-			console.log(err);
+			console.error("Error getting tweets from Twitter API", err);
 			return false;
 		}
 		
@@ -47,12 +52,19 @@ function _getTweets(params) {
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
-			console.log("tweet.id", tweet.id);
+			console.log("Fetched tweet from API. ID:", tweet.id);
 		});
 		
+		// console.log(reply);
+		
 		// save to db
-		db.save(reply, function(err, resp) {
-			console.log('saved tweets');
+		// db.save(reply, function(err, resp) {
+		db.bulk({ "docs": reply }, {}, function(err, resp) {
+			if(err) {
+				console.error("Error saving tweets to db", err);
+			} else {
+				console.log('saved tweets');	
+			}
 		});
 		
 		// update _since_id based on response
@@ -64,17 +76,25 @@ function _getTweets(params) {
 		*/
 	});
 }
-
+/**
+ * Get the id of the last tweet stored. Stores the value of this
+ * in the private variable `_since_id`
+ * @method _getSinceId
+ * @return {Object} promise object for ajax call to hotair/since_id
+ */
 function _getSinceId() {
 	console.log("_getSinceId", _since_id);
-	var dfd = Q.defer();
+	
+	var dfd = Q.defer(); // set up promise object
+	
+	// 
 	if(!_.isNull(_since_id)) {
 		dfd.resolve();
 		return dfd.promise;
 	}
-	db.view('hotair/since_id', { group: false }, function(err, resp) {
+	db.view('hotair', 'since_id', function(err, resp) {
 		if(err) {
-			console.log(err);
+			console.error("Error retrieving since_id", err);
 			dfd.reject(new Error(err));
 			return;
 		}
@@ -100,19 +120,19 @@ exports.home = function(req, res){
 };
 
 exports.play = function(req, res) {
-	res.render('Play', { title: 'Hot Air' });
+	res.render('play', { title: 'Hot Air' });
 }
 
 exports.reset = function(rew, res) {
 	console.log("reset");
-	db.all(function(err, res) {
+	db.list(function(err, res) {
 		console.log(res);
-		_.each(res, function(doc, key) {
+		_.each(res.rows, function(doc, key) {
 			console.log("key", key);
 			console.log("doc", doc);
 			if(doc.key.indexOf("_design/") !== -1) return;
 				
-			db.remove(doc.key, doc.value.rev, function (err, res) {
+			db.destroy(doc.key, doc.value.rev, function (err, res) {
 				console.log(doc.key+"removed");
 			});
 		});
@@ -130,16 +150,19 @@ exports.fetch_tweets = function(req, res) {
 	// Check if database is populated, if so use since_id
 	
 	_getSinceId()
-			.then(function(value) {
-				_getTweets(_params_r)
-			}, function(err) {
-				log(err);
-			})
-			.then(function(value) {
-				_getTweets(_params_d)
-			}, function(err) {
-				log(err);
-			});
+		.then(function(value) {
+			_getTweets(_params_r)
+		}, function(err) {
+			console.log("Error fetching republican tweets", err);
+		})
+		.then(function(value) {
+			_getTweets(_params_d)
+		}, function(err) {
+			console.error("Error fetching democratic tweets", err);
+		})
+		.fail(function(err) {
+			console.error("getSinceId() failed", error);
+		});
 	
 	// _getTweets(_params_r);
 	// _getTweets(_params_d);
@@ -174,7 +197,7 @@ exports.all = function(req, res) {
 	var startkey = req.query.startkey || 0,
 		limit = req.query.limit || 100;
 	console.log("startkey: ", typeof startkey);
-	db.view('hotair/all', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
+	db.view('hotair', 'all', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
 	   	// console.log("resp", resp);
 		var out = [];
 	    if(resp) {
@@ -204,6 +227,9 @@ exports.load_tweets = function(req, res) {
 			},
 			// handle merging data
 			merge = function(err, resp) {
+				if(err) {
+					console.error("Error loading tweets from db", err);
+				}
 				if(resp) {
 					i++;
 					merged.total_rows += resp.total_rows;
@@ -216,8 +242,8 @@ exports.load_tweets = function(req, res) {
 			};
 
 	// query database
-	db.view('hotair/democrats', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
-	db.view('hotair/republican', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
+	db.view('hotair', 'democrats', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
+	db.view('hotair', 'republican', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
 	
 }
 
@@ -230,7 +256,7 @@ exports.democrats = function(req, res) {
 	var startkey = req.query.startkey || 0,
 		limit = req.query.limit || 100;
 	console.log("startkey: ", typeof startkey);
-	db.view('hotair/democrats', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
+	db.view('hotair', 'democrats', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
 	   	// console.log("resp", resp);
 		var out = [];
 	  if(resp) {
@@ -250,7 +276,7 @@ exports.republican = function(req, res) {
 	var startkey = req.query.startkey || 0,
 		limit = req.query.limit || 100;
 	console.log("startkey: ", typeof startkey);
-	db.view('hotair/republican', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
+	db.view('hotair', 'republican', {startkey: parseInt(startkey), limit: limit}, function(err, resp) {
 	   	// console.log("resp", resp);
 		var out = [];
 	  if(resp) {
@@ -265,6 +291,42 @@ exports.republican = function(req, res) {
 	});
 }
 
+/**
+ * Get a list of highscores
+ */
+exports.highscores = function(req, res) {
+	var highscores = {
+		data: [
+			{
+				user: "JRB",
+				party: "r",
+				score: 10500
+			},
+			{
+				user: "FES",
+				party: "d",
+				score: 10100
+			},
+			{
+				user: "MTG",
+				party: "r",
+				score: 8500
+			},
+			{
+				user: "LRS",
+				party: "d",
+				score: 6700
+			},
+			{
+				user: "PRW",
+				party: "d",
+				score: 1500
+			}
+		]
+	};
+	res.send(JSON.stringify(highscores));
+}
+
 /*
  * Save a highscore
  * POST
@@ -272,8 +334,10 @@ exports.republican = function(req, res) {
 exports.highscore = function(req, res) {
 	var data = req.body,
 		respBody = {};
-	db.save(data, function(db_err, db_res) {
+	// db.save(data, function(db_err, db_res) {
+	db.insert(data, function(db_err, db_res) {
 		if (db_err) {
+			console.lerror("Error saving high score", db_err)
 			respBody.error = db_err;
 		} else {
 			respBody.success = true;
@@ -282,30 +346,30 @@ exports.highscore = function(req, res) {
 	});
 };
 
-/*
- * Retrieve tweets
- * POST
- */
+exports.notfound = function(req, res) {
+	res.send(404, "Page not found!");
+}
 
-exports.register = function(req, res) {
-  var data = req.body;
 
-  // Check if username is in use
-  db.get(data.username, function(err, doc) {
-    if(doc) {
-      res.render('add', {flash: 'Username is in use'});
-
-    // Check if confirm password does not match
-    } else if(data.password != data.confirm_password) {
-      res.render('add', {flash: 'Password does not match'});
-
-    // Create user in database
-    } else {
-      delete data.confirm_password;
-      db.save(data.username, data,
-        function(db_err, db_res) {
-          res.render('add', {flash: 'User created'});
-        });
-    }
-  });
-};
+// exports.register = function(req, res) {
+  // var data = req.body;
+// 
+  // // Check if username is in use
+  // db.get(data.username, function(err, doc) {
+    // if(doc) {
+      // res.render('add', {flash: 'Username is in use'});
+// 
+    // // Check if confirm password does not match
+    // } else if(data.password != data.confirm_password) {
+      // res.render('add', {flash: 'Password does not match'});
+// 
+    // // Create user in database
+    // } else {
+      // delete data.confirm_password;
+      // db.save(data.username, data,
+        // function(db_err, db_res) {
+          // res.render('add', {flash: 'User created'});
+        // });
+    // }
+  // });
+// };

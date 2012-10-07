@@ -10,10 +10,11 @@ HA.game = function(ns, $, _, C) {
 			_scoreIncrement = 100,
 			_level = 0,
 			_party,
-			_perfectLevel,
+			_perfectLevel = true,
 			_numEnemiesPerLevel = 2,
 			_partySelectMenu,
-			_pauseDisplay;
+			_pauseDisplay,
+			_state = 0;
 
 	// private methods
 	function _init(options) {
@@ -25,10 +26,15 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.init();
 		HA.sceneManager.init();
 		
-		// TODO decide where twitter module needs to be initialized
-		HA.twitter.init({
-			test : true
+		$.ajaxSetup({
+			beforeSend: function(xhr) {
+				var token = _getCsrfToken();
+				xhr.setRequestHeader('X-CSRF-Token', token);
+			}
 		});
+		
+		// TODO decide where twitter module needs to be initialized
+		HA.twitter.init();
 
 		// Set up initial event subscriptions
 		HA.m.subscribe(HA.events.GAME_LOADED, _handleGameLoadedEvent);
@@ -40,11 +46,26 @@ HA.game = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.LEVEL_COMPLETE, _handleLevelCompleteEvent);
 		HA.m.subscribe(HA.events.NEXT_LEVEL, _handleNextLevelEvent);
 		
+		// For window blur, when changing browser windows or application
+		C.bind("Pause", function(e) {
+			if(_state !== 1) return;
+			C.audio.pause("game_music");
+			HA.enemyController.stopProducing();
+		});
+		C.bind("Unpause", function(e) {
+			if(_state !== 1) return;
+			if(!C.isPaused()) return;
+			C.audio.unpause("game_music");
+			if(!HA.enemyController.isProducing()) HA.enemyController.startProducing();
+		});
+		
 		HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
 		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
 
 		// Initialize Crafty
 		C.init();
+		C.settings.modify("autoPause", true);
+		
 		// Load the first scene
 		HA.m.publish(HA.events.LOAD_SCENE, ["loading"]);
 
@@ -72,7 +93,9 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleStartNewGameEvent(e) {
 		_setLevel(1);
+		HA.player.setLives(3);
 		_bindGameplayKeyboardEvents();
+		_state = 1;
 	}
 	
 	/**
@@ -82,8 +105,15 @@ HA.game = function(ns, $, _, C) {
 	 * @param {object} e
 	 */
 	function _handleGameOverEvent(e) {
+		console.log("HA.game handleGameoverEvent");
 		// TODO: Possibly perform extra cleanup here, maybe clear out the mediator?
+		_unbindGameplayKeyboardEvents();
+		
+		_saveScore();
+		// _pauseDisplay.destroy();
+		// _pauseMenu.destroy();
 		HA.m.publish(HA.e.LOAD_SCENE, "gameover");
+		_state = 2;
 	}
 
 
@@ -141,6 +171,7 @@ HA.game = function(ns, $, _, C) {
 	function _doPause() {
 		_pauseDisplay.showPauseScreenDisplay();
 		_pauseMenu.renderListNav();
+		C.settings.modify("autoPause", false);
 		C.pause();
 	}
 
@@ -154,13 +185,14 @@ HA.game = function(ns, $, _, C) {
 		e.preventDefault();
 		console.log("Resume game!");
 		if(C.isPaused()) {
-			C.audio.unPause("game_music");
+			C.audio.unpause("game_music");
 			_pauseDisplay.destroy();
 			_pauseMenu.destroy();
 			Crafty.unbind("EnterFrame", _doPause);
 			_bindGameplayKeyboardEvents();
 			C.pause();
 			C.audio.play('pause');
+			C.settings.modify("autoPause", true);
 		}
 		return false;
 	};
@@ -175,12 +207,13 @@ HA.game = function(ns, $, _, C) {
 		e.preventDefault();
 		console.log("End game!");
 		if(C.isPaused()) {
+			_state = 0;
 			_pauseDisplay.destroy();
 			_pauseMenu.destroy();
-			Crafty.unbind("EnterFrame", _doPause);
+			C.unbind("EnterFrame", _doPause);
 			C.pause();
 			C.audio.play('pause');
-			C.scene("start");
+			HA.sceneManager.loadScene("start");
 		}
 		return false;
 	};
@@ -249,14 +282,7 @@ HA.game = function(ns, $, _, C) {
 			// perfect level, add a life!
 			C.audio.play("addLife");
 			HA.player.incrementLives();
-			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { _incrementLevel(); } ]);
-			
-			C.trigger("ShowMessage", {
-				text : "Perfect Level!",
-				callback : function() {
-					_incrementLevel();
-				}
-			});
+			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { console.log("called back"); _incrementLevel(); }, this ]);
 		} else {
 			_incrementLevel();
 		}
@@ -321,6 +347,7 @@ HA.game = function(ns, $, _, C) {
 		_perfectLevel = true;
 		HA.m.publish(HA.e.NEXT_LEVEL, [_level]);
 		HA.m.publish(HA.e.SHOW_MESSAGE, ["Level "+_level]);
+		console.log("_incrementLevel", _level);
 	}
 	
 	/**
@@ -362,13 +389,15 @@ HA.game = function(ns, $, _, C) {
 	 @method _saveScore
 	 */
 	function _saveScore() {
+		console.log("save score");
+		var token = _getCsrfToken();
 		$.ajax({
 			url : "/highscore",
 			type : "post",
 			contentType : "application/json",
 			data : JSON.stringify({
 				user : "XXX",
-				score : _getScore(),
+				score : HA.player.getScore(),
 				party : _party
 			}),
 			success : function(resp) {
@@ -376,6 +405,17 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 	};
+	
+	/**
+	 * Get the CSRF token from the meta tag.
+	 * @private
+	 * @method _getCsrfToken
+	 * @return {string} The CSRF token.
+	 */
+	function _getCsrfToken() {
+		var token = $("meta[name='csrf-token']").attr("content");
+		return token;
+	}
 	// public methods
 
 	/**
@@ -386,21 +426,7 @@ HA.game = function(ns, $, _, C) {
 	ns.init = _init;
 
 	/**
-	 Pause gameplay.
-	 @public
-	 @method pauseGame
-	 */
-	ns.pauseGame = _handlePauseGameEvent;
-
-	/**
-	 UnPause gameplay.
-	 @public
-	 @method unPauseGame
-	 */
-	ns.unPauseGame = _unPauseGame;
-
-	/**
-	 UnPause gameplay.
+	 Unpause gameplay.
 	 @public
 	 @method getParty
 	 */

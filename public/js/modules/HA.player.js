@@ -35,6 +35,7 @@ HA.player = function(ns, $, _, C) {
 		HA.m.publish(HA.e.UPDATE_SCORE, [_score]);
 	}
 	
+	
 	function _getParty() {
 		return _party;
 	}
@@ -47,6 +48,11 @@ HA.player = function(ns, $, _, C) {
 		return _lives;
 	}
 	
+	function _setLives(lives) {
+		_lives = lives;
+		HA.m.publish(HA.e.UPDATE_LIVES, [_lives]);
+	}
+	
 	function _incrementLives() {
 		_lives = _lives+1;
 		HA.m.publish(HA.e.UPDATE_LIVES, [_lives]);
@@ -55,7 +61,7 @@ HA.player = function(ns, $, _, C) {
 	function _decrementLives() {
 		_lives = _lives-1;
 		HA.m.publish(HA.e.UPDATE_LIVES, [_lives]);
-		if(_lives === 0) {
+		if(_lives <= 0) {
 			HA.m.publish(HA.e.GAME_OVER);
 		}
 	}
@@ -111,6 +117,13 @@ HA.player = function(ns, $, _, C) {
 	 * @return {number}
 	 */
 	ns.getLives = _getLives;
+	
+	/**
+	 * Set the number of lives left.
+	 * @method setLives
+	 * @return {number}
+	 */
+	ns.setLives = _setLives;
 	
 	/**
 	 * Add a life to the player.

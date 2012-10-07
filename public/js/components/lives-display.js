@@ -1,5 +1,5 @@
 Crafty.c("LivesDisplay", {
-	_lives: 3,
+	_lives: 0,
 	init: function(party) {
 		_.bindAll(this);
 		console.log("Lives: init()");
@@ -9,9 +9,7 @@ Crafty.c("LivesDisplay", {
 		this.w = 150;
 		this.h = 30;
 		this.css({"text-align": "left"});
-		// this.css({"padding": "20px"});
 		
-		this.updateLivesDisplay(this._lives);
 		this.updateLivesBackground();
 		
 		// this.bind("UpdateLives", function(e) {

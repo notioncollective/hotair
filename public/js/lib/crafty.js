@@ -4859,7 +4859,7 @@ Crafty.extend({
 
             Crafty.addEvent(this, window, "blur", function () {
                 if (Crafty.settings.get("autoPause")) {
-                    Crafty.pause();
+                    if(!Crafty._paused) Crafty.pause();
                 }
             });
             Crafty.addEvent(this, window, "focus", function () {
@@ -8259,19 +8259,19 @@ Crafty.c("Particles", {
         },
         
         /**@
-         * #Crafty.audio.unPause
-         * @sign public this Crafty.audio.unPause(string ID)
+         * #Crafty.audio.unpause
+         * @sign public this Crafty.audio.unpause(string ID)
          * 
          * Resume playing the Audio instance specified by id param.
          * 
          * @example
          * ~~~
-         * Crafty.audio.unPause('music');
+         * Crafty.audio.unpause('music');
          * ~~~
          * 
-         * @param {string} id The id of the audio object to unPause
+         * @param {string} id The id of the audio object to unpause
          */
-        unPause:function(id) {
+        unpause:function(id) {
         	if(!Crafty.support.audio || !id || !this.sounds[id]) return;
           var s = this.sounds[id];
           if(s.obj.paused) s.obj.play();
@@ -8288,7 +8288,7 @@ Crafty.c("Particles", {
          * Crafty.audio.togglePause('music');
          * ~~~
          * 
-         * @param {string} id The id of the audio object to pause/unPause
+         * @param {string} id The id of the audio object to pause/unpause
          */
         togglePause:function(id) {
         	if(!Crafty.support.audio || !id || !this.sounds[id]) return;

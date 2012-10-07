@@ -2,15 +2,6 @@ Crafty.scene("start", function() {
 	console.log("Scene: start");
 	
 	var startMenuNav, partySelectNav, closeMenuNav;
-	// Crafty.background('rgb(140, 208, 255)');
-	
-	// TODO: Audio needs to load first, so this doesn't work...
-	// Crafty.audio.play("start_music", -1, .5);
-	// $("#StartDisplay").show();
-	// var $startMenu = $("#StartDisplay li");
-	// var startMenu = new Crafty.ListNav($startMenu);
-	// startMenu.init();
-//
 
 	function closeModals() {
 		$(".modal").hide();		
@@ -50,8 +41,7 @@ Crafty.scene("start", function() {
 		
 		startMenuNav.addListItem({
 			text: "Instructions",
-			callback: function(arg) { 
-				console.log("list item callback says: "+arg);
+			callback: function(arg) {
 				closeModals();
 				openModal("InstructionsDisplay"); 
 				this.destroy();
@@ -62,8 +52,7 @@ Crafty.scene("start", function() {
 		
 		startMenuNav.addListItem({
 			text: "About",
-			callback: function(arg) { 
-				console.log("list item callback says: "+arg);
+			callback: function(arg) {
 				closeModals();
 				openModal("AboutDisplay"); 
 				this.destroy();
@@ -72,14 +61,19 @@ Crafty.scene("start", function() {
 			args: ["About!!"]
 		});
 		
+		// TODO: This templating could probably get moved to an HTMLTemplate entity? 
 		startMenuNav.addListItem({
 			text: "High Scores",
-			callback: function(arg) { 
-				console.log("list item callback says: "+arg);
+			callback: function(arg) {
 				closeModals();
-				openModal("HighScoresDisplay"); 
+				openModal("HighScoresDisplay");
 				this.destroy();
-				createCloseMenu(); 
+				createCloseMenu();
+				$.getJSON('/highscores', function(resp) {
+					var temp = _.template($("#HighScoresTemplate").html());
+					var tempHtml = temp({highscores: resp.data});
+					$("#HighScoresDisplay .modal-inner").html(tempHtml); 
+				});
 			},
 			args: ["High Scores!"]
 		});
@@ -116,10 +110,11 @@ Crafty.scene("start", function() {
 		
 		partySelectNav.renderListNav();
 	}
+	
 
 	var startScreenMainGraphic = Crafty.e('StartScreenMainGraphic')
-		.attr({x:(Crafty.DOM.window.width/2)-256, y:(Crafty.DOM.window.height/2)-256, z:100});
-	
+		.attr({x:(Crafty.DOM.window.width/2)-256, y:(Crafty.DOM.window.height/2)-256});
+		
 	createMainStartMenu();
 	
 	// fullscreen mode

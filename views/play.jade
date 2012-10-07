@@ -2,6 +2,7 @@ doctype 5
 html(lang="en")
 	head
 		title Hot Air
+		meta(name="csrf-token", content=token)
 		link(rel='stylesheet', type='text/css', href='css/style.css')
 		link(href='http://fonts.googleapis.com/css?family=Press+Start+2P', rel='stylesheet', type='text/css')
 	body(id="home")
@@ -21,7 +22,7 @@ html(lang="en")
 			script(src="js/crafty-extensions/#{ext[i]}.js", type="text/javascript", charset="utf-8")
 
 		// game components
-		- var com = ['html-template', 'oscillate', 'start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'list-nav', 'message-display', 'enemy-selection'];
+		- var com = ['html-template', 'oscillate', 'start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'gameover-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'list-nav', 'message-display', 'enemy-selection'];
 		- for (var i=0;i<com.length;i++)
 			script(src="js/components/#{com[i]}.js", type="text/javascript", charset="utf-8")
 
@@ -58,37 +59,53 @@ html(lang="en")
 			#HighScoresDisplay.modal
 				h1 High Scores!
 				.modal-inner
-					ul
-						li JB  10400
-						li AMD 9300
-						li JW  4900 
+					| loading...
+						
+			// HIGH SCORES TEMPLATE
+			script(id='HighScoresTemplate',type='text/template')
+				| <div id="HighScores">
+				|		<ul>
+				|		<% _.each(highscores, function(highscore) { %>
+				|			<li><%= highscore.score %> - <%= highscore.user %> (<%= highscore.party.toUpperCase() %>)
+				|		<% }); %>
+				|		</ul>
+				| </div>
 
-			// PAUSE DISPLAY
-			script(id='PauseDisplayTemplate',type='text/template')
-				| <div id="PauseDisplay">
-				|		<h1>Paused</h1>
-				|	</div>
-
-			// TWEET DISPLAY
+			// TWEET DISPLAY TEMPLATE
 			script(id='TweetDisplayTemplate',type='text/template')
 				| <div id="TweetDisplay">
 				|		<div class='content'><%= text %></div>
 				| </div>
 
-			// GAMEOVER DISPLAY
-			#GameOverDisplay
-				h1 Game Over
-				#NewHighscore
-					h3 New High Score!
-					label Enter your initials:
-						input#gameover-name(type="text") test
-					a#SaveHighscore(href="#done") Done
-				#GameOverOptions
-					ul.list-inline
-						li
-							a#gameover-start(href="#gameover-start") Start Screen
-						li
-							a#gameover-again(href="#gameover-again") Play Again
+			// PAUSE DISPLAY TEMPLATE
+			script(id='PauseDisplayTemplate',type='text/template')
+				| <div id="PauseDisplay">
+				|		<h1>Paused</h1>
+				|	</div>
+				
+			// GAMEOVER DISPLAY TEMPLATE
+			script(id='GameOverDisplayTemplate',type='text/template')
+				| <div id="GameOverDisplay">
+				|		<h1>Game Over</h1>
+				|	</div>
+
+
+			// HIGHSCORE FORM
+			script(id='HighScoreForm',type='text/template')
+			
+			//  #HighScoreForm
+			//  	h1 Game Over
+			//  	#NewHighscore
+			//  		h3 New High Score!
+			//  		label Enter your initials:
+			//  			input#gameover-name(type="text") test
+			//  		a#SaveHighscore(href="#done") Done
+			//  	#GameOverOptions
+			//  		ul.list-inline
+			//  			li
+			//  				a#gameover-start(href="#gameover-start") Start Screen
+			//  			li
+			//  				a#gameover-again(href="#gameover-again") Play Again
 							
 			// FULL SCREEN
 			#FullScreenPrompt

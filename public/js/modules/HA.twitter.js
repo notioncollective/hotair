@@ -7,8 +7,8 @@ HA.twitter = function(ns, $, _, C) {
 	// PRIVATE
 	var _options = {},
 			_defaults = {
-				protocol: 'http://',
-				domain: 'localhost:3000',
+				// protocol: 'http://', // should need this
+				// domain: 'localhost:3000', // shouldn't need this
 				load_tweets_endpoint: '/load_tweets',
 				tweet_limit: 100,
 				test: false
@@ -40,15 +40,19 @@ HA.twitter = function(ns, $, _, C) {
    */
 	// TODO: refactor this function! many arguments aren't even used!
 	function _loadTweets(params) {
-		var uri = _options.protocol;
-				uri += _options.domain;
-				uri += _options.load_tweets_endpoint;
+		// var uri = _options.protocol;
+				// uri += _options.domain;
+				// uri += _options.load_tweets_endpoint;
+		var uri = _options.load_tweets_endpoint;
 		params = params || {};		
 		
 		// ping the server for twitter data
 		$.getJSON(uri, params)
 			.done(_handleLoadTweets)
-			.fail(function(){ throw "Error loading tweet data."; });
+			.fail(function(){
+				console.log("Error loading tweets!");
+				throw new Error("Error loading tweet data.");
+			});
 	}
 	
 	
