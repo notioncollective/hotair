@@ -346,6 +346,10 @@ exports.highscore = function(req, res) {
 	});
 };
 
+exports.notfound = function(req, res) {
+	res.send(404, "Page not found!");
+}
+
 
 // exports.register = function(req, res) {
   // var data = req.body;
