@@ -64,7 +64,7 @@ app.get('/republican', auth, routes.republican);
 app.get('/load_tweets', auth, routes.load_tweets);
 app.get('/highscores', auth, routes.highscores);
 app.post('/highscore', auth, routes.highscore);
-app.get('*', routes.notfound);
+// app.get('/*', routes.notfound);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
