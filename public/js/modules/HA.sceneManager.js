@@ -27,7 +27,7 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 		if(screenfull) {
 			screenfull.request();
 			_fullScreenMode = true;
-			HA.m.publish(HA.events.CHANGE_FULL_SCREEN, [_fullSceenMode]);
+			HA.m.publish(HA.events.CHANGE_FULL_SCREEN, [_fullScreenMode]);
 		} else throw new Error("screenfull library is not loaded");
 		return _fullScreenMode;		
 	}
@@ -37,7 +37,7 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 		if(screenfull) {
 			screenfull.exit();
 			_fullScreenMode = false;
-      HA.m.publish(HA.events.CHANGE_FULL_SCREEN, [_fullSceenMode]);
+      HA.m.publish(HA.events.CHANGE_FULL_SCREEN, [_fullScreenMode]);
 		} else throw new Error("screenfull library is not loaded");
 		return _fullScreenMode;		
 	}

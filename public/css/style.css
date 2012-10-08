@@ -78,15 +78,17 @@ div.list-nav {
 	bottom: 100px;
 	left: 0px;
 	width: 100%;
-	height: 30px;
+/*	height: 30px;*/
 	z-index: 1010;
 	line-height: 2;
+	padding: 16px 0;
+	background: transparent url("../img/pause_bg.png") top left repeat;
 }
 
 div.list-nav span {
 	margin: 20px;
 	padding: 5px;
-	color: #FFF;
+	color: #000;
 	cursor: pointer;
 }
 
