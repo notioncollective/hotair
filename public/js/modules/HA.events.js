@@ -106,13 +106,22 @@ HA.events = HA.e = function(ns, $, _, C) {
 		 */
 		TWEETS_LOADED: "ha:tweets_loaded",
 		
-		    /**
-     * Tweets loaded into twitter module
-     * @property {string} TWEETS_LOADED
+		/**
+     * Event for when fullscreen mode is toggled
+     * @property {string} CHANGE_FULL_SCREEN
      * @final
-     * @param {boolean} fullscreen enabled/disabled
+     * @param {boolean} isFullscreen enabled/disabled
      */
     CHANGE_FULL_SCREEN: "ha:change_full_screen",
+    
+    /**
+     * Tweets loaded into twitter module
+     * @property {string} RESIZE_VIEWPORT
+     * @final
+     * @param {number} width new viewport width
+     * @param {number} height new viewport height
+     */
+    RESIZE_VIEWPORT: "ha:resize_viewport",
     
 		
 		

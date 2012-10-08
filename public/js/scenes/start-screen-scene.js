@@ -1,10 +1,18 @@
 Crafty.scene("start", function() {
 	console.log("Scene: start");
-	HA.sm.fullScreenKeyEnabled(true);
-	
-	var startMenuNav, partySelectNav, closeMenuNav;
-
-
+	var startMenuNav, partySelectNav, closeMenuNav, startScreenMainGraphic;
+  HA.sm.fullScreenKeyEnabled(true); // enable full-screen mode
+  
+  // fullscreen key binding
+  $(document).on("keydown", function(e) {
+    if(e.keyCode == Crafty.keys['ESC']) {
+      console.log("Full scrn");
+      HA.sm.toggleFullScreenMode();
+    }
+  });
+  
+  HA.m.subscribe(HA.events.RESIZE_VIEWPORT, resizeViewportHandler);
+  
 	function closeModals() {
 		$(".modal").hide();		
 	}
@@ -80,9 +88,24 @@ Crafty.scene("start", function() {
 			args: ["High Scores!"]
 		});
 		
+		createStartScreenMainGraphic()
+		
 		startMenuNav.renderListNav();
+
 	}
 	
+	function resizeViewportHandler(e, width, height) {
+	  createStartScreenMainGraphic(width, height);
+	 }
+
+  function createStartScreenMainGraphic(width, height) {  
+    startScreenMainGraphic = startScreenMainGraphic || Crafty.e('StartScreenMainGraphic');
+    startScreenMainGraphic.attr(
+         {
+           x:(Crafty.DOM.window.width/2)-256,
+           y:(Crafty.DOM.window.height/2)-256
+        });
+  }
 
 	function createPartySelectMenu() {
 		console.log("party select menu...");
@@ -110,13 +133,19 @@ Crafty.scene("start", function() {
 			}
 		});
 		
+		partySelectNav.addListItem({
+      text: "Back",
+      callback: function(arg) {
+        this.destroy();
+        createMainStartMenu();
+      }
+    });
+		
 		partySelectNav.renderListNav();
 	}
-	
 
-	var startScreenMainGraphic = Crafty.e('StartScreenMainGraphic')
-		.attr({x:(Crafty.DOM.window.width/2)-256, y:(Crafty.DOM.window.height/2)-256});
 		
+	createStartScreenMainGraphic()	
 	createMainStartMenu();
 	
 	// HA.startScreen = new Crafty.StartScreen();

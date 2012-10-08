@@ -59,6 +59,12 @@ HA.game = function(ns, $, _, C) {
 			if(!HA.enemyController.isProducing()) HA.enemyController.startProducing();
 		});
 		
+		// using jQuery here, wasn't sure of the Crafty equiv
+		$(window).on('resize orientationChanged', function(e) {
+		  // console.log("Change viewport size!", e);
+      HA.m.publish(HA.events.RESIZE_VIEWPORT, [C.DOM.window.width, C.DOM.window.height]);
+    });
+		
 		HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
 		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
 
@@ -336,7 +342,6 @@ HA.game = function(ns, $, _, C) {
 	function _unbindGameplayKeyboardEvents() {
 	  console.log("Unbind game keyboard events");
 		$(document).off("keydown");
-		HA.sm.fullScreenKeyEnabled(false);
 	}
 	
 	/**

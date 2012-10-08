@@ -6,8 +6,8 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 	
 	var _currentScene = null,
 		_fullScreenKeyEnabled = false,
-		_fullScreenMode = false,
-		_currentSceneInitFn = function(){};
+		_fullScreenMode = false;
+		// _sceneKeyEventsFn = function(){};
 	
 	
 	function _init() {
@@ -27,6 +27,7 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 		if(screenfull) {
 			screenfull.request();
 			_fullScreenMode = true;
+			HA.m.publish(HA.events.CHANGE_FULL_SCREEN, [_fullSceenMode]);
 		} else throw new Error("screenfull library is not loaded");
 		return _fullScreenMode;		
 	}
@@ -36,6 +37,7 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 		if(screenfull) {
 			screenfull.exit();
 			_fullScreenMode = false;
+      HA.m.publish(HA.events.CHANGE_FULL_SCREEN, [_fullSceenMode]);
 		} else throw new Error("screenfull library is not loaded");
 		return _fullScreenMode;		
 	}
@@ -46,19 +48,27 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 		return _fullScreenMode;
 	}
 	
-	function _unbindSceneKeyEvents() {
-	  
-	}
+  /**
+   * Unbind scene key events
+   * @private
+   * @method _unbindGameplayKeyboardEvents
+   */
+  function _unbindSceneKeyEvents() {
+    console.log("Unbind scene keyboard events");
+    $(document).off("keydown");
+    HA.sm.fullScreenKeyEnabled(false);
+  }
+  
 	
-	function _bindSceneKeyEvents(fn) {
-	  // only allow passing functions or undefined
-	  if(!_.isFunction(fn) && !_.isUndefined(fn))
-	   throw new Error("Must be passed a function or nothing.");
-	  
-	  if(fn) _currentSceneInitFn = fn;
-	  
-    _currentSceneInitFn.call();	  
-	}
+	// function _bindSceneKeyEvents(fn) {
+	  // // only allow passing functions or undefined
+	  // if(!_.isFunction(fn) && !_.isUndefined(fn))
+	   // throw new Error("Must be passed a function or nothing.");
+// 	  
+	  // if(fn) _currentSceneInitFn = fn;
+// 	  
+    // _currentSceneInitFn.call();	  
+	// }
 	
 	/**
    * See public loadScene method
@@ -90,8 +100,9 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 		return _fullScreenKeyEnabled;
 	};
 	
-	ns.init = _init;
+	ns.toggleFullScreenMode = _toggleFullScreenMode;
 	
+	ns.init = _init;
 	
 	
 	return ns;

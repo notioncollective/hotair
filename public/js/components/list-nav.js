@@ -1,9 +1,7 @@
 Crafty.c("ListNav", {
 	init: function() {
 		this.addComponent("2D, DOM, HTML, Keyboard");
-		this.w = Crafty.DOM.window.width;
-		this.h = Crafty.DOM.window.height;
-		
+    this._fitToViewport();
 		this.listNavItems = [];
 		this.selectedItem = 0;
 		
@@ -34,6 +32,12 @@ Crafty.c("ListNav", {
 		// this.bind("Click", function(e) {
 			 			
 		// });
+		
+	  var that = this;
+		HA.m.subscribe(HA.events.RESIZE_VIEWPORT, function(e, w, h){
+		  that.w = Crafty.DOM.window.width;
+      that.h = Crafty.DOM.window.height;
+		});
 		
 	},
 	
@@ -67,6 +71,12 @@ Crafty.c("ListNav", {
 		this.replace("<div id='"+this.wrappingId+"'class='"+this.wrappingClass+"'>"+output+"</div>");
 		this._bindClickEvents();
 	},
+	
+  
+  _fitToViewport: function() {
+    this.w = Crafty.DOM.window.width;
+    this.h = Crafty.DOM.window.height;
+  },
 	
 	_unbindClickEvents: function() {
 		$(document).off("click", "."+this.wrappingClass+" span");
