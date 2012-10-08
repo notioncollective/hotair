@@ -312,7 +312,9 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _bindGameplayKeyboardEvents() {
 		_unbindGameplayKeyboardEvents();
+    console.log("Bind game keyboard events");
 		$(document).on("keydown", function(e) {
+		  console.log("keydown");
 			if(e.keyCode == Crafty.keys['ENTER']) {
 				if(!Crafty.isPaused()) {
 					HA.m.publish(HA.events.PAUSE_GAME);
@@ -321,9 +323,7 @@ HA.game = function(ns, $, _, C) {
 			}
 			if(e.keyCode == Crafty.keys['ESC']) {
 				console.log("Full scrn");
-				if(screenfull) {
-					screenfull.toggle();
-				}
+				HA.sm.toggleFullScreenMode();
 			}
 		});
 	}
@@ -334,7 +334,9 @@ HA.game = function(ns, $, _, C) {
 	 * @method _unbindGameplayKeyboardEvents
 	 */
 	function _unbindGameplayKeyboardEvents() {
+	  console.log("Unbind game keyboard events");
 		$(document).off("keydown");
+		HA.sm.fullScreenKeyEnabled(false);
 	}
 	
 	/**

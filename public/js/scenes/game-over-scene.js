@@ -1,5 +1,7 @@
 Crafty.scene("gameover", function() {
 	console.log("Scene: gameover");
+	HA.sm.fullScreenKeyEnabled(false);
+	
 	
 	var isHighscore = false, // hard coded for the moment 
 		gameOverDisplay, gameOverMenu, highScoreForm;

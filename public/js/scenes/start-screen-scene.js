@@ -1,7 +1,9 @@
 Crafty.scene("start", function() {
 	console.log("Scene: start");
+	HA.sm.fullScreenKeyEnabled(true);
 	
 	var startMenuNav, partySelectNav, closeMenuNav;
+
 
 	function closeModals() {
 		$(".modal").hide();		
@@ -116,20 +118,6 @@ Crafty.scene("start", function() {
 		.attr({x:(Crafty.DOM.window.width/2)-256, y:(Crafty.DOM.window.height/2)-256});
 		
 	createMainStartMenu();
-	
-	// fullscreen mode
-	if(screenfull) {
-		this.bind('KeyDown', function(e) {
-		    if(e.key == Crafty.keys['ESC']) screenfull.toggle();
-	    });
-		screenfull.onchange = function(e) {
-			if(screenfull.isFullscreen) {
-				$('#FullScreenPrompt').hide();					
-			} else {
-				$('#FullScreenPrompt').show();									
-			}
-		};
-	}
 	
 	// HA.startScreen = new Crafty.StartScreen();
 	// HA.startScreen.init();

@@ -1,5 +1,7 @@
 Crafty.scene("gameplay", function() {
 	console.log("Scene: gameplay "+ this);
+	HA.sm.fullScreenKeyEnabled(false);
+	
 	
 	Crafty.audio.play("whoosh");
 	Crafty.audio.play("game_music", -1, .8);

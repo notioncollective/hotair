@@ -106,6 +106,15 @@ HA.events = HA.e = function(ns, $, _, C) {
 		 */
 		TWEETS_LOADED: "ha:tweets_loaded",
 		
+		    /**
+     * Tweets loaded into twitter module
+     * @property {string} TWEETS_LOADED
+     * @final
+     * @param {boolean} fullscreen enabled/disabled
+     */
+    CHANGE_FULL_SCREEN: "ha:change_full_screen",
+    
+		
 		
 		/********************************/
 		/**		PLAYER EVENTS

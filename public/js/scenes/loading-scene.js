@@ -1,9 +1,13 @@
 Crafty.scene("loading", function() {
 	console.log("Scene: loading");
+	HA.sm.fullScreenKeyEnabled(false);
+	
 	Crafty.load([
 		"img/20.png",
 		"img/40.png",
 		"img/60.png",
+		"img/fonts/blue_score_16x16.png",
+		"img/fonts/grey_score_16x16.png",
 		"/snd/cloud_loops.mp3",
 		"/snd/drop.wav",
 		"/snd/level.wav",
