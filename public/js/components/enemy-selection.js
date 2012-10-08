@@ -5,7 +5,7 @@ Crafty.c("EnemySelection", {
 			.animate("selected", 0, 1, 3)		
 			.animate("selected", 30, -1);
 			
-		this.bind('EnterFrame', this._enterFrame);
+		this.bind('EnterFrame', this._enterFrame);         
 	},
 	// setParent: function(obj) {
 		// console.log("EnemySelection :: Set parent", obj);
@@ -16,7 +16,7 @@ Crafty.c("EnemySelection", {
 		// this.h = this.parent.h;
 	// },
 	_enterFrame: function() {
-		if(typeof this.parent !== 'undefined') {
+		if(typeof this.enemyParent !== 'undefined') {
 			this.x = this.enemyParent.x;
 			this.y = this.enemyParent.y;
 		}

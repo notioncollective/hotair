@@ -153,7 +153,11 @@ Crafty.c("Enemy", {
 							enemyParent: this
 						});
 		this.balloon_select_arrow = Crafty.e('EnemySelectionArrow')
-						.attr({ x:this.x+((this.w/2)-30) });
+						.attr({
+						  x:this.x+((this.w/2)-30),
+              y:this.y-70,
+              enemyParent: this
+            });
 
 		// this.stop().animate("selected", this.BALLOON_DURATION, -1);
 		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);

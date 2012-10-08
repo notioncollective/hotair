@@ -53,7 +53,7 @@ Crafty
 		score_cloud_8: [8, 0],
 		score_cloud_right: [9, 0]
 	})
-	.sprite(100, 'img/clouds.png', {
+	.sprite(100, 'img/cloudsx2.png', {
 		cloud1: [0, 0],
 		cloud2: [1, 0],
 		cloud3: [2, 0],

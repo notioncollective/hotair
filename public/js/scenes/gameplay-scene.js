@@ -7,6 +7,7 @@ Crafty.scene("gameplay", function() {
 	Crafty.audio.play("game_music", -1, .8);
 	
 	// draw some clouds	
+	
 	var j = 0;
 	for (;j<5;j++) {
 		Crafty.e("Cloud");
