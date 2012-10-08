@@ -36,9 +36,11 @@ footer, header, hgroup, menu, nav, section {
 
 /*-------*/
 
-body.placeholder {
+body#placeholder {
 	font-family: "Helvetica", "Arial", sans-serif;
 	background: #9dd9fe url(../img/placeholder_illustration.jpg) 5% 20% no-repeat;
+	margin: 0;
+	padding: 0;
 	/*background-size: cover;*/
 }
 
@@ -50,6 +52,7 @@ body.placeholder {
 	top: 10%;
 	width: 300px;
 	padding: 30px;
+	margin: 0;
 /*	background: #ddd url(../img/pause_bg.png) 0 0 repeat;*/
 	background: #fff;
 	opacity: 0.9;
