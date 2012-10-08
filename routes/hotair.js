@@ -52,7 +52,7 @@ function _getTweets(params) {
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
-			console.log("Fetched tweet from API. ID:", tweet.id);
+			// console.log("Fetched tweet from API. ID:", tweet.id);
 		});
 		
 		// console.log(reply);
