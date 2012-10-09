@@ -149,6 +149,34 @@ div#PauseNav span, div#GameOverNav span {
 	line-height: 2;
 }
 
+#HighScores {
+  margin-top: 30px;
+}
+
+#HighScores ol {
+  list-style-type: decimal;
+  list-style-position: inside; 
+}
+
+#HighScores ol li {
+  
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+
+}
+
+#HighScores ol li i {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  background: transparent url("../img/20x2.png") 0 0 no-repeat;
+}
+
+#HighScores ol li i.d { background-position: -10px -10px; }
+#HighScores ol li i.r { background-position: -50px -10px; }
+
 #TweetDisplay, .tweet-display {
 /*	display: none;*/
 	z-index: 1000;

@@ -64,11 +64,11 @@ html(lang="en")
 			// HIGH SCORES TEMPLATE
 			script(id='HighScoresTemplate',type='text/template')
 				| <div id="HighScores">
-				|		<ul>
+				|		<ol>
 				|		<% _.each(highscores, function(highscore) { %>
-				|			<li><%= highscore.score %> - <%= highscore.user %> (<%= highscore.party.toUpperCase() %>)
+				|			<li class="<%= highscore.party %>"><i class="<%= highscore.party %>"></i><%= highscore.user %> (<%= highscore.party.toUpperCase() %>) - <%= highscore.score %></li>
 				|		<% }); %>
-				|		</ul>
+				|		</ol>
 				| </div>
 
 			// TWEET DISPLAY TEMPLATE

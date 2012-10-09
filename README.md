@@ -8,11 +8,16 @@ Release Notes
 
 ### 0.1: Private beta
 
-- Major display bugs fixed
-- Game is playable
-- High scores are recorded
-- Basic analytics in place
-- Full gameplay cycle is operational
+ - Major display bugs fixed
+ - Game is playable
+ - High scores are recorded
+ - Basic analytics in place
+ - Full gameplay cycle is operational
+
+### 0.5 Public beta
+
+ - Advanced analytics in place
+ - Further bug fixes
 
  
 Build
