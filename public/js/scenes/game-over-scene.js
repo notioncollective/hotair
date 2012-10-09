@@ -41,6 +41,13 @@ Crafty.scene("gameover", function() {
 			}
 		});
 		
+	  gameOverMenu.addListItem({
+      text: "Give us Feedback!",
+      callback: function(arg) {
+        window.open('/survey', '_blank');
+      }
+    });
+		
 		gameOverMenu.renderListNav();
 	}
 	

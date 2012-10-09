@@ -123,6 +123,15 @@ exports.play = function(req, res) {
 	res.render('play', { title: 'Hot Air' });
 }
 
+exports.survey = function(req, res) {
+  res.render('survey', { title: 'Hot Air (private beta survey)' });
+}
+
+exports.privatebeta = function(req, res) {
+  res.render('privatebeta', { title: 'Hot Air (private beta)' });
+}
+
+
 exports.reset = function(rew, res) {
 	console.log("reset");
 	db.list(function(err, res) {
