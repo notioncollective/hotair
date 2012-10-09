@@ -158,6 +158,14 @@ HA.game = function(ns, $, _, C) {
 				}
 			});
 			
+			_pauseMenu.addListItem({
+        text: "Give us Feedback!",
+        callback: function(arg) {
+          window.open('/survey', '_blank');
+        }
+      });
+      
+			
 			// Pause the music, but leave other sounds alone.
 			C.audio.pause("game_music");
 			C.audio.play('pause');
