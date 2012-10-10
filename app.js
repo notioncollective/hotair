@@ -8,6 +8,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , nano = require('nano')
+  , useragent = require('useragent')
   , cronJob = require('cron').CronJob;
 
 
@@ -69,14 +70,22 @@ function csrf(req, res, next) {
   next();
 }
 
+// simple middleware for useragent detection
+function agent(req, res, next) {
+	if(!useragent.is(req.headers['user-agent']).chrome) {
+		res.redirect('/notsupported');
+	} else next();
+}
+
 
 app.get('/', routes.home);
-app.get('/play', auth, csrf, routes.play);
+app.get('/play', agent, auth, csrf, routes.play);
 app.get('/survey', auth, routes.survey);
 app.get('/privatebeta', auth, routes.privatebeta);
-app.get('/reset', auth, routes.reset);
+app.get('/notsupported', routes.notsupported);
+// app.get('/reset', auth, agent, routes.reset);
 app.get('/fetch_tweets', auth, routes.fetch_tweets);
-app.get('/all', auth, routes.all);
+app.get('/all', auth, agent, routes.all);
 app.get('/democrats', auth, routes.democrats);
 app.get('/republican', auth, routes.republican);
 app.get('/load_tweets', auth, routes.load_tweets);
