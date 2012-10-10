@@ -5,6 +5,9 @@ html(lang="en")
 		meta(name="csrf-token", content=token)
 		link(rel='stylesheet', type='text/css', href='css/style.css')
 		link(href='http://fonts.googleapis.com/css?family=Press+Start+2P', rel='stylesheet', type='text/css')
+		- var html = '<script style="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-35454107-1"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>'
+		!{html}
+
 	body(id="home")
 		// js librariess
 		- var libs = ['jquery-min', 'crafty', 'underscore-min', 'screenfull.min'];
@@ -46,14 +49,14 @@ html(lang="en")
 			#InstructionsDisplay.modal
 				h1 Instructions
 				.modal-inner
-					p Your player is at the top.  Hot air balloons ascend from the bottom, each associated with a tweet.  It is your job to determine which tweets are associated with your team, and which are on the opposite team!
-					p Select balloons using the up and down arrows.  Move your player using the left and right arrows.  Shoot using the space bar (or letter 'a' key).  Pause by pressing Enter.
+					p Your player is at the top.	Hot air balloons ascend from the bottom, each associated with a tweet.	It is your job to determine which tweets are associated with your team, and which are on the opposite team!
+					p Select balloons using the up and down arrows.	 Move your player using the left and right arrows.	Shoot using the space bar (or letter 'a' key).	Pause by pressing Enter.
 					p Have fun!
 					
 			#AboutDisplay.modal
 				h1 About
 				.modal-inner
-					p Hot Air uses live twitter data from the @tweetcongress lists "republican" and "democrats".  
+					p Hot Air uses live twitter data from the @tweetcongress lists "republican" and "democrats".	
 					p The Notion Collective is a 4.5-person art-making group based in Brooklyn, NY.
 					
 			#HighScoresDisplay.modal
@@ -81,46 +84,33 @@ html(lang="en")
 			script(id='PauseDisplayTemplate',type='text/template')
 				| <div id="PauseDisplay">
 				|		<h1>Paused</h1>
-				|	</div>
+				| </div>
 				
 			// GAMEOVER DISPLAY TEMPLATE
 			script(id='GameOverDisplayTemplate',type='text/template')
-			  | <div id="GameOverDisplay">
+				| <div id="GameOverDisplay">
 				|		<h1>Game Over</h1>
-				|	</div>
+				| </div>
 
 
 			// HIGHSCORE FORM
 			script(id='HighScoreForm',type='text/template')
 			
-			//  #HighScoreForm
-			//  	h1 Game Over
-			//  	#NewHighscore
-			//  		h3 New High Score!
-			//  		label Enter your initials:
-			//  			input#gameover-name(type="text") test
-			//  		a#SaveHighscore(href="#done") Done
-			//  	#GameOverOptions
-			//  		ul.list-inline
-			//  			li
-			//  				a#gameover-start(href="#gameover-start") Start Screen
-			//  			li
-			//  				a#gameover-again(href="#gameover-again") Play Again
+			//	#HighScoreForm
+			//		h1 Game Over
+			//		#NewHighscore
+			//			h3 New High Score!
+			//			label Enter your initials:
+			//				input#gameover-name(type="text") test
+			//			a#SaveHighscore(href="#done") Done
+			//		#GameOverOptions
+			//			ul.list-inline
+			//				li
+			//					a#gameover-start(href="#gameover-start") Start Screen
+			//				li
+			//					a#gameover-again(href="#gameover-again") Play Again
 							
 			// FULL SCREEN
 			#FullScreenPrompt
 				.prompt Press Esc for Fullscreen Mode
-				
-			// google analytics
-			script(type="text/javascript")
-				| var _gaq = _gaq || [];
-				| _gaq.push(['_setAccount', 'UA-35454107-1']);
-				| _gaq.push(['_trackPageview']);
-				|
-				| (function() {
-				|   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				|   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				|   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-				| })();
 
-				
