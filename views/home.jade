@@ -1,12 +1,6 @@
-doctype 5
-head
-	title "Hot Air"
-	link(rel='stylesheet', type='text/css', href='css/placeholder.css')
-	link(href='http://fonts.googleapis.com/css?family=Press+Start+2P', rel='stylesheet', type='text/css')
-	script(src="js/placeholder.js", type="text/javascript", charset="utf-8")
+extends layout
 
-
-body#placeholder
+block content
 	#Main
 		p.digital We've got something in the works. Sign up here if you'd like to find out more!
 		// Begin MailChimp Signup Form
@@ -16,5 +10,3 @@ body#placeholder
 				input(type="email", value="", name="EMAIL", class="email", id="mce-EMAIL", placeholder="email address", required="requred")
 				.clear: input(type="submit", value="Subscribe", name="subscribe", id="mc-embedded-subscribe", class="button")
 		p.credits A project by <a href="http://notioncollective.com">The Notion Collective</a>.
-
-	

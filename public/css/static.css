@@ -36,28 +36,17 @@ footer, header, hgroup, menu, nav, section {
 
 /*-------*/
 
-body#placeholder {
+body {
 	font-family: "Helvetica", "Arial", sans-serif;
-	background: #9dd9fe url(../img/placeholder_illustration.jpg) 5% 20% no-repeat;
+	background: #9dd9fe url("../img/clouds_bg.jpg") 0 0 repeat;
 	margin: 0;
 	padding: 0;
-	/*background-size: cover;*/
 }
 
-#Main {
-	width: 600px;
-	/* margin: 500px auto 0 auto; */
-	position: absolute;
-	right: 5%;
-	top: 10%;
-	width: 300px;
-	padding: 30px;
-	margin: 0;
-/*	background: #ddd url(../img/pause_bg.png) 0 0 repeat;*/
-	background: #fff;
-	opacity: 0.9;
-	-moz-opacity: 0.9;
-	filter:alpha(opacity=90);
+h1 {
+	line-height: 1.3;
+	font-family: "Press Start 2P", Courier;
+	margin-bottom: 1em;
 }
 
 .digital {
@@ -71,17 +60,46 @@ body#placeholder {
 	margin-top: 20px;
 }
 
-#mc_embed_signup {
+#Main {
+	margin: 5% auto;
+	width: 600px;
+	padding: 30px;
+	background: #fff;
+	opacity: 0.9;
+	-moz-opacity: 0.9;
+	filter:alpha(opacity=90);
+}
+
+/* LANDING PAGE */
+body#home {
+	background: #9dd9fe url("../img/placeholder_illustration.jpg") 5% 20% no-repeat;
+}
+
+body#home #Main {
+	position: absolute;
+	right: 5%;
+	top: 10%;
+	width: 300px;
+	padding: 30px;
+	margin: 0;
+/*	background: #ddd url(../img/pause_bg.png) 0 0 repeat;*/
+	background: #fff;
+	opacity: 0.9;
+	-moz-opacity: 0.9;
+	filter:alpha(opacity=90);
+}
+
+body#home #mc_embed_signup {
 	margin-top: 1em;
 }
 
 
-#mc_embed_signup label#subscribe {
+body#home #mc_embed_signup label#subscribe {
 	margin-top: 20px;
 }
 
 
-#mc_embed_signup input[type="email"]{
+body#home #mc_embed_signup input[type="email"]{
 	font-family: "Press Start 2P", Courier;
 	padding: 8px;
 	font-size: 100%;
@@ -92,7 +110,7 @@ body#placeholder {
 	color: #000;
 }
 
-#mc_embed_signup input[type="submit"]{
+body#home #mc_embed_signup input[type="submit"]{
 	font-family: "Press Start 2P", Courier;
 	padding: 8px;
 	font-size: 100%;

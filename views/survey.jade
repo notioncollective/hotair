@@ -1,15 +1,9 @@
-doctype 5
-head
-  title "Hot Air [shhh... private beta]"
-  link(rel='stylesheet', type='text/css', href='css/placeholder.css')
-  link(href='http://fonts.googleapis.com/css?family=Press+Start+2P', rel='stylesheet', type='text/css')
-  script(src="js/placeholder.js", type="text/javascript", charset="utf-8")
+extends layout
 
-
-body#survey
+block content
   #Main
-    p.digital Survey!
-    iframe(src="https://docs.google.com/a/notioncollective.com/spreadsheet/embeddedform?formkey=dHNweVZVVU51X2l5Y3pQRWZNQmdVOUE6MQ", width="760", height="625", frameborder="0", marginheight="0", marginwidth="0") "Loading..."
+    h1 #{title}
+    iframe(src="https://docs.google.com/a/notioncollective.com/spreadsheet/embeddedform?formkey=dHNweVZVVU51X2l5Y3pQRWZNQmdVOUE6MQ", width="540", height="625", frameborder="0", marginheight="0", marginwidth="0") "Loading..."
     p.credits A project by <a href="http://notioncollective.com">The Notion Collective</a>.
 
   

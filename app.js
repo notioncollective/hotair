@@ -18,7 +18,23 @@ new cronJob('0 */12 * * * *', function(){
 }, null, true, "America/New_York");;
 
 var app = express();
-var auth = express.basicAuth('notion', 'Madi50nW1'); 
+// var auth = express.basicAuth('notion', 'Madi50nW1'); 
+var auth = express.basicAuth(function(username, password) {
+  var valid_logins = {
+    'notion': 'Madi50nW1',
+    'privatebeta1': 'B!denVsRyan', // jason
+    'privatebeta2': 'B!denVsRyan', // andy
+    'privatebeta3': 'B!denVsRyan', // michael
+    'privatebeta4': 'B!denVsRyan', // candice
+    'privatebeta5': 'B!denVsRyan', // jon
+  }
+  
+  if(typeof valid_logins[username]   === 'string' && valid_logins[username] === password) {
+    console.log("basicAuth login ", username, password);
+    return true;
+  } else return false;
+  
+})
 
 
 app.configure(function(){

@@ -116,19 +116,19 @@ function _getSinceId() {
 
 exports.home = function(req, res){
   _getSinceId();
-  res.render('home', { title: 'Hot Air' });
+  res.render('home', { title: 'Hot Air', slug: 'home' });
 };
 
 exports.play = function(req, res) {
-	res.render('play', { title: 'Hot Air' });
+	res.render('play', { title: 'Hot Air', slug: 'play' });
 }
 
 exports.survey = function(req, res) {
-  res.render('survey', { title: 'Hot Air (private beta survey)' });
+  res.render('survey', { title: 'Hot Air (private beta survey)', slug: 'survey' });
 }
 
 exports.privatebeta = function(req, res) {
-  res.render('privatebeta', { title: 'Hot Air (private beta)' });
+  res.render('privatebeta', { title: 'Hot Air (private beta)', slug: 'privatebeta' });
 }
 
 
