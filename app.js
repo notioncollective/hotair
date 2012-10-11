@@ -42,7 +42,6 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
@@ -50,7 +49,9 @@ app.configure(function(){
   app.use(express.session({secret: 'hotair'}));
   app.use(express.csrf());
   app.use(app.router);
+  app.use(express.favicon(path.join(__dirname, '/public/favicon.ico')));
   app.use(express.static(path.join(__dirname, 'public'), {maxAge:  86400000}));
+
 });
 
 // configure dev-specific settings
