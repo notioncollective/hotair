@@ -123,6 +123,16 @@ HA.events = HA.e = function(ns, $, _, C) {
      */
     RESIZE_VIEWPORT: "ha:resize_viewport",
     
+    /**
+     * Trigger saving a high score
+     * @property {string} SAVE_SCORE
+     * @final
+     * @param {string} initials
+     * @param {number} score
+     */
+    SAVE_SCORE: 'ha:save_score',
+    
+    
 		
 		
 		/********************************/

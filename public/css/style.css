@@ -235,6 +235,17 @@ div#PauseNav span, div#GameOverNav span {
 	height: 600px;	*/
 }
 
+#HighScoreFormDisplay {
+	z-index: 1000;
+	position: absolute;
+	top: 20%;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	line-height: 2;
+}
+
 .tweet-info-name {
 	font-size: .6em;
 	margin-bottom: 5px;

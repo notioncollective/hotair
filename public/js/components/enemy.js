@@ -68,6 +68,7 @@ Crafty.c("Enemy", {
 		this.showScore(dScore);
 			
 	},
+	
 	setSpeed: function(speed) {
 		console.log("speed: ", speed);
 		this.dy = (speed); // speed
@@ -97,7 +98,7 @@ Crafty.c("Enemy", {
 			this
 				.unbind("EnterFrame", this._fallingCallback)
 				.destroy();
-			console.log("++++++ DESTROYED ENEMY ENTITY", this.y);
+			console.log("++++++ DESTROYED ENEMY ENTITY", this, this.y);
 		}
 	},
 	_risingCallback: function(e) {

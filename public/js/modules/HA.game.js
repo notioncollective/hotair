@@ -14,7 +14,8 @@ HA.game = function(ns, $, _, C) {
 			_numEnemiesPerLevel = 2,
 			_partySelectMenu,
 			_pauseDisplay,
-			_state = 0;
+			_state = 0,
+			_highScores;
 
 	// private methods
 	function _init(options) {
@@ -33,6 +34,9 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 		
+		// Load the latest high scores
+		_fetchHighScores();
+		
 		// TODO decide where twitter module needs to be initialized
 		HA.twitter.init();
 
@@ -45,6 +49,7 @@ HA.game = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.END_GAME, _handleEndGameEvent);
 		HA.m.subscribe(HA.events.LEVEL_COMPLETE, _handleLevelCompleteEvent);
 		HA.m.subscribe(HA.events.NEXT_LEVEL, _handleNextLevelEvent);
+		HA.m.subscribe(HA.e.SAVE_SCORE, _handleSaveScoreEvent);
 		
 		// For window blur, when changing browser windows or application
 		C.bind("Pause", function(e) {
@@ -115,7 +120,7 @@ HA.game = function(ns, $, _, C) {
 		// TODO: Possibly perform extra cleanup here, maybe clear out the mediator?
 		_unbindGameplayKeyboardEvents();
 		
-		_saveScore();
+		// _saveScore();
 		// _pauseDisplay.destroy();
 		// _pauseMenu.destroy();
 		HA.m.publish(HA.e.LOAD_SCENE, "gameover");
@@ -319,6 +324,30 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.startProducing(true);
 	};
 	
+	
+	function _handleSaveScoreEvent(e, initials, score) {
+		_saveScore()
+	}
+	
+	/**
+	 * The actual function that is handles the gameplay keyboard events
+	 * @private
+	 * @method _gameplayKeyboardEventHandler
+	 */
+	function _gameplayKeyboardEventHandler(e) {
+		console.log("keydown");
+		if(e.keyCode == Crafty.keys['ENTER']) {
+			if(!Crafty.isPaused()) {
+				HA.m.publish(HA.events.PAUSE_GAME);
+				_unbindGameplayKeyboardEvents();
+			}
+		}
+		if(e.keyCode == Crafty.keys['ESC']) {
+			console.log("Full scrn");
+			HA.sm.toggleFullScreenMode();
+		}
+	}
+	
 	/**
 	 * Bind the ENTER and ESC keys to the pause and full screen functionality.
 	 * @private
@@ -327,19 +356,7 @@ HA.game = function(ns, $, _, C) {
 	function _bindGameplayKeyboardEvents() {
 		_unbindGameplayKeyboardEvents();
     console.log("Bind game keyboard events");
-		$(document).on("keydown", function(e) {
-		  console.log("keydown");
-			if(e.keyCode == Crafty.keys['ENTER']) {
-				if(!Crafty.isPaused()) {
-					HA.m.publish(HA.events.PAUSE_GAME);
-					_unbindGameplayKeyboardEvents();
-				}
-			}
-			if(e.keyCode == Crafty.keys['ESC']) {
-				console.log("Full scrn");
-				HA.sm.toggleFullScreenMode();
-			}
-		});
+		$(document).on("keydown", _gameplayKeyboardEventHandler);
 	}
 	
 	/**
@@ -403,7 +420,7 @@ HA.game = function(ns, $, _, C) {
 	 @private
 	 @method _saveScore
 	 */
-	function _saveScore() {
+	function _saveScore(initials, score) {
 		console.log("save score");
 		var token = _getCsrfToken();
 		$.ajax({
@@ -411,8 +428,8 @@ HA.game = function(ns, $, _, C) {
 			type : "post",
 			contentType : "application/json",
 			data : JSON.stringify({
-				user : "XXX",
-				score : HA.player.getScore(),
+				user : initials,
+				score : score,
 				party : _party
 			}),
 			success : function(resp) {
@@ -431,6 +448,21 @@ HA.game = function(ns, $, _, C) {
 		var token = $("meta[name='csrf-token']").attr("content");
 		return token;
 	}
+	
+	/**
+	 * Fetch the highscores from the server. 
+	 */
+	function _fetchHighScores(callback, context) {
+		$.getJSON('/highscores', function(resp) {
+			console.log("highscores fetched", resp);
+			_highScores = resp.data;
+			if(callback && _.isFunction(callback)) {
+				context = context || this;
+				callback.call(context);
+			}
+		});
+	}
+	
 	// public methods
 
 	/**
@@ -462,6 +494,23 @@ HA.game = function(ns, $, _, C) {
 			throw "Party must be a string containing either 'r' or 'd'";
 		}
 	};
+	
+	/**
+	 * Check to see if a value is a highscore.
+	 * @param {Object} score
+	 * @return {boolean} True if the score is equal to or greater than the minimum highscore
+	 */
+	ns.isHighScore = function(score) {
+		var scores = _.pluck(_highScores, "score");
+		var min = _.min(scores);
+		return score >= min;
+	}
+	
+	ns.fetchHighScores = _fetchHighScores;
+	
+	ns.getHighScores = function() {
+		return _highScores;
+	}
 	return ns;
 
 }(HA.namespace("HA.game"), jQuery, _, Crafty);

@@ -187,7 +187,7 @@ HA.enemyController = function(ns, $, _, C) {
 		var index = _.indexOf(_enemies, enemy);
 		console.log("Removing Visible Enemy: " + enemy);
 		if(index !== -1) {
-			
+			enemy.unselect();
 			if(_enemies[_selectedEnemy] === enemy) {
 				// If the enemy to remove is selected, select the new 0 index enemy.
 				console.log("000000000 selected enemy destroyed");
@@ -202,7 +202,7 @@ HA.enemyController = function(ns, $, _, C) {
 				console.log("000000000 unselected enemy destroyed");
 			}
 			
-			_destroyEnemy(enemy);
+			// _destroyEnemy(enemy);
 			_numEnemiesLeft -= 1;
 			if(_numEnemiesLeft === 0) {
 				// last enemy is gone, player isn't dead... go to next level!
