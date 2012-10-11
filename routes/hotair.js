@@ -127,8 +127,8 @@ exports.survey = function(req, res) {
   res.render('survey', { title: 'Hot Air (private beta survey)', slug: 'survey' });
 }
 
-exports.privatebeta = function(req, res) {
-  res.render('privatebeta', { title: 'Hot Air (private beta)', slug: 'privatebeta' });
+exports.privatealpha = function(req, res) {
+  res.render('privatealpha', { title: 'Hot Air (private alpha)', slug: 'privatealpha' });
 }
 
 exports.notsupported = function(req, res) {
