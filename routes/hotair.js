@@ -255,8 +255,8 @@ exports.load_tweets = function(req, res) {
 			};
 
 	// query database
-	db.view('hotair', 'democrats', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
-	db.view('hotair', 'republican', {startKey: parseInt(startkey), limit: Math.floor(limit/2)}, merge);
+	db.view('hotair', 'democrats', {startKey: parseInt(startkey), limit: Math.floor(limit/2), descending: true}, merge);
+	db.view('hotair', 'republican', {startKey: parseInt(startkey), limit: Math.floor(limit/2), descending: true}, merge);
 	
 }
 
@@ -329,6 +329,7 @@ exports.highscores = function(req, res) {
 exports.highscore = function(req, res) {
 	var data = req.body,
 		respBody = {};
+	console.log("highscore: ", data);
 	// db.save(data, function(db_err, db_res) {
 	db.insert(data, function(db_err, db_res) {
 		if (db_err) {

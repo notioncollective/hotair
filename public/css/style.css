@@ -235,15 +235,31 @@ div#PauseNav span, div#GameOverNav span {
 	height: 600px;	*/
 }
 
+#GameOverDisplay {
+	padding-top: 10%;
+	background: none;
+}
+
 #HighScoreFormDisplay {
 	z-index: 1000;
 	position: absolute;
-	top: 20%;
+	top: 25%;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	text-align: center;
 	line-height: 2;
+}
+
+#HighScoreFormDisplay h2 {
+	font-size: 3em;
+}
+
+#HighScoreFormDisplay input {
+	font-size: 2em;
+	border: none;
+	padding: 10px;
+	font-family: "Press Start 2P", Courier;
 }
 
 .tweet-info-name {

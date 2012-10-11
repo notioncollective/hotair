@@ -7,7 +7,6 @@ Crafty.c("HighScoreFormDisplay", {
 		this.y = 0;
 		this.w = Crafty.DOM.window.width;
 		this.h = Crafty.DOM.window.height;
-		this.updateContent({score: 1000});
 	},
 	/**
 	 * 

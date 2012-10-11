@@ -326,7 +326,7 @@ HA.game = function(ns, $, _, C) {
 	
 	
 	function _handleSaveScoreEvent(e, initials, score) {
-		_saveScore()
+		_saveScore(initials, score, HA.player.getParty());
 	}
 	
 	/**
@@ -420,8 +420,8 @@ HA.game = function(ns, $, _, C) {
 	 @private
 	 @method _saveScore
 	 */
-	function _saveScore(initials, score) {
-		console.log("save score");
+	function _saveScore(initials, score, party) {
+		console.log("save score", initials, score, party);
 		var token = _getCsrfToken();
 		$.ajax({
 			url : "/highscore",
@@ -430,7 +430,7 @@ HA.game = function(ns, $, _, C) {
 			data : JSON.stringify({
 				user : initials,
 				score : score,
-				party : _party
+				party : party
 			}),
 			success : function(resp) {
 				console.log("saved high score: ", resp);
@@ -503,7 +503,7 @@ HA.game = function(ns, $, _, C) {
 	ns.isHighScore = function(score) {
 		var scores = _.pluck(_highScores, "score");
 		var min = _.min(scores);
-		return score >= min;
+		return score > min;
 	}
 	
 	ns.fetchHighScores = _fetchHighScores;

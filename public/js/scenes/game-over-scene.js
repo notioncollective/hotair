@@ -2,7 +2,9 @@ Crafty.scene("gameover", function() {
 	console.log("Scene: gameover");
 	HA.sm.fullScreenKeyEnabled(false);
 	
-	var score = HA.player.getScore(),
+	var 
+		score = 2200,
+		// score = HA.player.getScore(),
 		isHighscore = HA.game.isHighScore(score), // hard coded for the moment 
 		gameOverDisplay, 
 		gameOverMenu, 
@@ -19,6 +21,7 @@ Crafty.scene("gameover", function() {
 	
 	function createHighScoreForm() {
 		highScoreForm = Crafty.e("HighScoreFormDisplay");
+		highScoreForm.updateContent({score:score});
 		highScoreForm.showHighScoreFormDisplay();
 		$("#gameover-name").focus();
 		
@@ -28,6 +31,7 @@ Crafty.scene("gameover", function() {
 		highScoreFormMenu.addListItem({
 			text: 'Ok!',
 			callback: function() {
+				var initials = $("#gameover-name").val() || "N/A"; 
 				HA.m.publish(HA.e.SAVE_SCORE, [initials, score]);
 				highScoreForm.destroy();
 				createGameOverMenu();
