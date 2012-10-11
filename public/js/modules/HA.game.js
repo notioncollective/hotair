@@ -502,6 +502,10 @@ HA.game = function(ns, $, _, C) {
 	 */
 	ns.isHighScore = function(score) {
 		var scores = _.pluck(_highScores, "score");
+		// if there aren't yet 5 highscores, you're in luck!
+		if(scores.length < 5) return true;
+		
+		// if there are more than 5 highscores, and yours is better, you're in luck!
 		var min = _.min(scores);
 		return score > min;
 	}
