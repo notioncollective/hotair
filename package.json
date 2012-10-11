@@ -1,7 +1,7 @@
 {
   "name": "hotair",
   "description": "A game for gasbags.",
-  "version": "0.0.5-4",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node app.js"
