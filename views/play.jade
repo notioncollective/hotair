@@ -51,10 +51,17 @@ html(lang="en")
 			#InstructionsDisplay.modal
 				h1 Instructions
 				.modal-inner
-					p Your player is at the top.	Hot air balloons ascend from the bottom, each associated with a tweet.	It is your job to determine which tweets are associated with your team, and which are on the opposite team!
-					p Select balloons using the up and down arrows.	 Move your player using the left and right arrows.	Shoot using the space bar (or letter 'a' key).	Pause by pressing Enter.
-					p Have fun!
-					
+					ul.keys
+						li
+							<span class="key" id="left-right-keys">Left/Right</span> Move your player
+						li 
+							<span class="key" id="up-down-keys">Up/Down Arrows</span> Select balloon (tweet)
+						li 
+							<span class="key" id="spacebar-key">Spacebar</span> Drop a dart
+						li 
+							<span class="key" id="enter-key">Enter</span> Pause the game
+					p The game starts when you pick a side: Democrat or Republican. You can select each balloon and see the text of their tweet above. Your job is to identify party allies, and deflate your political opponents with a well-aimed dart.
+					p Good luck, and have fun!
 			#AboutDisplay.modal
 				h1 About
 				.modal-inner

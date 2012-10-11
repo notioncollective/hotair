@@ -126,10 +126,42 @@ div.modal {
 	z-index: 1000;
 }
 
+div.modal h1 {
+	margin-bottom: 16px;
+	text-transform: uppercase;
+}
+
 div.modal-inner p {
 	margin: 20px 0px;
 	line-height: 1.4;
 }
+
+
+#InstructionsDisplay.modal {}
+#InstructionsDisplay.modal ul.keys{
+	
+}
+
+#InstructionsDisplay.modal ul.keys li {
+	line-height: 32px;
+	margin-top: 4px;
+}
+	
+#InstructionsDisplay.modal .key {
+	display: block;
+	float: left;
+	width: 68px;
+	height: 32px;
+	text-indent: -9999px;
+	overflow: hidden;
+	background: transparent url('../img/keysx2.png') 0 0 no-repeat;
+	margin-right: 8px;
+}
+
+#InstructionsDisplay.modal #left-right-keys { background-position: 2px -96px}
+#InstructionsDisplay.modal #up-down-keys { background-position: 2px -64px}
+#InstructionsDisplay.modal #spacebar-key { background-position: 0 -0px}
+#InstructionsDisplay.modal #enter-key { background-position: 4px -32px}
 
 
 div#PauseNav, div#GameOverNav {

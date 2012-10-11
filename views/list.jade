@@ -1,9 +1,0 @@
-extends layout
-
-block content
-  - if (typeof(flash) != 'undefined')
-    p= flash
-  h2 List
-  ul
-    each item in list
-      li= item.username
