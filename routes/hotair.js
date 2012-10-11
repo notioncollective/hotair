@@ -126,7 +126,7 @@ exports.play = function(req, res) {
 }
 
 exports.survey = function(req, res) {
-  res.render('survey', { title: 'Hot Air (private beta survey)', slug: 'survey' });
+  res.render('survey', { title: 'Hot Air survey (private alpha)', slug: 'survey' });
 }
 
 exports.privatealpha = function(req, res) {
