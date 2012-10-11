@@ -3,8 +3,8 @@ Crafty.scene("gameover", function() {
 	HA.sm.fullScreenKeyEnabled(false);
 	
 	var 
-		score = 2200,
-		// score = HA.player.getScore(),
+		// score = 2200,
+		score = HA.player.getScore(),
 		isHighscore = HA.game.isHighScore(score), // hard coded for the moment 
 		gameOverDisplay, 
 		gameOverMenu, 
