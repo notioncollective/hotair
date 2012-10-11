@@ -134,7 +134,7 @@ exports.privatealpha = function(req, res) {
 }
 
 exports.notsupported = function(req, res) {
-	if(useragent.is(req.headers['user-agent']).chrome) res.redirect('/');
+	if(useragent.is(req.headers['user-agent']).chrome || useragent.is(req.headers['user-agent']).safari) res.redirect('/');
 	res.render('notsupported', { title: 'Console not supported!', slug: 'notsupported'});
 }
 
