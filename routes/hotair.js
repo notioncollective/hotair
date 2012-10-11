@@ -13,7 +13,9 @@ console.log("Connecting to couchdb: ", nano_url);
 var nano = require('nano')(nano_url),
 	Twit = require('twit'),
 	_ = require('lodash'),
-	Q = require('q');
+	Q = require('q'),
+	useragent = require('useragent');
+  
 
 
 
@@ -132,6 +134,7 @@ exports.privatealpha = function(req, res) {
 }
 
 exports.notsupported = function(req, res) {
+	if(useragent.is(req.headers['user-agent']).chrome) res.redirect('/');
 	res.render('notsupported', { title: 'Console not supported!', slug: 'notsupported'});
 }
 
