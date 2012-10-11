@@ -131,6 +131,10 @@ exports.privatebeta = function(req, res) {
   res.render('privatebeta', { title: 'Hot Air (private beta)', slug: 'privatebeta' });
 }
 
+exports.notsupported = function(req, res) {
+	res.render('notsupported', { title: 'Console not supported!', slug: 'notsupported'});
+}
+
 
 exports.reset = function(rew, res) {
 	console.log("reset");

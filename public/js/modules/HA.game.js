@@ -11,7 +11,7 @@ HA.game = function(ns, $, _, C) {
 			_level = 0,
 			_party,
 			_perfectLevel = true,
-			_numEnemiesPerLevel = 2,
+			_numEnemiesPerLevel = 10,
 			_partySelectMenu,
 			_pauseDisplay,
 			_state = 0,
