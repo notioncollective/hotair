@@ -102,6 +102,11 @@ Crafty.scene("start", function() {
 		}
 	}
 	
+	function handleTweetsLoadErrorEvent(e) {
+		closeModals();
+		openModal("ErrorDisplay");
+	}
+	
 	function resizeViewportHandler(e, width, height) {
 	  createStartScreenMainGraphic(width, height);
 	 }
@@ -156,11 +161,7 @@ Crafty.scene("start", function() {
 	createStartScreenMainGraphic()	
 	if(HA.twitter.isLoaded()) {
 		createMainStartMenu();
-	} else {
-		closeModals();
-		openModal("ErrorDisplay"); 
 	}
-	
 	// HA.startScreen = new Crafty.StartScreen();
 	// HA.startScreen.init();
 	

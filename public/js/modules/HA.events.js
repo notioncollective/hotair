@@ -107,6 +107,13 @@ HA.events = HA.e = function(ns, $, _, C) {
 		TWEETS_LOADED: "ha:tweets_loaded",
 		
 		/**
+		 * Error loading tweets.
+		 * @property {string} TWEETS_LOAD_ERROR
+		 * @final
+		 */
+		TWEETS_LOAD_ERROR: "ha:error:tweets_load_error",
+		
+		/**
      * Event for when fullscreen mode is toggled
      * @property {string} CHANGE_FULL_SCREEN
      * @final
@@ -131,6 +138,8 @@ HA.events = HA.e = function(ns, $, _, C) {
      * @param {number} score
      */
     SAVE_SCORE: 'ha:save_score',
+    
+    
     
     
 		
