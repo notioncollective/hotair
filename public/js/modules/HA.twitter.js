@@ -13,7 +13,8 @@ HA.twitter = function(ns, $, _, C) {
 				tweet_limit: 100,
 				test: false
 			},
-			_tweets = [];
+			_tweets = [],
+			_loaded = false;
 	
 	/**
     See public documentation for `init`
@@ -69,6 +70,7 @@ HA.twitter = function(ns, $, _, C) {
 			_tweets = _tweets.concat(data.rows);
 		}
 		HA.m.publish(HA.e.TWEETS_LOADED);
+		_loaded = true;
 	}
 		
 	/**
@@ -97,6 +99,16 @@ HA.twitter = function(ns, $, _, C) {
 		@param {Number} count Total responses desired from each list
    */
 	ns.getTweetSet = _getTweetSet;
+	
+	/**
+	 * Determine if the tweets have been loaded.
+	 * @public
+	 * @method isLoaded
+	 * @return {boolean}
+	 */
+	ns.isLoaded = function() {
+		return _loaded;
+	}
 			
 	return ns;
 	

@@ -11,7 +11,9 @@ Crafty.scene("start", function() {
     }
   });
   
+  // Event subscriptions
   HA.m.subscribe(HA.events.RESIZE_VIEWPORT, resizeViewportHandler);
+  HA.m.subscribe(HA.e.TWEETS_LOADED, handleTweetsLoadedEvent);
   
 	function closeModals() {
 		$(".modal").hide();		
@@ -88,10 +90,16 @@ Crafty.scene("start", function() {
 			args: ["High Scores!"]
 		});
 		
-		createStartScreenMainGraphic()
 		
 		startMenuNav.renderListNav();
 
+	}
+	
+	function handleTweetsLoadedEvent(e) {
+		if(!startMenuNav) {
+			closeModals();
+			createMainStartMenu();
+		}
 	}
 	
 	function resizeViewportHandler(e, width, height) {
@@ -146,7 +154,12 @@ Crafty.scene("start", function() {
 
 		
 	createStartScreenMainGraphic()	
-	createMainStartMenu();
+	if(HA.twitter.isLoaded()) {
+		createMainStartMenu();
+	} else {
+		closeModals();
+		openModal("ErrorDisplay"); 
+	}
 	
 	// HA.startScreen = new Crafty.StartScreen();
 	// HA.startScreen.init();
