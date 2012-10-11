@@ -52,6 +52,7 @@ HA.twitter = function(ns, $, _, C) {
 			.done(_handleLoadTweets)
 			.fail(function(){
 				console.log("Error loading tweets!");
+				HA.m.publish(HA.e.TWEETS_LOAD_ERROR);
 				throw new Error("Error loading tweet data.");
 			});
 	}
