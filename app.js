@@ -73,7 +73,7 @@ function csrf(req, res, next) {
 
 // simple middleware for useragent detection
 function agent(req, res, next) {
-	if(!useragent.is(req.headers['user-agent']).chrome) {
+	if(!(useragent.is(req.headers['user-agent']).chrome || useragent.is(req.headers['user-agent']).safari)) {
 		res.redirect('/notsupported');
 	} else next();
 }
