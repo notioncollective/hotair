@@ -13,7 +13,9 @@ console.log("Connecting to couchdb: ", nano_url);
 var nano = require('nano')(nano_url),
 	Twit = require('twit'),
 	_ = require('lodash'),
-	Q = require('q');
+	Q = require('q'),
+	useragent = require('useragent');
+  
 
 
 
@@ -127,11 +129,12 @@ exports.survey = function(req, res) {
   res.render('survey', { title: 'Hot Air (private beta survey)', slug: 'survey' });
 }
 
-exports.privatebeta = function(req, res) {
-  res.render('privatebeta', { title: 'Hot Air (private beta)', slug: 'privatebeta' });
+exports.privatealpha = function(req, res) {
+  res.render('privatealpha', { title: 'Hot Air (private alpha)', slug: 'privatealpha' });
 }
 
 exports.notsupported = function(req, res) {
+	if(useragent.is(req.headers['user-agent']).chrome) res.redirect('/');
 	res.render('notsupported', { title: 'Console not supported!', slug: 'notsupported'});
 }
 
