@@ -5909,11 +5909,18 @@ Crafty.extend({
 		//prevent default actions for all keys except backspace and F1-F12.
 		//Among others this prevent the arrow keys from scrolling the parent page
 		//of an iframe hosting the game
-		if(Crafty.selected && !(e.key == 8 || e.key >= 112 && e.key <= 135)) {
-			e.stopPropagation();
-			if(e.preventDefault) e.preventDefault();
-			else e.returnValue = false;
-			return false;
+		var active = document.activeElement;
+		var flag = false;
+		if(active != null) {
+			if(active.tagName == "INPUT") flag = true;
+		}
+		if(!flag) {
+			if(Crafty.selected && !(e.key == 8 || e.key >= 112 && e.key <= 135)) {
+				e.stopPropagation();
+				if(e.preventDefault) e.preventDefault();
+				else e.returnValue = false;
+				return false;
+			}
 		}
 	}
 });

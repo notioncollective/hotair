@@ -31,7 +31,7 @@ Crafty.c("MessageDisplay", {
 		
 		function blinkOn() {
 			if(blinkCount === 0) {
-				if(_.isFunction(callback)) callback.call(context);
+				if(_.isFunction(callback)) callback();
 				return;
 			}
 			$(that._element).show();

@@ -3,8 +3,8 @@ Crafty.scene("gameover", function() {
 	HA.sm.fullScreenKeyEnabled(false);
 	
 	var 
-		// score = 2200,
-		score = HA.player.getScore(),
+		score = 2300,
+		// score = HA.player.getScore(),
 		isHighscore = HA.game.isHighScore(score), // hard coded for the moment 
 		gameOverDisplay, 
 		gameOverMenu, 
@@ -20,11 +20,6 @@ Crafty.scene("gameover", function() {
 	}
 	
 	function createHighScoreForm() {
-		highScoreForm = Crafty.e("HighScoreFormDisplay");
-		highScoreForm.updateContent({score:score});
-		highScoreForm.showHighScoreFormDisplay();
-		$("#gameover-name").focus();
-		
 		highScoreFormMenu = Crafty.e("ListNav")
 			.attr({wrappingId: "HighScoreFormNav"});
 			
@@ -40,6 +35,11 @@ Crafty.scene("gameover", function() {
 		});
 		
 		highScoreFormMenu.renderListNav();
+
+		highScoreForm = Crafty.e("HighScoreFormDisplay");
+		highScoreForm.updateContent({score:score});
+		highScoreForm.showHighScoreFormDisplay();
+		$("#gameover-name").focus();
 	}
 	
 	
@@ -75,48 +75,6 @@ Crafty.scene("gameover", function() {
 	
 	
 	
-	
-// 	
-	// $("#GameOverDisplay").show();
-	// var $gameOverMenu = $("#GameOverDisplay li");
-	// var gameOverMenu = new Crafty.ListNav($gameOverMenu);
-	// gameOverMenu.init();
-	
-	// event handlers
-	// $(document).on('click', "#gameover-start", function(e) {
-		// e.preventDefault();
-		// Crafty.scene("start");
-		// return false;
-	// });
-// 	
-	// $(document).on('keydown', "#gameover-name", function(e) {
-// 		
-	// });
-// 	
-	// $(document).on('click', "#gameover-again", function(e) {
-		// e.preventDefault();
-		// // that.enemyController.stopProducing();
-		// // that.enemyController.destroyAllEnemies();
-		// Crafty.scene("gameplay");
-		// return false;
-	// });
-// 	
-// 	
-	// $(document).on("click", "#SaveHighscore", function(e) {
-		// var name = $('#gameover-name').val();
-		// HA.game.saveScore(name);
-		// $("#NewHighscore").hide();
-		// $("#GameOverOptions").show();
-	// });
-	//
-	
-	// var demY = Crafty.DOM.window.height/2;
-	// var dem = Crafty.e("Button").text("Play Again").attr({
-			// y: demY,
-			// callback: function() {
-				// Crafty.scene("start");
-			// }
-		// });
 }, function() {
 	$("#GameOverDisplay").hide();
 });

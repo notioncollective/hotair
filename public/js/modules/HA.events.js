@@ -93,11 +93,19 @@ HA.events = HA.e = function(ns, $, _, C) {
 		LEVEL_COMPLETE: "ha:level_complete",
 		
 		/**
-		 * Go to the next level.
-		 * @property {string} NEXT_LEVEL
+		 * Increment the level
+		 * @property {string} INCREMENT_LEVEL
 		 * @final
 		 */
-		NEXT_LEVEL: "ha:next_level",
+		INCREMENT_LEVEL: "ha:increment_level",
+		
+		/**
+		 * Start a level.
+		 * @property {string} START_LEVEL
+		 * @final
+		 * @param {number} _level The level to start.
+		 */
+		START_LEVEL: "ha:start_level",
 		
 		/**
 		 * Tweets loaded into twitter module
