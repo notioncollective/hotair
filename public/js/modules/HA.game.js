@@ -506,7 +506,7 @@ HA.game = function(ns, $, _, C) {
 	function _fetchHighScores(callback, context) {
 		$.getJSON('/highscores', function(resp) {
 			console.log("highscores fetched", resp);
-			_highScores = resp.data;
+			_highScores = resp.highscores;
 			if(callback && _.isFunction(callback)) {
 				context = context || this;
 				callback.call(context);
@@ -571,13 +571,18 @@ HA.game = function(ns, $, _, C) {
 	 * @return {boolean} True if the score is equal to or greater than the minimum highscore
 	 */
 	ns.isHighScore = function(score) {
-		var scores = _.pluck(_highScores, "score");
-		// if there aren't yet 5 highscores, you're in luck!
-		if(scores.length < 5) return true;
-		
-		// if there are more than 5 highscores, and yours is better, you're in luck!
-		var min = _.min(scores);
-		return score > min;
+		// if(score > 0) {
+			var scores = _.pluck(_highScores, "score"),
+					min = _.min(scores),
+					isHigh = (score > min || scores.length < 5);
+			
+			console.log("Min score", min);
+			console.log("Scores length", scores.length);
+			console.log("Is high score?", isHigh);
+		// if there aren't yet 5 highscores, or yours is higheryou're in luck!
+			return isHigh;
+
+		// } else return false;
 	}
 	
 	ns.fetchHighScores = _fetchHighScores;
