@@ -1,7 +1,11 @@
 Crafty.scene("start", function() {
 	console.log("Scene: start");
 	var that = this;
-	var startMenuNav, partySelectNav, closeMenuNav, startScreenMainGraphic;
+	var startMenuNav,
+			partySelectNav,
+			closeMenuNav,
+			startScreenMainGraphic;
+			
   HA.sm.fullScreenKeyEnabled(true); // enable full-screen mode
   
   // fullscreen key binding
@@ -64,15 +68,15 @@ Crafty.scene("start", function() {
 					var temp = _.template($("#HighScoresTemplate").html());
 					var tempHtml = temp({highscores: resp.data});
 					$("#HighScoresDisplay .modal-inner").html(tempHtml); 
-				});
+				})
+
+					
+				})
 			},
 			args: ["High Scores!"]
 		});
 		
 		
-		startMenuNav.renderListNav();
-
-	}
 
 	function createCloseMenu() {
 		closeMenuNav = Crafty.e('ListNav')
