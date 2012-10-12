@@ -3,9 +3,17 @@ Crafty.scene("loading", function() {
 	HA.sm.fullScreenKeyEnabled(false);
 	
 	Crafty.load([
-		"img/20.png",
-		"img/40.png",
-		"img/60.png",
+		"img/20x2.png",
+		"img/40x2.png",
+		"img/balloonx2.png",
+		"img/balloon_select_arrowx2.png",
+		"img/cloud_scorex2.png",
+		"img/cloudsx2.png",
+		"img/keysx2.png",
+		"img/lives_score_clouds.png",
+		"img/parachutex2.png",
+		"img/startscreen_basket.png",
+		"img/tweet_display.png",
 		"img/fonts/blue_score_16x16.png",
 		"img/fonts/grey_score_16x16.png",
 		"/snd/cloud_loops.mp3",

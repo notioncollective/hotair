@@ -1,0 +1,9 @@
+.git
+.svn
+node_modules
+.DS_Store
+.project
+.settings
+*docs
+venv
+public/img/build/psd/*
