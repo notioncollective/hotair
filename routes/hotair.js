@@ -54,6 +54,7 @@ function _getTweets(params) {
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
+			tweet._id = "" + tweet.id;
 			// console.log("Fetched tweet from API. ID:", tweet.id);
 		});
 		
@@ -141,17 +142,15 @@ exports.notsupported = function(req, res) {
 
 exports.reset = function(rew, res) {
 	console.log("reset");
-	db.list(function(err, res) {
-		console.log(res);
-		_.each(res.rows, function(doc, key) {
-			console.log("key", key);
-			console.log("doc", doc);
-			if(doc.key.indexOf("_design/") !== -1) return;
-				
-			db.destroy(doc.key, doc.value.rev, function (err, res) {
-				console.log(doc.key+"removed");
+	
+	var tweets;
+	
+	db.view('hotair', 'all', function(err, resp) {
+	  resp.rows.forEach(function(tweet) {
+	  	db.destroy(tweet._id, tweet._rev, function (err, res) {
+				console.log(tweet._id+" removed");
 			});
-		});
+	  });
 	});
 	res.send("reseting db");
 };

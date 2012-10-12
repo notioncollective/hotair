@@ -84,7 +84,7 @@ app.get('/play', agent, auth, csrf, routes.play);
 app.get('/survey', auth, routes.survey);
 app.get('/privatealpha', auth, routes.privatealpha);
 app.get('/notsupported', routes.notsupported);
-// app.get('/reset', auth, agent, routes.reset);
+app.get('/reset', auth, agent, routes.reset);
 app.get('/fetch_tweets', auth, routes.fetch_tweets);
 app.get('/all', auth, agent, routes.all);
 app.get('/democrats', auth, routes.democrats);
