@@ -94,6 +94,7 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleGameLoadedEvent(e) {
 		console.log("_handleGameLoaded");
+		// HA.sceneManager.loadScene("gameover");
 		HA.sceneManager.loadScene("start");
 	}
 
