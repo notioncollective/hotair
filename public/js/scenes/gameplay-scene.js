@@ -35,6 +35,23 @@ Crafty.scene("gameplay", function() {
 }, function() {
 	console.log("Scene: gameplay - uninit");
 	Crafty.audio.stop("game_music");
+	
+	function createCloseMenu() {
+		closeMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "CloseListNav"});
+			
+		closeMenuNav.addListItem({
+			text: "Ok!",
+			callback: function() {
+				this.destroy();
+				HA.game.closeModals();
+				createMainStartMenu();
+			}
+		});
+		closeMenuNav.renderListNav();
+	}
+
+	
 	// player.destroy();
 	// tweetDisplay.destroy();
 	// scoreDisplay.destroy(); 

@@ -14,6 +14,7 @@ HA.game = function(ns, $, _, C) {
 			_numEnemiesPerLevel = 10,
 			_partySelectMenu,
 			_pauseDisplay,
+			_pauseMenu,
 			_state = 0,
 			_highScores;
 
@@ -142,9 +143,56 @@ HA.game = function(ns, $, _, C) {
 			// remove event bindings from Gameplay
 			_unbindGameplayKeyboardEvents();
 			
+			_createPauseDisplay()
+
+			// Pause the music, but leave other sounds alone.
+			C.audio.pause("game_music");
+			C.audio.play('pause');
+			
+			// Do the actual frame pause on following frame.
+			Crafty.bind("EnterFrame", _doPause);
+			
+		}
+	};
+
+	
+	/**
+	 * Perform the actual pause of the draw loop via Crafty.pause();
+	 * Also displays the PauseDisplay and pause menu entities.
+	 * @private
+	 * @method _doPause(); 
+	 */
+	function _doPause() {
+		_pauseDisplay.showPauseScreenDisplay();
+    _createPauseMenu();
+		C.settings.modify("autoPause", false);
+		C.pause();
+	}
+	
+	function _createCloseMenu() {
+		closeMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "CloseListNav"});
+			
+		closeMenuNav.addListItem({
+			text: "Ok!",
+			callback: function() {
+				this.destroy();
+				HA.game.closeModals();
+				HA.m.publish(HA.e.RESUME_GAME);
+			}
+		});
+		closeMenuNav.renderListNav();
+	}
+
+
+	function _createPauseDisplay() {	
 			// Create the pause display entity
 			_pauseDisplay = C.e("PauseDisplay");
-			
+	}
+	
+	function _createPauseMenu() {
+		
+			console.log("create pause menu");
 			// Create the pause nav entity
 			_pauseMenu = C.e("ListNav")
 				.attr({wrappingId: "PauseNav"});
@@ -167,34 +215,24 @@ HA.game = function(ns, $, _, C) {
 			});
 			
 			_pauseMenu.addListItem({
+				text: "Instructions",
+				callback: function(arg) {
+					HA.game.closeModals();
+					HA.game.openModal("InstructionsDisplay"); 
+					this.destroy();
+					_createCloseMenu();
+				},
+				args: ["Instructions!"]
+			});
+			
+			_pauseMenu.addListItem({
         text: "Give us Feedback!",
         callback: function(arg) {
           window.open('/survey', '_blank');
         }
-      });
+      });				
       
-			
-			// Pause the music, but leave other sounds alone.
-			C.audio.pause("game_music");
-			C.audio.play('pause');
-			
-			// Do the actual frame pause on following frame.
-			Crafty.bind("EnterFrame", _doPause);
-			
-		}
-	};
-	
-	/**
-	 * Perform the actual pause of the draw loop via Crafty.pause();
-	 * Also displays the PauseDisplay and pause menu entities.
-	 * @private
-	 * @method _doPause(); 
-	 */
-	function _doPause() {
-		_pauseDisplay.showPauseScreenDisplay();
-		_pauseMenu.renderListNav();
-		C.settings.modify("autoPause", false);
-		C.pause();
+      _pauseMenu.renderListNav();
 	}
 
 	/**
@@ -485,6 +523,25 @@ HA.game = function(ns, $, _, C) {
 	 */
 	ns.init = _init;
 
+	/**
+	 Close all modals
+	 @public
+	 @method closeModals
+	 */	
+	ns.closeModals = function() {
+		$(".modal").hide();		
+	}
+	
+	/**
+	 Open a modals
+	 @public
+	 @method openModal
+	 * @param id {string} the id of the modal template in the DOM	 
+	 */	
+	ns.openModal = function(id) {
+		$("#"+id).show();
+	}
+	
 	/**
 	 Unpause gameplay.
 	 @public

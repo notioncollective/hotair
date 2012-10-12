@@ -1,5 +1,6 @@
 Crafty.scene("start", function() {
 	console.log("Scene: start");
+	var that = this;
 	var startMenuNav, partySelectNav, closeMenuNav, startScreenMainGraphic;
   HA.sm.fullScreenKeyEnabled(true); // enable full-screen mode
   
@@ -14,28 +15,6 @@ Crafty.scene("start", function() {
   // Event subscriptions
   HA.m.subscribe(HA.events.RESIZE_VIEWPORT, resizeViewportHandler);
   HA.m.subscribe(HA.e.TWEETS_LOADED, handleTweetsLoadedEvent);
-  
-	function closeModals() {
-		$(".modal").hide();		
-	}
-	function openModal(id) {
-		$("#"+id).show();
-	}
-
-	function createCloseMenu() {
-		closeMenuNav = Crafty.e('ListNav')
-			.attr({wrappingId: "CloseListNav"});
-			
-		closeMenuNav.addListItem({
-			text: "Ok!",
-			callback: function() {
-				this.destroy();
-				closeModals();
-				createMainStartMenu();
-			}
-		});
-		closeMenuNav.renderListNav();
-	}
 
 	function createMainStartMenu() {
 		startMenuNav = Crafty.e('ListNav')
@@ -46,7 +25,7 @@ Crafty.scene("start", function() {
 			callback: function(arg) {
 				console.log("New Game!"); 
 				createPartySelectMenu();
-				closeModals();
+				HA.game.closeModals();
 				this.destroy();
 			}
 		});
@@ -54,8 +33,8 @@ Crafty.scene("start", function() {
 		startMenuNav.addListItem({
 			text: "Instructions",
 			callback: function(arg) {
-				closeModals();
-				openModal("InstructionsDisplay"); 
+				HA.game.closeModals();
+				HA.game.openModal("InstructionsDisplay"); 
 				this.destroy();
 				createCloseMenu();
 			},
@@ -65,8 +44,8 @@ Crafty.scene("start", function() {
 		startMenuNav.addListItem({
 			text: "About",
 			callback: function(arg) {
-				closeModals();
-				openModal("AboutDisplay"); 
+				HA.game.closeModals();
+				HA.game.openModal("AboutDisplay"); 
 				this.destroy();
 				createCloseMenu();
 			},
@@ -77,8 +56,8 @@ Crafty.scene("start", function() {
 		startMenuNav.addListItem({
 			text: "High Scores",
 			callback: function(arg) {
-				closeModals();
-				openModal("HighScoresDisplay");
+				HA.game.closeModals();
+				HA.game.openModal("HighScoresDisplay");
 				this.destroy();
 				createCloseMenu();
 				$.getJSON('/highscores', function(resp) {
@@ -94,16 +73,32 @@ Crafty.scene("start", function() {
 		startMenuNav.renderListNav();
 
 	}
+
+	function createCloseMenu() {
+		closeMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "CloseListNav"});
+			
+		closeMenuNav.addListItem({
+			text: "Ok!",
+			callback: function() {
+				this.destroy();
+				HA.game.closeModals();
+				createMainStartMenu();
+			}
+		});
+		closeMenuNav.renderListNav();
+	}
+
 	
 	function handleTweetsLoadedEvent(e) {
 		if(!startMenuNav) {
-			closeModals();
+			HA.game.closeModals();
 			createMainStartMenu();
 		}
 	}
 	
 	function handleTweetsLoadErrorEvent(e) {
-		closeModals();
+		HA.game.closeModals();
 		openModal("ErrorDisplay");
 	}
 	

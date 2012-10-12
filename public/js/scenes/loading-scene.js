@@ -2,6 +2,9 @@ Crafty.scene("loading", function() {
 	console.log("Scene: loading");
 	HA.sm.fullScreenKeyEnabled(false);
 	
+	var messageDisplay = Crafty.e("MessageDisplay");
+	messageDisplay.showMessage("Loading...");
+		
 	Crafty.load([
 		"img/20x2.png",
 		"img/40x2.png",

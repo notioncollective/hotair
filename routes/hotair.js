@@ -134,6 +134,11 @@ exports.privatealpha = function(req, res) {
   res.render('privatealpha', { title: 'Hot Air (private alpha)', slug: 'privatealpha' });
 }
 
+exports.alphacomplete = function(req, res) {
+  res.render('alphacomplete', { title: 'Hot Air private alpha testing expired! :(', slug: 'privatealpha' });
+}
+
+
 exports.notsupported = function(req, res) {
 	if(useragent.is(req.headers['user-agent']).chrome || useragent.is(req.headers['user-agent']).safari) res.redirect('/');
 	res.render('notsupported', { title: 'Console not supported!', slug: 'notsupported'});
