@@ -23,23 +23,37 @@ Crafty.c("MessageDisplay", {
 		this.flashMessage(text, callback, context);
 	},
 	
+	setMessage: function(text) {
+		this.replace("<div class='message-display'>" + text + "</div>");
+	},
+	
+	showMessage: function(text) {
+		if(_.isString(text)) this.setMessage(text);
+		$(this._element).show();
+
+	},
+	
+	hideMessage: function() {
+		$(this._element).hide();
+	},
+	
 	flashMessage: function(text, callback, context) {
 		var that = this,
-			blinkCount = that._blinkCount;
+				blinkCount = that._blinkCount;
 		
-		this.replace("<div class='message-display'>" + text + "</div>");
+		that.setMessage(text);
 		
 		function blinkOn() {
 			if(blinkCount === 0) {
 				if(_.isFunction(callback)) callback();
 				return;
 			}
-			$(that._element).show();
+			that.showMessage()
 			_.delay(blinkOff, that._flashDuration);
 		}
 		
 		function blinkOff() {
-			$(that._element).hide();
+			that.hideMessage();
 			blinkCount -= 1;
 			_.delay(blinkOn, that._flashDuration);
 		}
