@@ -6,4 +6,8 @@ node_modules
 .settings
 *docs
 venv
-public/img/build/psd/*
+public/img/build
+script
+grunt.js
+db
+build
