@@ -13,7 +13,8 @@ HA.mediator = HA.m = function(ns, $, _, C) {
 				// events: {
 				// 	eventname: 'HA/eventname',
 				// }
-			};
+			},
+			_tempSubs = [];
 			
 	var _init = function(options) {
 		
@@ -52,10 +53,28 @@ HA.mediator = HA.m = function(ns, $, _, C) {
    * Publish an event
    * @method publish
    */
-  ns.publish = function() {
-  	console.log("publish", arguments[0]);
-    o.trigger.apply(o, arguments);
+  ns.publish = function(event, params, afterCallback) {
+
+		if(_.isFunction(afterCallback)) {
+			var uuid = _.uniqueId("temp_");
+	  	_tempSubs[uuid] = function() {
+	  		ns.unsubscribe(event, _tempSubs[uuid]);
+	  		afterCallback();
+	  	};
+	  	
+	  	ns.subscribe(event, _tempSubs[uuid]);
+		}
+  	
+  	var args = params ? [event].concat([params]) : [event];
+  	console.log("publish", arguments[0], args);
+
+    o.trigger.apply(o, args);
   };
+  
+  // ns.publish = function() {
+  	// console.log("publish", arguments[0], arguments);
+  	// o.trigger.apply(o, arguments);
+  // }
   
 	ns.events = _events;
 	
