@@ -48,7 +48,8 @@ HA.game = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.RESUME_GAME, _handleResumeGameEvent);
 		HA.m.subscribe(HA.events.END_GAME, _handleEndGameEvent);
 		HA.m.subscribe(HA.events.LEVEL_COMPLETE, _handleLevelCompleteEvent);
-		HA.m.subscribe(HA.events.NEXT_LEVEL, _handleNextLevelEvent);
+		HA.m.subscribe(HA.events.INCREMENT_LEVEL, _handleIncrementLevelEvent);
+		HA.m.subscribe(HA.events.START_LEVEL, _handleStartLevelEvent);
 		HA.m.subscribe(HA.e.SAVE_SCORE, _handleSaveScoreEvent);
 		
 		// For window blur, when changing browser windows or application
@@ -107,6 +108,7 @@ HA.game = function(ns, $, _, C) {
 		HA.player.setLives(3);
 		_bindGameplayKeyboardEvents();
 		_state = 1;
+		HA.m.publish(HA.e.START_LEVEL, [_level]);
 	}
 	
 	/**
@@ -292,28 +294,41 @@ HA.game = function(ns, $, _, C) {
 	/**
 	 Handle level complete event.
 	 @private
-	 @method _handleLevelComplete
+	 @method _handleLevelCompleteEvent
 	 @param {Object} e Event object.
 	 */
-	_handleLevelCompleteEvent = function(e) {
+	function _handleLevelCompleteEvent(e) {
 		console.log("handleLevelComplete");
 		if(_perfectLevel) {
 			// perfect level, add a life!
 			C.audio.play("addLife");
 			HA.player.incrementLives();
-			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { console.log("called back"); _incrementLevel(); }, this ]);
+			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { 
+				HA.m.publish(HA.e.INCREMENT_LEVEL);
+			}]);
+			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!"]);
 		} else {
-			_incrementLevel();
+			HA.m.publish(HA.e.INCREMENT_LEVEL);
 		}
 	};
 	
 	/**
-	 Handle next level event.
+	 * Handle increment level event.
+	 * @private
+	 * @method _handleIncrementLevelEvent
+	 * @param {Object} e Event object
+	 */
+	function _handleIncrementLevelEvent(e) {
+		_incrementLevel();
+	}
+	
+	/**
+	 Handle start level event.
 	 @private
-	 @method _handleNextLevelEvent
+	 @method _handleStartLevelEvent
 	 @param {Object} e Event object.
 	 */
-	function _handleNextLevelEvent(e) {
+	function _handleStartLevelEvent(e) {
 		console.log("handleNextLevel");
 		C.audio.play("whoosh");
 		var numEnemiesPerLevel = _getNumEnemiesPerLevel();
@@ -321,7 +336,7 @@ HA.game = function(ns, $, _, C) {
 		// _setIncrement(100 * _getScoreMultiplier());
 		HA.enemyController.loadEnemySet(start, numEnemiesPerLevel);
 		HA.enemyController.setSpeed(_getLevel() / 1.5);
-		HA.enemyController.startProducing(true);
+		if(!HA.enemyController.isProducing()) HA.enemyController.startProducing(true);
 	};
 	
 	
@@ -377,7 +392,7 @@ HA.game = function(ns, $, _, C) {
 	function _incrementLevel() {
 		_level += 1;
 		_perfectLevel = true;
-		HA.m.publish(HA.e.NEXT_LEVEL, [_level]);
+		HA.m.publish(HA.e.START_LEVEL, [_level]);
 		HA.m.publish(HA.e.SHOW_MESSAGE, ["Level "+_level]);
 		console.log("_incrementLevel", _level);
 	}
@@ -390,9 +405,7 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _setLevel(level) {
 		_level = level;
-		// Crafty.trigger("ShowMessage", {text: "Level "+e.level});
 		HA.m.publish(HA.e.SHOW_MESSAGE, ["Level "+level]);
-		// Crafty.trigger("SetLevel", {level: level});
 	}
 	
 	function _getSpeed() {
