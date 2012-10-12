@@ -130,8 +130,7 @@ exports.survey = function(req, res) {
 }
 
 exports.privatealpha = function(req, res) {
-  // res.render('privatealpha', { title: 'Hot Air (private alpha)', slug: 'privatealpha' });
-  res.redirect('/alphacomplete');
+  res.render('privatealpha', { title: 'Hot Air (private alpha)', slug: 'privatealpha' });
 }
 
 exports.alphacomplete = function(req, res) {
