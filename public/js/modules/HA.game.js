@@ -306,7 +306,6 @@ HA.game = function(ns, $, _, C) {
 			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { 
 				HA.m.publish(HA.e.INCREMENT_LEVEL);
 			}]);
-			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!"]);
 		} else {
 			HA.m.publish(HA.e.INCREMENT_LEVEL);
 		}
