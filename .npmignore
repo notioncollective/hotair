@@ -7,7 +7,5 @@ node_modules
 *docs
 venv
 public/img/build
-script
-grunt.js
 db
 build
