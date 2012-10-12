@@ -11,6 +11,7 @@ Crafty.c("Enemy", {
 		this.hit = false;
 		this.y = Crafty.DOM.window.height + this.h;
 		this.x = this.w + Math.random()*(Crafty.DOM.window.width-this.w*2);
+		// this.x = Crafty.DOM.window.width-150;
 		this.dy = (Math.random()*.5)+.3; // speed
 		this.scoreMultiplier = 1;
 		
@@ -125,7 +126,6 @@ Crafty.c("Enemy", {
 							.setScore(score);							
 	},
 	showTweetPerson: function() {
-		// console.log("====== showTweetPerson: ", this.tweet.name);
 		var party = this.getParty();
 		var tweet_person = Crafty.e('TweetPerson')
 				.attr({
@@ -137,12 +137,14 @@ Crafty.c("Enemy", {
 		var tweet_person_info = Crafty.e("TweetPersonInfo")
 				.attr({
 					tweet: this.tweet,
-					x: this.x+90,
-					y: this.y+100,
+					parent_x: this.x,
+					parent_y: this.y,
+					parent_w: this.w,
 					yv: yv
 				})
 				.setParty(party)
 				.drawInfo();
+		// var tpw = tweet_person_info.;
 	},
 	select: function() {
 		if(!this.selected) Crafty.audio.play("select", 1, .5);

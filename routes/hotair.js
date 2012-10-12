@@ -148,12 +148,11 @@ exports.notsupported = function(req, res) {
 exports.reset = function(rew, res) {
 	console.log("reset");
 	
-	var tweets;
-	
-	db.view('hotair', 'all', function(err, resp) {
+	db.view('hotair', 'all', {limit: 50000}, function(err, resp) {
+		console.log(resp);
 	  resp.rows.forEach(function(tweet) {
-	  	db.destroy(tweet._id, tweet._rev, function (err, res) {
-				console.log(tweet._id+" removed");
+	  	db.destroy(tweet.value.id, tweet.value.rev, function (err, res) {
+				console.log(tweet.value.id+" removed");
 			});
 	  });
 	});

@@ -23,9 +23,16 @@ Crafty.c("TweetPersonInfo", {
 	
 	drawInfo: function() {
 		var party_txt = this.getParty() == 'r' ? "(R)" : "(D)";
-		console.log("drawInfo()", this.tweet.name);
-		this.append("<div class='tweet-info-name'>"+this.tweet.name+" "+party_txt+"</div>"); //<a href='http://www.craftyjs.com'>Crafty.js</a>");
+		this.append("<div class='tweet-info-name'><span>"+this.tweet.name+" "+party_txt+"</span></div>"); //<a href='http://www.craftyjs.com'>Crafty.js</a>");
 		this.append("<div class='tweet-info-screenname'>&#64;"+this.tweet.screen_name+"</div>");
-		// console.log(this);
+		var width = $(".tweet-info-name span").width();
+		if(Crafty.DOM.window.width-(this.parent_x+90) < width+20) {
+			this.x = this.parent_x-480;
+			$(this._element).css("text-align", "right");
+		} else {
+			this.x = this.parent_x+90;
+		}
+		this.y = this.parent_y+100;
+		console.log("drawInfo()", Crafty.DOM.window.width, this.parent_x, this.parent_w, width);
 	}
 });
