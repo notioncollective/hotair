@@ -19,11 +19,11 @@ Crafty.c("Player", {
 		// this.angle = 0; // this is used for creating the floating sin wave
 		
 		this.bind("EnterFrame", function(e) {
-			if(this.x >= Crafty.DOM.window.width-80) {
-				this.x = Crafty.DOM.window.width-80;
+			if(this.x > Crafty.DOM.window.width) {
+				this.x = -40;
 			}
-			if(this.x <= 0) {
-				this.x = 0;
+			if(this.x < -40) {
+				this.x = Crafty.DOM.window.width;
 			}
 			
 			// this.y += (Math.sin(this.angle)/2);
