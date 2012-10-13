@@ -331,14 +331,14 @@ exports.highscores = function(req, res) {
 		handle_cumscore_r = function(err, resp) {
 			if(err) console.error("Error loading republican cumulateive score from db", err);
 			if(resp && resp.rows) {
-				data.stats.r = parseInt(resp.rows[0].value);
+				data.stats.r = resp.rows.length > 0 ? parseInt(resp.rows[0].value) : 0;
 			}
 			if(checkData()) res.send(JSON.stringify(data));
 		},
 		handle_cumscore_d = function(err, resp) {
 			if(err) console.error("Error loading democrat cumulateive score from db", err);
 			if(resp && resp.rows) {
-				data.stats.d = parseInt(resp.rows[0].value);
+				data.stats.d =  resp.rows.length > 0 ? parseInt(resp.rows[0].value) : 0;
 			}
 			if(checkData()) res.send(JSON.stringify(data));			
 		},
