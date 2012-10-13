@@ -1,4 +1,0 @@
-MAP:
-function(doc) {
-  if(doc.party === "republican") emit(doc.id, {"name": doc.user.name, "screen_name": doc.user.screen_name, "party": "r", "text": doc.text});
-}

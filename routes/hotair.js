@@ -51,6 +51,7 @@ function _getTweets(params) {
 		
 		// add extra info
 		_.each(reply, function(tweet) {
+			tweet.type = "tweet";
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;
@@ -315,17 +316,46 @@ exports.republican = function(req, res) {
  */
 exports.highscores = function(req, res) {
 	
-	db.view('hotair', 'highscores', {limit: 5, descending: true}, function(err, resp) {
-   	console.log("highscores resp", resp);
-   	var out = {data: []};
-	  if(resp && resp.rows) {
-			resp.rows.forEach(function(row) {
-	   	  out.data.push(row.value);	
-	   	});
+	var data = {
+				'stats': {
+					'r': null, // number
+					'd': null // number
+				},
+				'highscores': null // array
+		},
+		checkData = function() {
+			return (_.isNumber(data.stats.r) 
+							&& _.isNumber(data.stats.d)
+							&& _.isArray(data.highscores));
+		},
+		handle_cumscore_r = function(err, resp) {
+			if(err) console.error("Error loading republican cumulateive score from db", err);
+			if(resp && resp.rows) {
+				data.stats.r = parseInt(resp.rows[0].value);
+			}
+			if(checkData()) res.send(JSON.stringify(data));
+		},
+		handle_cumscore_d = function(err, resp) {
+			if(err) console.error("Error loading democrat cumulateive score from db", err);
+			if(resp && resp.rows) {
+				data.stats.d = parseInt(resp.rows[0].value);
+			}
+			if(checkData()) res.send(JSON.stringify(data));			
+		},
+		handle_highscores = function(err, resp) {
+			if(err) console.error("Error loading highscores from db", err);
+		  if(resp && resp.rows) {
+		  	data.highscores = [];
+				resp.rows.forEach(function(row) {
+		   	  data.highscores.push(row.value);	
+		   	});
+			}
+			if(checkData()) res.send(JSON.stringify(data));			
 		}
-   	console.log("out", out);
-		res.send(JSON.stringify(out));
-	});
+	
+	db.view('hotair', 'cumscore_r', {limit: 5, descending: true}, handle_cumscore_r);
+	db.view('hotair', 'cumscore_d', {limit: 5, descending: true}, handle_cumscore_d);
+	db.view('hotair', 'highscores', {limit: 5, descending: true}, handle_highscores);
 }
 
 /*

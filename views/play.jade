@@ -81,12 +81,17 @@ html(lang="en")
 						
 			// HIGH SCORES TEMPLATE
 			script(id='HighScoresTemplate',type='text/template')
-				| <div id="HighScores">
-				|		<ol>
+				| <div id="HighScores">	
+				|		<ol class="highscores">
 				|		<% _.each(highscores, function(highscore) { %>
 				|			<li class="<%= highscore.party %>"><i class="<%= highscore.party %>"></i><%= highscore.user %> (<%= highscore.party.toUpperCase() %>) - <%= highscore.score %></li>
 				|		<% }); %>
 				|		</ol>
+				|		<h2>Total Scores</h2>
+				|		<ul class="cum">
+				|			<li id="cumscore_d"><i class="d"></i><%= cumscore_d %></li>
+				|			<li id="cumscore_r"><i class="r"></i><%= cumscore_r %></li>
+				|		</ul>
 				| </div>
 
 			// TWEET DISPLAY TEMPLATE

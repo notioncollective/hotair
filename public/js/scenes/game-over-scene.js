@@ -5,7 +5,8 @@ Crafty.scene("gameover", function() {
 	var 
 		// score = 2300,
 		score = HA.player.getScore(),
-		isHighscore = HA.game.isHighScore(score), // hard coded for the moment 
+		noInitials = "???",
+		// isHighscore = HA.game.isHighScore(score), // hard coded for the moment 
 		gameOverDisplay, 
 		gameOverMenu, 
 		highScoreForm;
@@ -13,12 +14,18 @@ Crafty.scene("gameover", function() {
 	gameOverDisplay = Crafty.e("GameOverDisplay");
 	gameOverDisplay.showGameOverDisplay();
 	
-	if(isHighscore) {
-		createHighScoreForm();
-	} else {
-		createGameOverMenu();		
-	}
-	
+	HA.game.fetchHighScores(function() {
+			console.log("Fetched high scores");
+			if(HA.game.isHighScore(score)) {
+				console.log("High score! ", score);
+				createHighScoreForm();
+			} else {
+				console.log("Not high score");
+				if(score > 0) HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
+				createGameOverMenu();		
+			}
+	}, this)
+
 	function createHighScoreForm() {
 		highScoreFormMenu = Crafty.e("ListNav")
 			.attr({wrappingId: "HighScoreFormNav"});
@@ -26,7 +33,7 @@ Crafty.scene("gameover", function() {
 		highScoreFormMenu.addListItem({
 			text: 'Ok!',
 			callback: function() {
-				var initials = $("#gameover-name").val() || "N/A"; 
+				var initials = $("#gameover-name").val() || noInitials; 
 				HA.m.publish(HA.e.SAVE_SCORE, [initials, score]);
 				highScoreForm.destroy();
 				createGameOverMenu();
