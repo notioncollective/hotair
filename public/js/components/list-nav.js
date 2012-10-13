@@ -16,6 +16,7 @@ Crafty.c("ListNav", {
 		this.selectSnd = "select";
 		this.chooseSelectionSnd = "choose";
 		this.chooseSelectionKeys = [Crafty.keys.ENTER, Crafty.keys.SPACE];
+		this.z = 2000;
 		
 		this.bind("KeyDown", function(e) {
 			// console.log("selecting...", e.key);

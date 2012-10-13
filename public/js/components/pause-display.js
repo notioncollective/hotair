@@ -5,6 +5,7 @@ Crafty.c("PauseDisplay", {
 		this.setTemplate($("#PauseDisplayTemplate").html());
 		this.x = 0;
 		this.y = 0;
+		this.z = 1000;
 		this.w = Crafty.DOM.window.width;
 		this.h = Crafty.DOM.window.height;
 		this.updateContent();

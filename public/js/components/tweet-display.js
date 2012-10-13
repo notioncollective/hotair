@@ -5,8 +5,7 @@ Crafty.c("TweetDisplay", {
 		this.setTemplate($("#TweetDisplayTemplate").html());
 		this.textSelector = '#TweetDisplay .content';
 		this.w = Crafty.DOM.window.width;
-		this.z = 0;
-		
+		this.z = 999;
 		HA.m.subscribe(HA.e.ENEMY_SELECTED, this._handleEnemySelectedEvent);
 		HA.m.subscribe(HA.e.PAUSE_GAME, this._hideTweetText);
 		HA.m.subscribe(HA.e.RESUME_GAME, this._showTweetText);

@@ -52,7 +52,8 @@ Crafty.c("HitScore", {
 				.attr({
 					x:this.x+16,y:this.y+46,
 					w: this._score_w*score_str.length,
-					h:this._score_w
+					h:this._score_w,
+					z:0
 				})
 				.text('');
 					
