@@ -51,6 +51,7 @@ function _getTweets(params) {
 		
 		// add extra info
 		_.each(reply, function(tweet) {
+			tweet.type = "tweet";
 			tweet.party = params.slug;
 			tweet.twitter_list_screen_name = params.owner_screen_name;
 			tweet.twitter_list_slug = params.slug;

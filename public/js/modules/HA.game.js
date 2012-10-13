@@ -479,9 +479,11 @@ HA.game = function(ns, $, _, C) {
 			type : "post",
 			contentType : "application/json",
 			data : JSON.stringify({
+				type: "score",
 				user : initials,
 				score : score,
-				party : party
+				party : party,
+				timestamp: Date.now()
 			}),
 			success : function(resp) {
 				console.log("saved high score: ", resp);
