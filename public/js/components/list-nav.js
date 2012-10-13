@@ -92,6 +92,13 @@ Crafty.c("ListNav", {
 		});	
 	},
 	
+	// select specific item in list
+	selectItem: function(n) {
+		if(0 <= n && n < this.listNavItems.length) {
+			this.selectedItem = n;
+		} else console.error("Invalid menu item selected")
+	},
+	
 	selectNextItem: function() {
 		if(this.selectedItem < this.listNavItems.length-1) {
 			Crafty.audio.play(this.selectSnd);

@@ -154,7 +154,8 @@ Crafty.scene("start", function() {
         createMainStartMenu();
       }
     });
-		
+    var defaultSelected = Math.floor(Math.random()*2);
+		partySelectNav.selectItem(defaultSelected);
 		partySelectNav.renderListNav();
 	}
 
