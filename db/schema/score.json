@@ -1,0 +1,10 @@
+{
+	"type": "score"
+	"_id": "90f68f99632c59e10a46e6bf6a10ad3b",
+	"_rev": "1-884c106b5018bc7feec9b5f64d787b43",
+	"party": "d", // d or r
+	"score": 100,
+	"highscore": true,
+	"timestamp": 1350087823584,
+	"user": "JMW"
+}
