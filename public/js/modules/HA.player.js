@@ -24,6 +24,7 @@ HA.player = function(ns, $, _, C) {
 	
 	function _setScore(score) {
 		_score = score;
+		HA.m.publish(HA.e.UPDATE_SCORE, [_score]);
 	}
 	
 	function _addToScore(points) {

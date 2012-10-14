@@ -168,10 +168,8 @@ Crafty.scene("start", function() {
 
 		
 	createStartScreenMainGraphic()	
-	if(HA.twitter.isLoaded()) {
+	// if(HA.twitter.isLoaded()) {
 		createMainStartMenu();
-	}
-	// HA.startScreen = new Crafty.StartScreen();
-	// HA.startScreen.init();
+	// }
 	
 });

@@ -36,7 +36,7 @@ HA.game = function(ns, $, _, C) {
 		});
 		
 		// Load the latest high scores
-		_fetchHighScores();
+		// _fetchHighScores();
 		
 		// TODO decide where twitter module needs to be initialized
 		HA.twitter.init();
@@ -107,6 +107,8 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _handleStartNewGameEvent(e) {
 		_setLevel(1);
+		_perfectLevel = true;
+		HA.player.setScore(0);
 		HA.player.setLives(3);
 		_bindGameplayKeyboardEvents();
 		_state = 1;
@@ -573,7 +575,7 @@ HA.game = function(ns, $, _, C) {
 	 * @return {boolean} True if the score is equal to or greater than the minimum highscore
 	 */
 	ns.isHighScore = function(score) {
-		// if(score > 0) {
+		if(score > 0) {
 			var scores = _.pluck(_highScores, "score"),
 					min = _.min(scores),
 					isHigh = (score > min || scores.length < 5);
@@ -584,7 +586,7 @@ HA.game = function(ns, $, _, C) {
 		// if there aren't yet 5 highscores, or yours is higheryou're in luck!
 			return isHigh;
 
-		// } else return false;
+		} else return false;
 	}
 	
 	ns.fetchHighScores = _fetchHighScores;
@@ -592,6 +594,9 @@ HA.game = function(ns, $, _, C) {
 	ns.getHighScores = function() {
 		return _highScores;
 	}
+	
+	ns.getNumEnemiesPerLevel = _getNumEnemiesPerLevel;
+	
 	return ns;
 
 }(HA.namespace("HA.game"), jQuery, _, Crafty);

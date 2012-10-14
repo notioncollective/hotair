@@ -240,10 +240,17 @@ exports.all = function(req, res) {
 exports.load_tweets = function(req, res) {
 	var startkey = req.query.startkey || 0,
 			limit = req.query.limit || 100,
+			numPerSet = req.query.numPerSet || 10,
 			i = 0, // counts the number of lists recieved
+			a = [],
+			b = [],
+			aLen,
+			bLen,
+			smallerSetLen,
+			numSets,
 			merged = { // new response object
 				"total_rows": 0, 
-				"rows": []
+				"rows": [],
 			},
 			// handle merging data
 			merge = function(err, resp) {
@@ -253,9 +260,35 @@ exports.load_tweets = function(req, res) {
 				if(resp) {
 					i++;
 					merged.total_rows += resp.total_rows;
-					merged.rows = merged.rows.concat(resp.rows);
+					// merged.rows = merged.rows.concat(resp.rows);
+					if(i == 1) {
+						a = resp.rows;
+						aLen = a.length;
+					}
 					if(i == 2) { //if both lists have been merged in
-						merged.rows = _.shuffle(merged.rows); // shuffle rows
+						b = resp.rows;
+						bLen = b.length;
+						
+						smallerSetLen = aLen < bLen ? aLen : bLen;
+						
+						for(var j=0; j<smallerSetLen; j+=1) {
+							merged.rows.push(a[j]);
+							merged.rows.push(b[j]);
+							console.log(a[j].value.party);
+							console.log(b[j].value.party);
+						}
+						
+						numSets = Math.floor(smallerSetLen/numPerSet);
+						
+						for(var k=0; k<numSets; k+=1) {
+							var temp = merged.rows.slice(k, numPerSet);
+							temp = _.shuffle(temp);
+							
+							// insert an array into another array
+							var args = [k, numPerSet].concat(temp);
+							Array.prototype.splice.apply(merged.rows, args);
+						}
+						
 						res.send(merged); // send response
 					}					
 				}

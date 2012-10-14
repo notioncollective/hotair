@@ -26,11 +26,11 @@ HA.twitter = function(ns, $, _, C) {
 		// force options obj
 		options = options || {};
 		_.extend(_options, options, _defaults);
-		if(!_options.test) {
-			_loadTweets({ startKey: 0, limit: _options.tweet_limit });
-		} else {
-			_handleLoadTweets(LOAD_TWEETS_SAMPLE);
-		}
+		// if(!_options.test) {
+			// _loadTweets({ startKey: 0, limit: _options.tweet_limit });
+		// } else {
+			// _handleLoadTweets(LOAD_TWEETS_SAMPLE);
+		// }
 	}
 	
 	/**
@@ -45,7 +45,7 @@ HA.twitter = function(ns, $, _, C) {
 				// uri += _options.domain;
 				// uri += _options.load_tweets_endpoint;
 		var uri = _options.load_tweets_endpoint;
-		params = params || {};		
+		params = params || {};
 		
 		// ping the server for twitter data
 		$.getJSON(uri, params)
@@ -82,6 +82,9 @@ HA.twitter = function(ns, $, _, C) {
 	function _getTweetSet(start, count) {
 		var end = start+count,
 				set = _tweets.slice(start, end);
+		// console.log("TWEET SET: ", set);
+		var vals = _.pluck(set, "value");
+		console.log("TWEET SET: ", _.pluck(vals, "party"));
 		return set;
 	}
 		
@@ -91,6 +94,9 @@ HA.twitter = function(ns, $, _, C) {
     @method init
    */
 	ns.init = _init;
+	
+	
+	ns.loadTweets = _loadTweets;
 	
 	/**
     Grabs a set of tweets based on the passed variables.
