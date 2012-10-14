@@ -39,7 +39,7 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	font-family: "Press Start 2P", Courier;
-	background: #8CD0FF;
+	background: #8CD0FF url("../img/sky-top-fadex2.png") 0 0 repeat-x;
 }
 ol, ul {
 	list-style: none;
@@ -313,6 +313,15 @@ div#PauseNav span, div#GameOverNav span {
 	border: none;
 	padding: 10px;
 	font-family: "Press Start 2P", Courier;
+}
+
+#Footer {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 600px;
+	width: 100%;
+	background: transparent url("../img/sky-bottom-fadex2.png") bottom left repeat-x;
 }
 
 .tweet-info-name {

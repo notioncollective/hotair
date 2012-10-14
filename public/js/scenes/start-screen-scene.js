@@ -19,6 +19,13 @@ Crafty.scene("start", function() {
   // Event subscriptions
   HA.m.subscribe(HA.events.RESIZE_VIEWPORT, resizeViewportHandler);
   HA.m.subscribe(HA.e.TWEETS_LOADED, handleTweetsLoadedEvent);
+  
+  	
+	// draw some clouds	
+	var j = 0;
+	for (;j<5;j++) {
+		Crafty.e("Cloud");
+	}
 
 	function createMainStartMenu() {
 		startMenuNav = Crafty.e('ListNav')

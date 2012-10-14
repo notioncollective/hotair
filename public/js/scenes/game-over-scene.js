@@ -1,6 +1,11 @@
 Crafty.scene("gameover", function() {
 	console.log("Scene: gameover");
-	HA.sm.fullScreenKeyEnabled(false);
+	
+		// draw some clouds	
+	var j = 0;
+	for (;j<5;j++) {
+		Crafty.e("Cloud");
+	}
 	
 	var 
 		// score = 2300,
