@@ -1,0 +1,13 @@
+{
+	"version": "0.1.2",
+	"debug": false,
+	"logins": {
+		// username : [password, group]
+		"notion": ["Madi50nW1", "admin"],
+		"privatealpha1": ["B!denVsRyan", "alphatester"],
+		"privatealpha2": ["B!denVsRyan", "alphatester"],
+		"privatealpha3": ["B!denVsRyan", "alphatester"],
+		"privatealpha4": ["B!denVsRyan", "alphatester"],
+		"privatealpha5": ["B!denVsRyan", "alphatester"]
+	}	
+}
