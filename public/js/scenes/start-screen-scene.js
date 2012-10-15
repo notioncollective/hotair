@@ -26,6 +26,12 @@ Crafty.scene("start", function() {
 	for (;j<5;j++) {
 		Crafty.e("Cloud");
 	}
+	
+	// draw some balloons	
+	// var k = 0;
+	// for (;k<10;k++) {
+		// Crafty.e("StartScreenBalloon");
+	// }
 
 	function createMainStartMenu() {
 		startMenuNav = Crafty.e('ListNav')
