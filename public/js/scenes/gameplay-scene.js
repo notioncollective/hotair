@@ -46,9 +46,7 @@ Crafty.scene("gameplay", function() {
 	console.log("Scene: gameplay - uninit");
 	Crafty.audio.stop("game_music");
 	
-	HA.m.unsubscribe(HA.e.TWEETS_LOADED, function() {
-		HA.m.publish(HA.events.START_NEW_GAME);
-	});
+	HA.m.unsubscribe(HA.e.TWEETS_LOADED);
 	
 	
 	// function createCloseMenu() {

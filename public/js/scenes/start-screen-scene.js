@@ -17,9 +17,7 @@ Crafty.scene("start", function() {
   });
   
   // Event subscriptions
-  HA.m.subscribe(HA.events.RESIZE_VIEWPORT, resizeViewportHandler);
-  HA.m.subscribe(HA.e.TWEETS_LOADED, handleTweetsLoadedEvent);
-  
+  HA.m.subscribe(HA.events.RESIZE_VIEWPORT, resizeViewportHandler);  
   	
 	// draw some clouds	
 	var j = 0;
@@ -107,19 +105,6 @@ Crafty.scene("start", function() {
 		});
 		closeMenuNav.renderListNav();
 	}
-
-	
-	function handleTweetsLoadedEvent(e) {
-		if(!startMenuNav) {
-			HA.game.closeModals();
-			createMainStartMenu();
-		}
-	}
-	
-	function handleTweetsLoadErrorEvent(e) {
-		HA.game.closeModals();
-		openModal("ErrorDisplay");
-	}
 	
 	function resizeViewportHandler(e, width, height) {
 	  createStartScreenMainGraphic(width, height);
@@ -178,4 +163,7 @@ Crafty.scene("start", function() {
 		createMainStartMenu();
 	// }
 	
+}, function () {
+	HA.m.unsubscribe(HA.events.RESIZE_VIEWPORT);
+  HA.m.unsubscribe(HA.e.TWEETS_LOADED);
 });
