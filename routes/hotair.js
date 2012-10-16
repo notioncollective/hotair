@@ -391,6 +391,23 @@ exports.highscores = function(req, res) {
 	db.view('hotair', 'highscores', {limit: 5, descending: true}, handle_highscores);
 }
 
+exports.score = function(req, res) {
+	if(req.params.id) {
+		db.get(req.params.id, function(db_err, db_res) {
+			// error check
+			if(db_err) {
+				console.error("Error loading high score", db_err);
+				res.send(404, 'Sorry, we cannot find that!');
+			}
+			// 404 if it's the wrong doc type
+			if(db_res.type !== 'score') res.send(404, 'Sorry, we cannot find that!');
+			// otherwise render template
+			else res.render('score', { data: db_res, title: "Score!", slug: 'score'});
+		});		
+	} else res.redirect('/'); // redirect if no id
+
+}
+
 /*
  * Save a highscore
  * POST
@@ -402,7 +419,7 @@ exports.highscore = function(req, res) {
 	// db.save(data, function(db_err, db_res) {
 	db.insert(data, function(db_err, db_res) {
 		if (db_err) {
-			console.lerror("Error saving high score", db_err)
+			console.error("Error saving high score", db_err)
 			respBody.error = db_err;
 		} else {
 			respBody.success = true;

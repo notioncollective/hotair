@@ -93,7 +93,9 @@ app.get('/democrats', auth, routes.democrats);
 app.get('/republican', auth, routes.republican);
 app.get('/load_tweets', auth, routes.load_tweets);
 app.get('/highscores', auth, routes.highscores);
+app.get('/score/:id', routes.score);
 app.post('/highscore', auth, routes.highscore);
+
 // app.get('/*', routes.notfound);
 
 http.createServer(app).listen(app.get('port'), function(){
