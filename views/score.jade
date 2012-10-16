@@ -1,7 +1,5 @@
 extends layout
 
-
-
 block content
 	#Main
 		- var scoretxt = data.highscore ? "high score" : "score"
@@ -10,7 +8,8 @@ block content
 		.score #{data.score}			
 		p <span class="user">#{data.user}</span> got this #{scoretxt} playing <a href="/"><strong>Hot Air</strong></a> on <span class="date">#{date.toDateString()}</span> at <span class="time">#{date.toTimeString()}</span>
 		ul#actions.cf
-			li: a(href="#", id="share") Share this Score 
+			li: a(href="#{twitter_url}", id="share_twitter", target="_blank") Share on Twitter 
+			li: a(href="#", id="share_facebook", target="_blank") Share on Facebook
 			li: a(href="#", id="play") Play Hot Air!
 
 	
