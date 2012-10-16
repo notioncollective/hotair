@@ -16,7 +16,8 @@
     "q": "0.8.8",
     "cron": "1.0.1",
     "time": "0.8.3",
-    "useragent": "1.1.0"
+    "useragent": "1.1.0",
+    "querystring": "0.1.0"
   },
   "subdomain": "hotair",
   "domains": [
