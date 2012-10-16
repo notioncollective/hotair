@@ -11,6 +11,8 @@ Crafty.c("MessageDisplay", {
 		this._blinkCount = 3;
 		this._flashDuration =  300;
 		
+		this._messageCallback = null;
+		
 		// this.bind("ShowMessage", function(e) {
 			// this.flashMessage(e.text, e.callback);
 		// });
@@ -20,7 +22,13 @@ Crafty.c("MessageDisplay", {
 	},
 	
 	_handleShowMessageEvent: function(e, text, callback, context) {
-		this.flashMessage(text, callback, context);
+		console.log("_handleShowMessageEvent callback: ", callback);
+		if(_.isFunction(callback)) {
+			this._messageCallback = callback;
+		} else {
+			this._messageCallback = null;
+		}
+		this.flashMessage(text);
 	},
 	
 	setMessage: function(text) {
@@ -37,15 +45,19 @@ Crafty.c("MessageDisplay", {
 		$(this._element).hide();
 	},
 	
-	flashMessage: function(text, callback, context) {
+	flashMessage: function(text) {
 		var that = this,
-				blinkCount = that._blinkCount;
+				blinkCount = that._blinkCount,
+				callback = callback;
+		
+		// console.log("flashMessage callback: ", that._messageCallback);
 		
 		that.setMessage(text);
 		
 		function blinkOn() {
 			if(blinkCount === 0) {
-				if(_.isFunction(callback)) callback();
+				// console.log("blinkOn callback: ", that._messageCallback);
+				if(_.isFunction(that._messageCallback)) that._messageCallback();
 				return;
 			}
 			that.showMessage()

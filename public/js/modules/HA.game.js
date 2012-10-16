@@ -11,7 +11,7 @@ HA.game = function(ns, $, _, C) {
 			_level = 0,
 			_party,
 			_perfectLevel = true,
-			_numEnemiesPerLevel = 10,
+			_numEnemiesPerLevel = 2,
 			_partySelectMenu,
 			_pauseDisplay,
 			_pauseMenu,
@@ -344,7 +344,7 @@ HA.game = function(ns, $, _, C) {
 			// perfect level, add a life!
 			C.audio.play("addLife");
 			HA.player.incrementLives();
-			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() { 
+			HA.m.publish(HA.e.SHOW_MESSAGE, ["Perfect Level!", function() {
 				HA.m.publish(HA.e.INCREMENT_LEVEL);
 			}]);
 		} else {
@@ -359,6 +359,7 @@ HA.game = function(ns, $, _, C) {
 	 * @param {Object} e Event object
 	 */
 	function _handleIncrementLevelEvent(e) {
+		console.log("_handleIncrementLevelEvent");
 		_incrementLevel();
 	}
 	
