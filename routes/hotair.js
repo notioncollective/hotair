@@ -131,6 +131,22 @@ function _buildScoreTweetUrl(score) {
 	return tweet_url;
 }
 
+function _buildScoreFacebookUrl(score) {
+	var base = "http://www.facebook.com/dialog/feed?",
+			params = {
+				name: "I just scored "+score.score+" points playing Hot Air!",
+				app_id: "155380987937796",
+				link: "http://hotairgame.com/score/"+score._id,
+				caption: "Hot Air score page",
+				description: "It's a web-based game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.",
+				redirect_uri: "http://hotairgame.com/score/"+score._id
+			},
+			facebook_url = base+querystring.stringify(params);
+
+	console.log("facebook url: ", facebook_url);
+	return facebook_url;
+}
+
 /*
  * GET home page.
  */
@@ -423,7 +439,8 @@ exports.score = function(req, res) {
 				data: db_res,
 				title: "Score!",
 				slug: 'score',
-				twitter_url: _buildScoreTweetUrl(db_res)
+				twitter_url: _buildScoreTweetUrl(db_res),
+				facebook_url: _buildScoreFacebookUrl(db_res)
 			});
 		});		
 	} else res.redirect('/'); // redirect if no id
