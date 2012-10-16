@@ -125,7 +125,7 @@ div.modal {
 	left: 50%;
 	background: transparent url(../img/pause_bg.png) 0 0 repeat;
 	padding: 20px;
-	border: solid 5px #fff;
+	border: 6px solid #fff;
 	z-index: 1000;
 }
 
