@@ -26,11 +26,6 @@ HA.twitter = function(ns, $, _, C) {
 		// force options obj
 		options = options || {};
 		_.extend(_options, options, _defaults);
-		// if(!_options.test) {
-			// _loadTweets({ startKey: 0, limit: _options.tweet_limit });
-		// } else {
-			// _handleLoadTweets(LOAD_TWEETS_SAMPLE);
-		// }
 	}
 	
 	/**

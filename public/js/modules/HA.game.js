@@ -35,11 +35,11 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 		
-		// Load the latest high scores
+		// High scores are now loaded on demand.
 		// _fetchHighScores();
 		
-		// TODO decide where twitter module needs to be initialized
-		HA.twitter.init();
+		// The init method no longer performs the fetch, so it's not necessary here.
+		// HA.twitter.init();
 
 		// Set up initial event subscriptions
 		HA.m.subscribe(HA.events.GAME_LOADED, _handleGameLoadedEvent);
