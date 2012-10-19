@@ -143,10 +143,15 @@ Crafty.scene("loading", function() {
 				.sprite(100, 'img/startscreen_balloonx2.png?_='+cacheBuster, {
 					startscreen_balloon_d: [0, 0]
 				});
-			HA.m.publish(HA.events.GAME_LOADED);
+			window.setTimeout(function(){
+				$('body').addClass('loaded');
+				HA.m.publish(HA.events.GAME_LOADED);			
+			}, 1500);
+
 		},
 		function(e) {
 			// onProgress
+			$('#LoadingDisplay').text('Loading: '+Math.floor(e.percent)+'%');
 			console.log("percent: ", e.percent, "src: ", e.src);
 		},
 		function(e) {

@@ -39,8 +39,39 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	font-family: "Press Start 2P", Courier;
+	background: #000;
+}
+
+#loading-wrap {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	text-align: center;
+}
+
+#LoadingDisplay {
+	position: absolute;
+	color: #8CD0FF;
+	text-align: center;
+	left: 0;
+	top: 66.66%;
+	width: 100%;
+}
+
+img#LoadingImg {
+	display: block;
+	margin: 13% auto 0 auto;
+	border: 0;
+}
+
+body.loaded {
 	background: #8CD0FF url("../img/sky-top-fadex2.png") 0 0 repeat-x;
 }
+
+body.loaded #loading-wrap { display: none; }
+
 ol, ul {
 	list-style: none;
 }
@@ -249,6 +280,7 @@ div#PauseNav span, div#GameOverNav span {
 }
 
 #FullScreenPrompt {
+	display: none;
 	position: absolute;
 	text-align: center;
 	bottom: 20px;
@@ -315,7 +347,10 @@ div#PauseNav span, div#GameOverNav span {
 	font-family: "Press Start 2P", Courier;
 }
 
+
+
 #Footer {
+	display: none;
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -323,6 +358,8 @@ div#PauseNav span, div#GameOverNav span {
 	width: 100%;
 	background: transparent url("../img/sky-bottom-fadex2.png") bottom left repeat-x;
 }
+
+body.loaded #Footer { display: block; }
 
 .tweet-info-name {
 	font-size: .6em;
