@@ -14,8 +14,12 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 	  HA.m.subscribe(HA.events.LOAD_SCENE, _handleLoadSceneEvent);
 	  
 	  // detect fullscreen mode
-  	if(screenfull) _fullScreenMode = screenfull.isFullscreen;
-		else throw new Error("screenfull library is not loaded");
+	  // console.log("screenfull", screenfull);
+  	// if(screenfull) {
+  		// _fullScreenMode = screenfull.isFullscreen;
+  	// } else {
+  		// throw new Error("screenfull library is not loaded");
+  	// }
 	}
 	
 	function _handleLoadSceneEvent(e, scene) {
@@ -28,7 +32,9 @@ HA.sceneManager = HA.sm = function(ns, $, _, C) {
 			screenfull.request();
 			_fullScreenMode = true;
 			HA.m.publish(HA.events.CHANGE_FULL_SCREEN, [_fullScreenMode]);
-		} else throw new Error("screenfull library is not loaded");
+		} else {
+			throw new Error("screenfull library is not loaded");
+		}
 		return _fullScreenMode;		
 	}
 	
