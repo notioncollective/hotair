@@ -60,52 +60,41 @@ Crafty.scene("loading", function() {
 				// ],
 				game_music: [
 					"/snd/cloud_loops.mp3",
-					"/snd/cloud_loops.wav",
 					"/snd/cloud_loops.ogg"
 				], 
 				drop: [
-					"/snd/drop.wav",
 					"/snd/drop.mp3",
 					"/snd/drop.ogg"
 				],
 				level: [
-					"/snd/level.wav",
 					"/snd/level.ogg",
 					"/snd/level.mp3"
 				],
 				hit_good: [
-					"/snd/hit_good.wav",
 					"/snd/hit_good.mp3",
 					"/snd/hit_good.ogg"
 				],
 				hit_bad: [
-					"/snd/hit_bad.wav",
 					"/snd/hit_bad.mp3",
 					"/snd/hit_bad.ogg"
 				],
 				whoosh: [
-					"/snd/whoosh.wav",
 					"/snd/whoosh.mp3",
-					"/snd/whoosh.ogg"
-					
+					"/snd/whoosh.ogg"					
 				],
 				pause: [
-					"/snd/pause.wav",
 					"/snd/pause.mp3",
 					"/snd/pause.ogg"
 				],
 				select: [
-					"/snd/select.wav",
 					"/snd/select.mp3",
 					"/snd/select.ogg"
 				],
 				choose: [
-					"/snd/select2.wav",
 					"/snd/select2.ogg",
 					"/snd/select2.mp3"
 				],
 				addLife: [
-					"/snd/addLife.wav",
 					"/snd/addLife.ogg",
 					"/snd/addLife.mp3"
 				]
