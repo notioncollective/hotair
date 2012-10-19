@@ -51,44 +51,44 @@ Crafty.scene("loading", function() {
 					// "/snd/iamerror.mp3"
 				// ],
 				game_music: [
-					"/snd/cloud_loops.mp3?_="+cacheBuster,
-					"/snd/cloud_loops.ogg?_="+cacheBuster
+					"/snd/cloud_loops.mp3",
+					"/snd/cloud_loops.ogg"
 				], 
 				drop: [
-					"/snd/drop.mp3?_="+cacheBuster,
-					"/snd/drop.ogg?_="+cacheBuster
+					"/snd/drop.mp3",
+					"/snd/drop.ogg"
 				],
 				level: [
-					"/snd/level.ogg?_="+cacheBuster,
-					"/snd/level.mp3?_="+cacheBuster
+					"/snd/level.ogg",
+					"/snd/level.mp3"
 				],
 				hit_good: [
-					"/snd/hit_good.mp3?_="+cacheBuster,
-					"/snd/hit_good.ogg?_="+cacheBuster
+					"/snd/hit_good.mp3",
+					"/snd/hit_good.ogg"
 				],
 				hit_bad: [
-					"/snd/hit_bad.mp3?_="+cacheBuster,
-					"/snd/hit_bad.ogg?_="+cacheBuster
+					"/snd/hit_bad.mp3",
+					"/snd/hit_bad.ogg"
 				],
 				whoosh: [
-					"/snd/whoosh.mp3?_="+cacheBuster,
-					"/snd/whoosh.ogg?_="+cacheBuster					
+					"/snd/whoosh.mp3",
+					"/snd/whoosh.ogg"					
 				],
 				pause: [
-					"/snd/pause.mp3?_="+cacheBuster,
-					"/snd/pause.ogg?_="+cacheBuster
+					"/snd/pause.mp3",
+					"/snd/pause.ogg"
 				],
 				select: [
-					"/snd/select.mp3?_="+cacheBuster,
-					"/snd/select.ogg?_="+cacheBuster
+					"/snd/select.mp3",
+					"/snd/select.ogg"
 				],
 				choose: [
-					"/snd/select2.ogg?_="+cacheBuster,
-					"/snd/select2.mp3?_="+cacheBuster
+					"/snd/select2.ogg",
+					"/snd/select2.mp3"
 				],
 				addLife: [
-					"/snd/addLife.ogg?_="+cacheBuster,
-					"/snd/addLife.mp3?_="+cacheBuster
+					"/snd/addLife.ogg",
+					"/snd/addLife.mp3"
 				]
 			});
 			

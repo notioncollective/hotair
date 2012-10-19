@@ -25,6 +25,9 @@
        "cumscore_d": {
            "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'd') emit(parseInt(doc.score), parseInt(doc.score));\n}",
            "reduce": "_sum"
+       },
+       "hits": {
+           "map": "function(doc) {\n  if(doc.type === 'hit') emit(doc._id, doc);\n}"
        }
    },
    "language": "javascript"
