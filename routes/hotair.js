@@ -459,9 +459,31 @@ exports.highscore = function(req, res) {
 	});
 };
 
+/**
+ * Save a data point to the db and to google analytics
+ * @param {Object} req
+ * @param {Object} res
+ */
+exports.data = function(req, res) {
+	var data = req.body,
+		respBody = {};
+	console.log("data: ", data);
+	// db.save(data, function(db_err, db_res) {
+	db.insert(data, function(db_err, db_res) {
+		if (db_err) {
+			console.error("Error saving data", db_err)
+			respBody.error = db_err;
+		} else {
+			respBody.success = true;
+		}
+		res.send(respBody);
+	});
+}
+
 exports.notfound = function(req, res) {
 	res.send(404, "Page not found!");
 }
+
 
 
 // exports.register = function(req, res) {

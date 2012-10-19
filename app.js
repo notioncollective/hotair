@@ -94,7 +94,9 @@ app.get('/republican', auth, routes.republican);
 app.get('/load_tweets', auth, routes.load_tweets);
 app.get('/highscores', auth, routes.highscores);
 app.get('/score/:id', routes.score);
+
 app.post('/highscore', auth, routes.highscore);
+app.post('/data', auth, routes.data);
 
 // app.get('/*', routes.notfound);
 

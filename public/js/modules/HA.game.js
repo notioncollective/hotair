@@ -293,7 +293,15 @@ HA.game = function(ns, $, _, C) {
 		if(enemy.hit) return;
 		console.log("Enemy: ", enemy);
 		console.log("Game: handleEnemyHitStart", enemy.tweet.party, HA.player.getParty());
-		var scoreInc = _getScoreIncrement();
+		var scoreInc = _getScoreIncrement(),
+				data = {
+					type: "hit",
+					tweet_id: enemy.tweet.id,
+					tweet_screen_name: enemy.tweet.screen_name,
+					tweet_party: enemy.tweet.party,
+					player_party: HA.player.getParty(),
+					timestamp: Date.now()
+				};
 		if(enemy.tweet.party == HA.player.getParty()) {
 			// _decrementScore();
 			scoreInc = -scoreInc;
@@ -306,6 +314,9 @@ HA.game = function(ns, $, _, C) {
 			HA.player.addToScore(scoreInc);
 			C.audio.play('hit_good');
 		}
+		
+		_saveData(data);
+		
 		HA.m.publish(HA.e.ENEMY_HIT_COMPLETE, [enemy, scoreInc]);
 	};
 
@@ -501,6 +512,21 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 	};
+	
+	function _saveData(data) {
+		console.log("SAVING DATA: ", data);
+		var token = _getCsrfToken();
+		$.ajax({
+			url : "/data",
+			type : "post",
+			contentType : "application/json",
+			data : JSON.stringify(data),
+			success : function(resp) {
+				console.log("DATA SAVED: ", resp);
+			}
+		});
+		_gaq.push(['_trackEvent', 'Gameplay', 'EnemyHit', data.tweet_party]);
+	}
 	
 	/**
 	 * Get the CSRF token from the meta tag.
