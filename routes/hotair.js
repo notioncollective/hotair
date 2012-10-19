@@ -109,33 +109,47 @@ function _getSinceId() {
 
 
 
-function _buildScoreTweetUrl(score) {
+function _buildTweetUrl(score) {
 	var hotAirTwitter = "hotairgame",
-			base = "https://twitter.com/share?"
-			// via = "@"+hotAirTwitter,
-			url = "http://hotairgame.com/score/"+score._id,
-			text = "I just got a #score of "+score.score+" on @"+hotAirTwitter+"!",
-			tweet_url = base+querystring.stringify({
-				"url":url,
-				"text":text
-			})
+			tweet_url = "https://twitter.com/share?",
+			params = {
+				url:"http://hotairgame.com/",
+				text: "Test your political meddle with @"+hotAirTwitter+"!"		
+			};
+
+			
+	if(_.isObject(score) && score.type === 'score') {
+		params.url = "http://hotairgame.com/score/"+score._id;
+		params.text = "I just got a #score of "+score.score+" on @"+hotAirTwitter+"!";		
+	}
+			
+	tweet_url = tweet_url+querystring.stringify(params);
 
 	console.log("tweet url: ", tweet_url);
 	return tweet_url;
 }
 
-function _buildScoreFacebookUrl(score) {
-	var base = "http://www.facebook.com/dialog/feed?",
+function _buildFacebookUrl(score) {
+	var facebook_url = "http://www.facebook.com/dialog/feed?",
 			params = {
-				name: "I just scored "+score.score+" points playing Hot Air!",
+				name: "Test your political meddle with Hot Air!",
 				app_id: "155380987937796",
-				link: "http://hotairgame.com/score/"+score._id,
-				caption: "Hot Air score page",
-				picture: "http://hotairgame.com/img/" + score.party + "_share_img.png",
-				description: "It's a web-based game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.",
-				redirect_uri: "http://hotairgame.com/score/"+score._id
-			},
-			facebook_url = base+querystring.stringify(params);
+				link: "http://hotairgame.com/",
+				caption: "Play the game",
+				description: "Hot Air is a web-based arcade game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.",
+				picture: "http://hotairgame.com/img/share_img.png",
+				redirect_uri: "http://hotairgame.com/"
+			};
+			
+	if(_.isObject(score) && score.type === 'score') {
+		params.name = "I just scored "+score.score+" points playing Hot Air!";
+		params.link = "http://hotairgame.com/score/"+score._id;
+		params.caption = "Hot Air score page";
+		params.picture = "http://hotairgame.com/img/" + score.party + "_share_img.png";
+		params.redirect_uri = "http://hotairgame.com/score/"+score._id;
+	}
+	
+	facebook_url = facebook_url+querystring.stringify(params);
 
 	console.log("facebook url: ", facebook_url);
 	return facebook_url;
@@ -437,6 +451,22 @@ exports.score = function(req, res) {
 		});		
 	} else res.redirect('/'); // redirect if no id
 
+}
+
+exports.share = function(req, res) {
+	if(req.params.service) {
+		switch(req.params.service) {
+			case "twitter":
+				res.redirect(_buildTweetUrl());
+				break;
+			case "facebook":
+				res.redirect(_buildFacebookUrl());
+				break;
+			default:
+				res.send(404, "Share service not available");
+				break;
+		}
+	} else res.redirect('/')
 }
 
 /*
