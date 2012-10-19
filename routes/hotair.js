@@ -14,7 +14,8 @@ var nano = require('nano')(nano_url),
 	Twit = require('twit'),
 	_ = require('lodash'),
 	Q = require('q'),
-	useragent = require('useragent');
+	useragent = require('useragent'),
+	querystring = require('querystring');
   
 
 
@@ -113,6 +114,22 @@ function _getSinceId() {
 	return dfd.promise;
 }
 
+
+
+function _buildScoreTweetUrl(score) {
+	var hotAirTwitter = "hotairgame",
+			base = "https://twitter.com/share?"
+			// via = "@"+hotAirTwitter,
+			url = "http://hotairgame.com/score/"+score._id,
+			text = "I just got a #score of "+score.score+" on @"+hotAirTwitter+"!",
+			tweet_url = base+querystring.stringify({
+				"url":url,
+				"text":text
+			})
+
+	console.log("tweet url: ", tweet_url);
+	return tweet_url;
+}
 
 /*
  * GET home page.
@@ -400,7 +417,12 @@ exports.score = function(req, res) {
 			// 404 if it's the wrong doc type
 			if(db_res.type !== 'score') res.send(404, 'Sorry, we cannot find that!');
 			// otherwise render template
-			else res.render('score', { data: db_res, title: "Score!", slug: 'score'});
+			else res.render('score', {
+				data: db_res,
+				title: "Score!",
+				slug: 'score',
+				twitter_url: _buildScoreTweetUrl(db_res)
+			});
 		});		
 	} else res.redirect('/'); // redirect if no id
 

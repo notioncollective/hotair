@@ -183,6 +183,7 @@ Node modules
  - cron (1.0.1)
  - time (0.8.3) *
  - useragent (1.1.0)
+ - querystring (0.1.0)
  
 ### Used only locally (not in package.js) ###
  - yuidoc (0.3.26)
