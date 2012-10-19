@@ -1,14 +1,6 @@
-/*
-function(doc) {
-//"id_str": "242300291976949760",
-  emit(doc._id, parseInt(doc.id_str));
-}
-*/
 
-
-// var cradle = require('cradle'),
-// var nano = require('nano')(app.get('couchdb host')+':'+app.get('couchdb port')),
-var nano_url = process.env.NODE_ENV === 'production' ? 'http://nodejitsudb198990392151.iriscouch.com:5984' : 'http://127.0.0.1:5984';
+// prod user/pass: hotair_user:Gr33nP01nt#
+var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:Gr33nP01nt#@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
 console.log("Connecting to couchdb: ", nano_url);
 var nano = require('nano')(nano_url),
 	Twit = require('twit'),
