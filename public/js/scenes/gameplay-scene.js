@@ -14,6 +14,8 @@ Crafty.scene("gameplay", function() {
 	}
 	
 
+	var messageDisplay = Crafty.e("MessageDisplay");
+	messageDisplay.showMessage("Loading...");
 	
 	// Display Entities
 	// var tweetDisplay = Crafty.e("TweetDisplay");
@@ -35,7 +37,6 @@ Crafty.scene("gameplay", function() {
 		var tweetDisplay = Crafty.e("TweetDisplay");
 		var scoreDisplay = Crafty.e("ScoreDisplay");
 		var livesDisplay = Crafty.e("LivesDisplay");
-		var messageDisplay = Crafty.e("MessageDisplay");
 		HA.m.publish(HA.events.START_NEW_GAME);
 	});
 	
