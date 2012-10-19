@@ -35,11 +35,11 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 		
-		// High scores are now loaded on demand.
+		// High scores are now loaded on demand.	
 		// _fetchHighScores();
 		
 		// The init method no longer performs the fetch, so it's not necessary here.
-		// HA.twitter.init();
+		HA.twitter.init();
 
 		// Set up initial event subscriptions
 		HA.m.subscribe(HA.events.GAME_LOADED, _handleGameLoadedEvent);
