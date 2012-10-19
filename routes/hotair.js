@@ -274,8 +274,6 @@ exports.load_tweets = function(req, res) {
 						for(var j=0; j<smallerSetLen; j+=1) {
 							merged.rows.push(a[j]);
 							merged.rows.push(b[j]);
-							console.log(a[j].value.party);
-							console.log(b[j].value.party);
 						}
 						
 						numSets = Math.floor(smallerSetLen/numPerSet);
