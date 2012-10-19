@@ -167,6 +167,7 @@ HA.game = function(ns, $, _, C) {
 	 * @method _doPause(); 
 	 */
 	function _doPause() {
+		Crafty.unbind("EnterFrame", _doPause);
 		_pauseDisplay.showPauseScreenDisplay();
     _createPauseMenu();
 		C.settings.modify("autoPause", false);
@@ -408,13 +409,13 @@ HA.game = function(ns, $, _, C) {
 		if(e.keyCode == Crafty.keys['ENTER']) {
 			if(!Crafty.isPaused()) {
 				HA.m.publish(HA.events.PAUSE_GAME);
-				_unbindGameplayKeyboardEvents();
+				// _unbindGameplayKeyboardEvents();
 			}
 		}
-		if(e.keyCode == Crafty.keys['ESC']) {
-			console.log("Full scrn");
-			HA.sm.toggleFullScreenMode();
-		}
+		// if(e.keyCode == Crafty.keys['ESC']) {
+			// console.log("Full scrn");
+			// HA.sm.toggleFullScreenMode();
+		// }
 	}
 	
 	/**
