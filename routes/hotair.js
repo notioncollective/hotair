@@ -1,7 +1,8 @@
 
 // prod user/pass: hotair_user:Gr33nP01nt#
-var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:Gr33nP01nt#@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
-console.log("Connecting to couchdb: ", nano_url);
+var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
+// var nano_url = process.env.NODE_ENV === 'production' ? 'http://nodejitsudb198990392151.iriscouch.com:5984' : 'http://127.0.0.1:5984';
+console.log("Connecting to couchdb");
 var nano = require('nano')(nano_url),
 	Twit = require('twit'),
 	_ = require('lodash'),
