@@ -147,8 +147,13 @@ HA.events = HA.e = function(ns, $, _, C) {
      */
     SAVE_SCORE: 'ha:save_score',
     
-    
-    
+    /**
+     * Score has been successfully saved to database
+     * @property {string} SCORE_SAVED_TO_DB
+     * @final
+     * @param {object} score object returned from db
+     */
+    SCORE_SAVED_TO_DB: 'ha:score_saved_to_db',       
     
 		
 		

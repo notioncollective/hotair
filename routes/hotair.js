@@ -431,7 +431,7 @@ exports.score = function(req, res) {
 				res.send(404, 'Sorry, we cannot find that!');
 			}
 			// 404 if it's the wrong doc type
-			if(db_res.type !== 'score') res.send(404, 'Sorry, we cannot find that!');
+			if(!_.isString(db_res.type) || db_res.type !== 'score') res.send(404, 'Sorry, we cannot find that!');
 			// otherwise render template
 			else res.render('score', {
 				data: db_res,
@@ -454,14 +454,14 @@ exports.highscore = function(req, res) {
 		respBody = {};
 	console.log("highscore: ", data);
 	// db.save(data, function(db_err, db_res) {
-	db.insert(data, function(db_err, db_res) {
-		if (db_err) {
-			console.error("Error saving high score", db_err)
-			respBody.error = db_err;
+	db.insert(data, function(err, body, header) {
+		if (err) {
+			console.error("Error saving high score", err)
+			respBody.error = err;
 		} else {
-			respBody.success = true;
+			respBody = body;
 		}
-		res.send(JSON.stringify(respBody));
+		res.send(respBody);
 	});
 };
 

@@ -16,7 +16,8 @@ HA.game = function(ns, $, _, C) {
 			_pauseDisplay,
 			_pauseMenu,
 			_state = 0,
-			_highScores;
+			_highScores,
+			_scoreObj;
 
 	// private methods
 	function _init(options) {
@@ -489,7 +490,13 @@ HA.game = function(ns, $, _, C) {
 				timestamp: Date.now()
 			}),
 			success : function(resp) {
-				console.log("saved high score: ", resp);
+				// var resp = JSON.parse(resp);
+				if(resp.ok) {
+					console.log("saved score", resp);
+					HA.m.publish(HA.e.SCORE_SAVED_TO_DB, [resp]);
+				} else {
+					console.error("error saving score!", resp);
+				} 	
 			}
 		});
 	};
