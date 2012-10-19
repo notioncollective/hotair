@@ -6,22 +6,14 @@ Crafty.scene("gameplay", function() {
 	Crafty.audio.play("whoosh");
 	Crafty.audio.play("game_music", -1, .8);
 	
-	// draw some clouds	
-	
+	// draw some clouds
 	var j = 0;
 	for (;j<5;j++) {
 		Crafty.e("Cloud");
 	}
-	
 
 	var messageDisplay = Crafty.e("MessageDisplay");
 	messageDisplay.showMessage("Loading...");
-	
-	// Display Entities
-	// var tweetDisplay = Crafty.e("TweetDisplay");
-	// var scoreDisplay = Crafty.e("ScoreDisplay");
-	// var livesDisplay = Crafty.e("LivesDisplay");
-	// var messageDisplay = Crafty.e("MessageDisplay");
 	
 	HA.m.subscribe(HA.e.TWEETS_LOADED, function() {
 		var player = Crafty.e("Player")
