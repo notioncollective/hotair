@@ -46,8 +46,8 @@ Crafty.c("HitScore", {
 		
 		// set up score text
 		this.score_text = Crafty.e("2D, DOM, SpriteText")
-				.registerFont("BlueScore", this._score_w, '../../img/fonts/blue_score_16x16.png')
-				.registerFont("GreyScore", this._score_w, '../../img/fonts/grey_score_16x16.png')
+				.registerFont("BlueScore", this._score_w, HA.game.cacheBuster('../../img/fonts/blue_score_16x16.png'))
+				.registerFont("GreyScore", this._score_w, HA.game.cacheBuster('../../img/fonts/grey_score_16x16.png'))
 				.align("center")
 				.attr({
 					x:this.x+16,y:this.y+46,
