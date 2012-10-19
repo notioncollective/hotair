@@ -10,7 +10,7 @@ html(lang="en")
 		- var html = '<script style="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-35454107-1"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>'
 		!{html}
 
-	body(id="home")
+	body.loading(id="play")
 		// js librariess
 		- var libs = ['jquery-min', 'crafty', 'underscore-min', 'screenfull.min', 'cookies.min'];
 		- for (var i=0;i<libs.length;i++)
@@ -42,6 +42,10 @@ html(lang="en")
 
 		// main js
 		script(src="js/main.js", type="text/javascript", charset="utf-8")
+
+		#loading-wrap
+			img#LoadingImg(src="../img/notion_logo_8bitx2.png", width="500", height="100", alt="The Notion Collective")
+			#LoadingDisplay Loading...
 
 		.start-wrap
 		
