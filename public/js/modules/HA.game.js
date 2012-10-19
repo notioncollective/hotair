@@ -17,7 +17,8 @@ HA.game = function(ns, $, _, C) {
 			_pauseMenu,
 			_state = 0,
 			_highScores,
-			_scoreObj;
+			_scoreObj,
+			_cacheBuster;
 
 	// private methods
 	function _init(options) {
@@ -604,6 +605,13 @@ HA.game = function(ns, $, _, C) {
 	}
 	
 	ns.getNumEnemiesPerLevel = _getNumEnemiesPerLevel;
+	
+	ns.cacheBuster = function(path) {
+		_cacheBuster = _cacheBuster || Date.now();
+		if(_.isString(path)) {
+			return path+'?_='+_cacheBuster;
+		} else return _cacheBuster;
+	}
 	
 	return ns;
 
