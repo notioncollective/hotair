@@ -138,6 +138,7 @@ function _buildScoreFacebookUrl(score) {
 				app_id: "155380987937796",
 				link: "http://hotairgame.com/score/"+score._id,
 				caption: "Hot Air score page",
+				picture: "http://hotairgame.com/img/" + score.party + "_share_img.png",
 				description: "It's a web-based game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.",
 				redirect_uri: "http://hotairgame.com/score/"+score._id
 			},

@@ -1,5 +1,10 @@
 extends layout
 
+block meta
+	- var og_img = "/img/" + data.party + "_share_img.png"
+	meta(property="og:title", content="#{title}")
+	meta(property="og:image", content="#{og_img}")
+
 block content
 	#Main
 		- var scoretxt = data.highscore ? "high score" : "score"
