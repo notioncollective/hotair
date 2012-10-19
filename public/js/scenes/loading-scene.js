@@ -111,7 +111,7 @@ Crafty.scene("loading", function() {
 		},
 		function(e) {
 			// onProgress
-			console.log("percent: ", e.percent);
+			console.log("percent: ", e.percent, "src: ", e.src);
 		},
 		function(e) {
 			// onError
