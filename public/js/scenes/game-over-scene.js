@@ -19,6 +19,8 @@ Crafty.scene("gameover", function() {
 	gameOverDisplay = Crafty.e("GameOverDisplay");
 	gameOverDisplay.showGameOverDisplay();
 	
+	HA.m.subscribe(HA.e.SCORE_SAVED_TO_DB, handleScoreSavedEvent);
+	
 	HA.game.fetchHighScores(function() {
 			console.log("Fetched high scores");
 			if(HA.game.isHighScore(score)) {
@@ -75,17 +77,20 @@ Crafty.scene("gameover", function() {
 			}
 		});
 		
-	  gameOverMenu.addListItem({
-      text: "Give us Feedback!",
-      callback: function(arg) {
-        window.open('/survey', '_blank');
-      }
-    });
-		
 		gameOverMenu.renderListNav();
 	}
 	
-	
+	function handleScoreSavedEvent(e, resp) {
+		console.log("Handle score saved in gameover scene", resp);
+	  gameOverMenu.addListItem({
+      text: "Share",
+      callback: function(arg) {
+        window.open('/score/'+resp.id, '_blank');
+      }
+    });
+		gameOverMenu.renderListNav();    
+   }
+
 	
 }, function() {
 	$("#GameOverDisplay").hide();

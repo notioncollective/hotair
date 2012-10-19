@@ -1,7 +1,8 @@
 
 // prod user/pass: hotair_user:Gr33nP01nt#
-var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:Gr33nP01nt#@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
-console.log("Connecting to couchdb: ", nano_url);
+var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
+// var nano_url = process.env.NODE_ENV === 'production' ? 'http://nodejitsudb198990392151.iriscouch.com:5984' : 'http://127.0.0.1:5984';
+console.log("Connecting to couchdb");
 var nano = require('nano')(nano_url),
 	Twit = require('twit'),
 	_ = require('lodash'),
@@ -121,6 +122,23 @@ function _buildScoreTweetUrl(score) {
 
 	console.log("tweet url: ", tweet_url);
 	return tweet_url;
+}
+
+function _buildScoreFacebookUrl(score) {
+	var base = "http://www.facebook.com/dialog/feed?",
+			params = {
+				name: "I just scored "+score.score+" points playing Hot Air!",
+				app_id: "155380987937796",
+				link: "http://hotairgame.com/score/"+score._id,
+				caption: "Hot Air score page",
+				picture: "http://hotairgame.com/img/" + score.party + "_share_img.png",
+				description: "It's a web-based game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.",
+				redirect_uri: "http://hotairgame.com/score/"+score._id
+			},
+			facebook_url = base+querystring.stringify(params);
+
+	console.log("facebook url: ", facebook_url);
+	return facebook_url;
 }
 
 /*
@@ -407,13 +425,14 @@ exports.score = function(req, res) {
 				res.send(404, 'Sorry, we cannot find that!');
 			}
 			// 404 if it's the wrong doc type
-			if(db_res.type !== 'score') res.send(404, 'Sorry, we cannot find that!');
+			if(!_.isString(db_res.type) || db_res.type !== 'score') res.send(404, 'Sorry, we cannot find that!');
 			// otherwise render template
 			else res.render('score', {
 				data: db_res,
 				title: "Score!",
 				slug: 'score',
-				twitter_url: _buildScoreTweetUrl(db_res)
+				twitter_url: _buildScoreTweetUrl(db_res),
+				facebook_url: _buildScoreFacebookUrl(db_res)
 			});
 		});		
 	} else res.redirect('/'); // redirect if no id
@@ -429,12 +448,12 @@ exports.highscore = function(req, res) {
 		respBody = {};
 	console.log("highscore: ", data);
 	// db.save(data, function(db_err, db_res) {
-	db.insert(data, function(db_err, db_res) {
-		if (db_err) {
-			console.error("Error saving high score", db_err)
-			respBody.error = db_err;
+	db.insert(data, function(err, body, header) {
+		if (err) {
+			console.error("Error saving high score", err)
+			respBody.error = err;
 		} else {
-			respBody.success = true;
+			respBody = body;
 		}
 		res.send(respBody);
 	});

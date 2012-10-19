@@ -1,15 +1,24 @@
 extends layout
 
+block meta
+	- var og_img = "/img/" + data.party + "_share_img.png"
+	meta(property="og:title", content="#{title}")
+	meta(property="og:image", content="#{og_img}")
+
 block content
 	#Main
 		- var scoretxt = data.highscore ? "high score" : "score"
 		- var date = new Date(data.timestamp)
-		h1 <i class="#{data.party}"></i><span class="user #{data.party}">#{data.user}</span> &mdash; <span class="date">#{date.toDateString()}</span>
+		- var user = (data.user === "???") ? "I" : data.user;
+		- if (data.user === "???")
+			h1 <i class="#{data.party}"></i><span class="date">#{date.toDateString()}</span>
+		- else
+			h1 <i class="#{data.party}"></i><span class="user #{data.party}">#{data.user}</span> &mdash; <span class="date">#{date.toDateString()}</span>
 		.score #{data.score}			
-		p <span class="user">#{data.user}</span> got this #{scoretxt} playing <a href="/"><strong>Hot Air</strong></a> on <span class="date">#{date.toDateString()}</span> at <span class="time">#{date.toTimeString()}</span>
+		p <span class="user">#{user}</span> got this #{scoretxt} playing <a href="/"><strong>Hot Air</strong></a> on <span class="date">#{date.toDateString()}</span> at <span class="time">#{date.toTimeString()}</span>
 		ul#actions.cf
 			li: a(href="#{twitter_url}", id="share_twitter", target="_blank") Share on Twitter 
-			li: a(href="#", id="share_facebook", target="_blank") Share on Facebook
-			li: a(href="#", id="play") Play Hot Air!
+			li: a(href="#{facebook_url}", id="share_facebook", target="_blank") Share on Facebook
+			li: a(href="/play", id="play") Play Hot Air!
 
 	
