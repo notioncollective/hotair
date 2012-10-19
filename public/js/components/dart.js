@@ -15,8 +15,8 @@ Crafty.c("Dart", {
 		this.addComponent("2D, DOM, Color, Collision, Party");
 		this.setPartySpriteTemplate('%p_dartx2');
 		
-		this.w = 40;
-		this.h = 40;
+		this.w = 10;
+		this.h = 20;
 		this.dy = 1;
 		this.ay = .2;
 				

@@ -12,7 +12,7 @@ html(lang="en")
 
 	body(id="home")
 		// js librariess
-		- var libs = ['jquery-min', 'crafty', 'underscore-min', 'screenfull.min'];
+		- var libs = ['jquery-min', 'crafty', 'underscore-min', 'screenfull.min', 'cookies.min'];
 		- for (var i=0;i<libs.length;i++)
 			script(src="js/lib/#{libs[i]}.js", type="text/javascript", charset="utf-8")
 
@@ -41,6 +41,7 @@ html(lang="en")
 
 		// test data
 		// script(src="js/data/load_tweets.js", type="text/javascript", charset="utf-8")
+		
 
 		// main js
 		script(src="js/main.js", type="text/javascript", charset="utf-8")

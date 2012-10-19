@@ -38,9 +38,16 @@ Crafty.scene("start", function() {
 		startMenuNav.addListItem({
 			text: "New Game",
 			callback: function(arg) {
-				console.log("New Game!"); 
-				createPartySelectMenu();
+				console.log("New Game!");
 				HA.game.closeModals();
+				// If the hotair cookie exists go directly to party selection, otherwise show instructions
+				if(Cookies.get('hotair')) {
+					createPartySelectMenu();
+				} else {
+					HA.game.openModal("InstructionsDisplay");
+					createCloseMenu(true);
+					Cookies.set("hotair", "played", {"expires": 604800});
+				}
 				this.destroy();
 			}
 		});
@@ -91,7 +98,7 @@ Crafty.scene("start", function() {
 	}
 		
 
-	function createCloseMenu() {
+	function createCloseMenu(selectParty) {
 		closeMenuNav = Crafty.e('ListNav')
 			.attr({wrappingId: "CloseListNav"});
 			
@@ -100,7 +107,11 @@ Crafty.scene("start", function() {
 			callback: function() {
 				this.destroy();
 				HA.game.closeModals();
-				createMainStartMenu();
+				if(selectParty) {
+					createPartySelectMenu();
+				} else {
+					createMainStartMenu();
+				}
 			}
 		});
 		closeMenuNav.renderListNav();
@@ -158,10 +169,8 @@ Crafty.scene("start", function() {
 	}
 
 		
-	createStartScreenMainGraphic()	
-	// if(HA.twitter.isLoaded()) {
-		createMainStartMenu();
-	// }
+	createStartScreenMainGraphic();
+	createMainStartMenu();
 	
 }, function () {
 	HA.m.unsubscribe(HA.events.RESIZE_VIEWPORT);
