@@ -120,6 +120,25 @@ p.note {
 	filter:alpha(opacity=90);
 }
 
+ul#actions {
+	font-family: "Press Start 2P", Courier;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+ul#actions li {
+	text-align: center;
+	display: block;
+	background: #fff;
+	margin-bottom: 8px;
+}
+ul#actions li a {
+	display: block;
+	text-decoration: none;
+	padding: 15px
+}
+
+
 #mc_embed_signup {
 	margin-top: 1em;
 }
@@ -174,23 +193,10 @@ body#score .score {
 	background: #fff;
 	color: #000;
 }
-
-ul#actions {
-	font-family: "Press Start 2P", Courier;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-ul#actions li {
-	text-align: center;
-	display: block;
-	background: #fff;
-	margin-bottom: 8px;
-}
-ul#actions li a {
-	display: block;
-	text-decoration: none;
-	padding: 15px
+/* SHARE PAGE */
+body#share #Main {
+	background: transparent url('../img/pause_bg.png') 0 0 repeat;
+	border: 6px solid #fff;
 }
 
 /* SURVEY PAGE */

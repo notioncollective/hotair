@@ -17,8 +17,8 @@ block content
 		.score #{data.score}			
 		p <span class="user">#{user}</span> got this #{scoretxt} playing <a href="/"><strong>Hot Air</strong></a> on <span class="date">#{date.toDateString()}</span> at <span class="time">#{date.toTimeString()}</span>
 		ul#actions.cf
-			li: a(href="#{twitter_url}", id="share_twitter", target="_blank") Share on Twitter 
-			li: a(href="#{facebook_url}", id="share_facebook", target="_blank") Share on Facebook
+			li: a(href="/share/score/twitter/#{data._id}", id="share_twitter", target="_blank") Share on Twitter 
+			li: a(href="/share/score/facebook/#{data._id}", id="share_facebook", target="_blank") Share on Facebook
 			li: a(href="/play", id="play") Play Hot Air!
 
 	

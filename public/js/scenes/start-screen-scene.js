@@ -4,6 +4,8 @@ Crafty.scene("start", function() {
 	var startMenuNav,
 			partySelectNav,
 			closeMenuNav,
+			aboutMenuNav,
+			shareMenuNav,
 			startScreenMainGraphic;
 			
   HA.sm.fullScreenKeyEnabled(true); // enable full-screen mode
@@ -36,7 +38,7 @@ Crafty.scene("start", function() {
 			.attr({wrappingId: "StartListNav"});
 	
 		startMenuNav.addListItem({
-			text: "New Game",
+			text: "Play!",
 			callback: function(arg) {
 				console.log("New Game!");
 				HA.game.closeModals();
@@ -69,14 +71,14 @@ Crafty.scene("start", function() {
 				HA.game.closeModals();
 				HA.game.openModal("AboutDisplay"); 
 				this.destroy();
-				createCloseMenu();
+				createAboutMenu();
 			},
 			args: ["About!!"]
 		});
 		
 		// TODO: This templating could probably get moved to an HTMLTemplate entity? 
 		startMenuNav.addListItem({
-			text: "High Scores",
+			text: "Scores",
 			callback: function(arg) {
 				HA.game.closeModals();
 				HA.game.openModal("HighScoresDisplay");
@@ -94,9 +96,72 @@ Crafty.scene("start", function() {
 			},
 			args: ["High Scores!"]
 		});
+		
+		startMenuNav.addListItem({
+			text: "Share",
+			callback: function() {
+				this.destroy();
+				createShareMenu();
+			}
+		});
+				
 		startMenuNav.renderListNav();
 	}
 		
+		
+	function createAboutMenu() {
+		aboutMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "AboutMenuNav"});
+		
+		aboutMenuNav.addListItem({
+			text: "Ok!",
+			callback: function() {
+				this.destroy();
+				HA.game.closeModals();
+				createMainStartMenu();
+			}
+		});
+		
+		aboutMenuNav.addListItem({
+			text: "Contact Us",
+			callback: function() {
+				window.open('/contact');
+			}
+		});
+		
+		aboutMenuNav.renderListNav();
+	}
+	
+	function createShareMenu() {	
+		shareMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "AboutMenuNav"});
+		
+		shareMenuNav.addListItem({
+			text: "Twitter",
+			callback: function() {
+				window.open("/share/twitter");
+			}
+		});		
+		
+		shareMenuNav.addListItem({
+			text: "Facebook",
+			callback: function() {
+				window.open("/share/facebook");
+			}
+		});								
+		
+		shareMenuNav.addListItem({
+			text: "Ok!",
+			callback: function() {
+				this.destroy();
+				createMainStartMenu();
+			}
+		});	
+		
+		shareMenuNav.renderListNav();
+					
+	}
+	
 
 	function createCloseMenu(selectParty) {
 		closeMenuNav = Crafty.e('ListNav')
@@ -157,7 +222,7 @@ Crafty.scene("start", function() {
 		});
 		
 		partySelectNav.addListItem({
-      text: "Back",
+      text: "&lt; Back",
       callback: function(arg) {
         this.destroy();
         createMainStartMenu();
