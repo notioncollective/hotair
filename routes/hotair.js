@@ -151,9 +151,18 @@ function _buildFacebookUrl(score) {
 	return facebook_url;
 }
 
-function _sendEmail(from_name, from_email, email_body, callback, context) {
+function _sendEmail(data, callback, context) {
 	console.log("sending email");
-	var smtp = nodemailer.createTransport(
+	if(
+			!_.isString(data.from_name)
+			|| !_.isString(data.from_email)
+			|| !_.isString(data.message)
+	) { callback.apply(context, [["All form fields are required."]])}
+	
+	var from_name = data.from_name,
+			from_email = data.from_email,
+			message = data.message,
+			smtp = nodemailer.createTransport(
 				"SMTP",
 				{
 					service: "Gmail",
@@ -167,11 +176,17 @@ function _sendEmail(from_name, from_email, email_body, callback, context) {
 				from: from_name+' <'+from_email+'>',
 				to: "Hot Air <hotair@notioncollective.com>",
 				subject: "Hot Air contact form submission",
-				text: from_name+"\n"+from_email+"\n"+email_body,
-				html: '<p>'+from_name+'</p><p>'+from_email+'</p><p>'+email_body+'<p>'
+				text: "",
+				html: ""
 			},
-			context = context || this;
-			
+			context = context || this,
+			text = "",
+			html = "";
+	
+	_.each(data, function(value, key) {
+		options.text += key+":\n"+value+"\n-----\n";
+		options.html += '<p><b>'+key+'</b></p>'+'<p>'+value+'</p><hr/>';
+	});
 		
 	smtp.sendMail(options, function(err, res){ callback.apply(context, [err, res]); });
 }
@@ -480,16 +495,31 @@ exports.contact = function(req, res) {
 /* POST */
 exports.contact_send = function(req, res) {
 	console.log("send email: ", req.body );
-	_sendEmail(
-			req.body.from_name,
-			req.body.from_email,
-			req.body.email_body,
-			function(em_err, em_res){
+	var data = {
+		type: "email",
+		from_name: req.body.from_name,
+		from_email: req.body.from_email,
+		message: req.body.email_body,
+		timestamp: Date.now(),
+		ip: req.ip
+	},
+	send_callback = function(em_err, em_res){
 				console.log("send email response ",em_err,em_res);
 				if(em_err) res.send({"errors":["There was an error sending the email"]});
 				else res.send(JSON.stringify(em_res));
-			}
-	);
+	};
+	
+	// insert the email
+	db.insert(data, function(err, body, header) {
+		if (err) {
+			console.error("Error inserting email into database", err)
+			_sendEmail(data, send_callback);
+		} else {
+			console.log("email data successfully inserted");
+			data.record_id = body.id;
+			_sendEmail(data, send_callback);
+		}
+	});
 }
 
 /*
