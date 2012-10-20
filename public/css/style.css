@@ -53,9 +53,9 @@ body {
 
 #LoadingDisplay {
 	position: absolute;
+	left: 0;
 	color: #8CD0FF;
 	text-align: center;
-	left: 0;
 	top: 66.66%;
 	width: 100%;
 }
@@ -144,6 +144,11 @@ div.list-nav span:hover {
 	z-index: -100;
 }
 */
+
+.message-display {
+/*	display: none;*/
+}
+
 
 div.modal {
 	display: none;
@@ -298,7 +303,7 @@ div#PauseNav span, div#GameOverNav span {
 	height: 40px;
 }
 
-#PauseDisplay, #GameOverDisplay {
+#PauseDisplay, #GameOverDisplay, #MessageDisplay {
 	z-index: 1000;
 	position: absolute;
 	left: 0;
@@ -307,7 +312,7 @@ div#PauseNav span, div#GameOverNav span {
 	height: 100%;
 	background: transparent url(../img/pause_bg.png) 0 0 repeat;
 	margin: 0;
-	padding-top: 20%;
+	padding-top: 10%;
 /*	display: none;
 	position: absolute;
 	left: 50%;
@@ -321,7 +326,6 @@ div#PauseNav span, div#GameOverNav span {
 }
 
 #GameOverDisplay {
-	padding-top: 10%;
 	background: none;
 }
 
@@ -334,6 +338,13 @@ div#PauseNav span, div#GameOverNav span {
 	height: 100%;
 	text-align: center;
 	line-height: 2;
+}
+
+#MessageDisplay {
+	display: none;
+	background: none;
+	text-align: center;
+	top: 20%;
 }
 
 #HighScoreFormDisplay h2 {

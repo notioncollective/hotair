@@ -11,37 +11,6 @@ html(lang="en")
 		!{html}
 
 	body.loading(id="play")
-		// js librariess
-		- var libs = ['jquery-min', 'crafty', 'underscore-min', 'screenfull.min', 'cookies.min', 'modernizr.custom'];
-		- for (var i=0;i<libs.length;i++)
-			script(src="js/lib/#{libs[i]}.js", type="text/javascript", charset="utf-8")
-
-		// modules
-		- var scn = ['HA', 'HA.game', 'HA.enemyController', 'HA.mediator', 'HA.player', 'HA.sceneManager', 'HA.twitter', 'HA.events'];
-		- for (var i=0;i<scn.length;i++)
-			script(src="js/modules/#{scn[i]}.js", type="text/javascript", charset="utf-8")
-
-		// game extensions
-		- var ext = ['twitter-extension', 'start-screen-module', 'list-nav-module', 'enemy-controller-extension'];
-		- for (var i=0;i<ext.length;i++)
-			script(src="js/crafty-extensions/#{ext[i]}.js", type="text/javascript", charset="utf-8")
-
-		// game components
-		- var com = ['html-template', 'oscillate', 'start-screen-main-graphic', 'start-screen-balloon', 'spriteText', 'hit-score', 'pause-display', 'gameover-display', 'highscore-form-display', 'lives', 'lives-display', 'levels', 'level-display', 'score', 'score-display', 'party', 'dart', 'player', 'tweet-person', 'tweet-person-info', 'enemy', 'cloud', 'tweet', 'tweet-display', 'list-nav', 'message-display', 'enemy-selection', 'enemy-selection-arrow', 'start-screen-balloon'];
-		- for (var i=0;i<com.length;i++)
-			script(src="js/components/#{com[i]}.js", type="text/javascript", charset="utf-8")
-
-		// game scenes
-		- var scn = ['loading-scene', 'start-screen-scene', 'game-over-scene', 'gameplay-scene'];
-		- for (var i=0;i<scn.length;i++)
-			script(src="js/scenes/#{scn[i]}.js", type="text/javascript", charset="utf-8")
-
-		// test data
-		// script(src="js/data/load_tweets.js", type="text/javascript", charset="utf-8")
-		
-
-		// main js
-		script(src="js/main.js", type="text/javascript", charset="utf-8")
 
 		#loading-wrap
 			img#LoadingImg(src="../img/notion_logo_8bitx2.png", width="500", height="100", alt="The Notion Collective")
@@ -96,6 +65,12 @@ html(lang="en")
 				|		</ul>
 				| </div>
 
+			// MESSAGE DISPLAY TEMPLATE
+			script(id='MessageDisplayTemplate',type='text/template')
+				| <div id="MessageDisplay">
+				|		<h1><%= message %></h1>
+				| </div>
+				
 			// TWEET DISPLAY TEMPLATE
 			script(id='TweetDisplayTemplate',type='text/template')
 				| <div id="TweetDisplay">
@@ -129,3 +104,8 @@ html(lang="en")
 				.prompt Press Esc for Fullscreen Mode
 
 		#Footer
+		
+		- if (env === 'prod')
+			include includes/prod-scripts
+		- else if (env === 'dev')
+			include includes/dev-scripts

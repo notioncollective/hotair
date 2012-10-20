@@ -14,6 +14,7 @@ Crafty.scene("gameplay", function() {
 
 	var messageDisplay = Crafty.e("MessageDisplay");
 	messageDisplay.showMessage("Loading...");
+
 	
 	HA.m.subscribe(HA.e.TWEETS_LOADED, function() {
 		var player = Crafty.e("Player")
@@ -40,33 +41,4 @@ Crafty.scene("gameplay", function() {
 	Crafty.audio.stop("game_music");
 	
 	HA.m.unsubscribe(HA.e.TWEETS_LOADED);
-	
-	
-	// function createCloseMenu() {
-		// closeMenuNav = Crafty.e('ListNav')
-			// .attr({wrappingId: "CloseListNav"});
-// 			
-		// closeMenuNav.addListItem({
-			// text: "Ok!",
-			// callback: function() {
-				// this.destroy();
-				// HA.game.closeModals();
-				// createMainStartMenu();
-			// }
-		// });
-		// closeMenuNav.renderListNav();
-	// }
-
-	
-	// player.destroy();
-	// tweetDisplay.destroy();
-	// scoreDisplay.destroy(); 
-	// livesDisplay.destroy();
-	// messageDisplay.destroy();
-	// HA.game.enemyController.destroyAllEnemies();
-	// HA.game.enemyController.stopProducing();
-	// HA.game.destroy();
-	// HA.tweetDisplay.hide();
-	// HA.tweetDisplay.destroy();
-	// clearInterval(HA.enemyTimer);
 });
