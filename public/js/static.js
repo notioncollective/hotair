@@ -38,7 +38,7 @@ jQuery(function($){
 						
 				} else {
 					$('#messages')
-						.addClass('error')
+						.addClass('success')
 						.html('<li>Submitted successfully! :)</li>')
 						.show();
 				} 	
