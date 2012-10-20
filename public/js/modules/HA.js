@@ -4,8 +4,19 @@
  */
 HA = {};
 
-HA = function(ns, $, _, C) {
+HA = function(ns, $, _) {
 	var NAMESPACE_STR = "HA";
+	
+	/**
+	 * Get the CSRF token from the meta tag.
+	 * @private
+	 * @method _getCsrfToken
+	 * @return {string} The CSRF token.
+	 */
+	function _getCsrfToken() {
+		var token = $("meta[name='csrf-token']").attr("content");
+		return token;
+	}	
 	
 	// http://www.zachleat.com/web/yui-code-review-yahoonamespace/
 	/**
@@ -29,11 +40,18 @@ HA = function(ns, $, _, C) {
 	    return o;
 	};
 	
-	// aliasing method?
-	// something that would allow you to do something like
-	// HA.alias("HA.mediator", "HA.m") so that "HA.m"
-	// is essentially a short hand for "HA.mediator"
+	ns.init = function() {
+		// set up CSRF token
+		$.ajaxSetup({
+			beforeSend: function(xhr) {
+				var token = _getCsrfToken();
+				xhr.setRequestHeader('X-CSRF-Token', token);
+			}
+		});	
+	};
+	
+	ns.getCsrfToken = _getCsrfToken;
 	
 	return ns;
 	
-}(HA || {}, jQuery, _, Crafty);
+}(HA || {}, jQuery, _);

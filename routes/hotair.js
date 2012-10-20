@@ -1,20 +1,16 @@
 
-// prod user/pass: hotair_user:Gr33nP01nt#
+// couchdb connection credentials
 var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
-// var nano_url = process.env.NODE_ENV === 'production' ? 'http://nodejitsudb198990392151.iriscouch.com:5984' : 'http://127.0.0.1:5984';
 console.log("Connecting to couchdb");
-var nano = require('nano')(nano_url),
-	Twit = require('twit'),
-	_ = require('lodash'),
-	Q = require('q'),
-	useragent = require('useragent'),
-	querystring = require('querystring');
+
+var nano = require('nano')(nano_url)
+	, Twit = require('twit')
+	, _ = require('lodash')
+	, Q = require('q')
+	, useragent = require('useragent')
+	, querystring = require('querystring')
+	, nodemailer = require("nodemailer");
   
-
-
-
-// var conn = new(cradle.Connection)(),
-	// db = conn.database('hotair'),
 var	db = nano.use('hotair'),
 	T = new Twit({
  	   consumer_key:         '5uH2QAOgqIVQfe2typ5w'
@@ -458,7 +454,8 @@ exports.contact = function(req, res) {
 
 /* POST */
 exports.contact_send = function(req, res) {
-	console.log("send email: ", req.params );
+	console.log("send email: ", req.body );
+	res.send(JSON.stringify({"ok":true}));
 }
 
 /*

@@ -2,6 +2,7 @@ doctype 5
 html
 	head
 		title #{title}
+		meta(name="csrf-token", content=token)
 		meta(property="fb:app_id", content="155380987937796")
 		block meta
 		
@@ -10,6 +11,8 @@ html
 		link(rel='icon', href='/favicon.ico', type='image/x-icon')
 		link(rel='shortcut icon', href='/favicon.ico', type='image/x-icon')
 		script(src="/js/lib/jquery-min.js", type="text/javascript", charset="utf-8")
+		script(src="/js/lib/underscore-min.js", type="text/javascript", charset="utf-8")	
+		script(src="/js/modules/HA.js", type="text/javascript", charset="utf-8")
 		script(src="/js/static.js", type="text/javascript", charset="utf-8")
 		- var html = '<script style="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-35454107-1"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>'
 		!{html}

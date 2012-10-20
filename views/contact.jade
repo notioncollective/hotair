@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	#Main
+		h1 #{title}
+		p Send us a message and let us know what you think!
+		ul#messages
+		form#ContactForm(method="post", action="/contact/send")
+			label(for="fromName") Your Name
+			input(name="fromName", type="text", id="fromName", placeholder="Joe Schmo")
+			label(for="fromEmail") Your Email Address
+			input(name="fromEmail", type="email", id="fromEmail", placeholder="joe@schmo.org")
+			textarea(name="emailBody", id="emailBody")
+			input(name="submit", type="submit", id="submit", value="Send!")
