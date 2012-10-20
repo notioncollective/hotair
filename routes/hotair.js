@@ -151,6 +151,31 @@ function _buildFacebookUrl(score) {
 	return facebook_url;
 }
 
+function _sendEmail(from_name, from_email, email_body, callback, context) {
+	console.log("sending email");
+	var smtp = nodemailer.createTransport(
+				"SMTP",
+				{
+					service: "Gmail",
+					auth: {
+						user: 'hotair@notioncollective.com',
+						pass: 'Madi50nW1'
+					}
+				}
+			),
+			options = {
+				from: from_name+' <'+from_email+'>',
+				to: "Hot Air <hotair@notioncollective.com>",
+				subject: "Hot Air contact form submission",
+				text: email_body,
+				html: '<p>'+email_body+'<p>'
+			},
+			context = context || this;
+			
+		
+	smtp.sendMail(options, function(err, res){ callback.apply(context, [err, res]); });
+}
+
 /*
  * GET home page.
  */
@@ -455,7 +480,16 @@ exports.contact = function(req, res) {
 /* POST */
 exports.contact_send = function(req, res) {
 	console.log("send email: ", req.body );
-	res.send(JSON.stringify({"ok":true}));
+	_sendEmail(
+			req.body.from_name,
+			req.body.from_email,
+			req.body.email_body,
+			function(em_err, em_res){
+				console.log("send email response ",em_err,em_res);
+				if(em_err) res.send({"errors":["There was an error sending the email"]});
+				else res.send(JSON.stringify(em_res));
+			}
+	);
 }
 
 /*

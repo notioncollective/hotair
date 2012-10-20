@@ -22,16 +22,16 @@ jQuery(function($){
 				email_body: $('#emailBody').val()			
 			}),
 			success : function(resp) {
-				// var resp = JSON.parse(resp);
+				console.log("submit email response", resp);
 				if(resp.errors) {
-					
 					$('#messages')
 						.html('')
 						.addClass('error');
 					
 					// show errors
 					_.each(resp.errors, function(err) {
-						$('li').html(err).appendTo('#messages');
+						console.log("append error", err);
+						$('#messages').append('<li>'+err+' :(</li>');
 					});
 					
 					$('#messages').show();
@@ -39,7 +39,7 @@ jQuery(function($){
 				} else {
 					$('#messages')
 						.addClass('error')
-						.html('<li>Submitted successfully!</li>')
+						.html('<li>Submitted successfully! :)</li>')
 						.show();
 				} 	
 			}
