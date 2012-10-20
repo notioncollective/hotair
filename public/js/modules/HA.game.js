@@ -555,7 +555,6 @@ HA.game = function(ns, $, _, C) {
 		});
 	}
 	
-	
 	function _mute() {
 		Crafty.audio.mute();
 		_muted = true;
