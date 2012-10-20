@@ -82,9 +82,14 @@ function agent(req, res, next) {
 
 app.get('/', routes.home);
 app.get('/play', agent, auth, csrf, routes.play);
+
+// share services
 app.get('/share/:action/:service/:id', auth, routes.share);
 app.get('/share/:service', auth, routes.share);
 app.get('/share', auth, routes.share);
+
+app.get('/contact', auth, routes.contact);
+app.post('/contact/send', auth, routes.contact_send);
 app.get('/survey', auth, routes.survey);
 // app.get('/privatealpha', auth, routes.privatealpha);
 app.get('/privatealpha', routes.alphacomplete); // use this when priv alpha is over

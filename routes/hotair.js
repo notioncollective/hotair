@@ -451,6 +451,16 @@ exports.score = function(req, res) {
 
 }
 
+/* GET */
+exports.contact = function(req, res) {
+	res.render('contact', {title: "Drop us a line!", slug: "contact"});
+}
+
+/* POST */
+exports.contact_send = function(req, res) {
+	console.log("send email: ", req.params );
+}
+
 /*
  * Handles share actions for the following endpoints
  * 
