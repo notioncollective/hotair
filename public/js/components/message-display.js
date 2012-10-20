@@ -2,20 +2,17 @@ Crafty.c("MessageDisplay", {
 	init: function() {
 		console.log("instantiate MessageDisplay");
 		_.bindAll(this);
-		this.addComponent("2D, DOM, HTML");
-		this.w = 400;
-		this.x = Crafty.DOM.window.width/2-this.w/2;
-		this.y = Crafty.DOM.window.height/2;
-		this.css("text-align", "center");
-		this.css("padding", "20px");
+		this.addComponent('HTMLTemplate');
+		this.setTemplate($("#MessageDisplayTemplate").html());
+		this.x = 0;
+		this.y = 0;
+		this.w = Crafty.DOM.window.width;
+		this.h = Crafty.DOM.window.height;
+		this.css("display", "none");
+		this.showMessage(" ");
 		this._blinkCount = 3;
 		this._flashDuration =  300;
-		
 		this._messageCallback = null;
-		
-		// this.bind("ShowMessage", function(e) {
-			// this.flashMessage(e.text, e.callback);
-		// });
 		
 		HA.m.subscribe(HA.e.SHOW_MESSAGE, this._handleShowMessageEvent);
 		
@@ -32,16 +29,18 @@ Crafty.c("MessageDisplay", {
 	},
 	
 	setMessage: function(text) {
-		this.replace("<div class='message-display'>" + text + "</div>");
+		this.updateContent({message: text});
+		// this.replace("<div class='message-display'>" + text + "</div>");
 	},
 	
 	showMessage: function(text) {
 		if(_.isString(text)) this.setMessage(text);
+		$("#MessageDisplay").show();
 		$(this._element).show();
-
 	},
 	
 	hideMessage: function() {
+		$("#MessageDisplay").hide();
 		$(this._element).hide();
 	},
 	
