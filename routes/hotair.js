@@ -167,8 +167,8 @@ function _sendEmail(from_name, from_email, email_body, callback, context) {
 				from: from_name+' <'+from_email+'>',
 				to: "Hot Air <hotair@notioncollective.com>",
 				subject: "Hot Air contact form submission",
-				text: email_body,
-				html: '<p>'+email_body+'<p>'
+				text: from_name+"\n"+from_email+"\n"+email_body,
+				html: '<p>'+from_name+'</p><p>'+from_email+'</p><p>'+email_body+'<p>'
 			},
 			context = context || this;
 			
