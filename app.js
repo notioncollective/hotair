@@ -24,11 +24,11 @@ var auth = express.basicAuth(function(username, password) {
   var valid_logins = {
     'notion': 'Madi50nW1',
     // comment the following out when priv beta is over
-    'privatealpha1': 'B!denVsRyan', // jason
-    'privatealpha2': 'B!denVsRyan', // andy
-    'privatealpha3': 'B!denVsRyan', // michael
-    'privatealpha4': 'B!denVsRyan', // candice
-    'privatealpha5': 'B!denVsRyan', // jon
+    // 'privatealpha1': 'B!denVsRyan', // jason
+    // 'privatealpha2': 'B!denVsRyan', // andy
+    // 'privatealpha3': 'B!denVsRyan', // michael
+    // 'privatealpha4': 'B!denVsRyan', // candice
+    // 'privatealpha5': 'B!denVsRyan', // jon
   }
   
   if(typeof valid_logins[username]   === 'string' && valid_logins[username] === password) {
@@ -86,8 +86,8 @@ app.get('/share/:action/:service/:id', routes.share);
 app.get('/share/:service', routes.share);
 app.get('/share', routes.share);
 app.get('/survey', auth, routes.survey);
-app.get('/privatealpha', auth, routes.privatealpha);
-// app.get('/privatealpha', routes.alphacomplete); // use this when priv alpha is over
+// app.get('/privatealpha', auth, routes.privatealpha);
+app.get('/privatealpha', routes.alphacomplete); // use this when priv alpha is over
 app.get('/notsupported', routes.notsupported);
 // app.get('/reset', auth, agent, routes.reset);
 app.get('/fetch_tweets', auth, routes.fetch_tweets);
