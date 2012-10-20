@@ -59,10 +59,12 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
   app.locals.pretty = true;
+  app.locals.env = 'dev';
 });
 
 // configure production-specific settings
 app.configure('production', function(){
+	app.locals.env = 'prod';
 });
 
 // simple middleware, could be moved to separate file
