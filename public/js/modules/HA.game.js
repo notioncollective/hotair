@@ -206,14 +206,6 @@ HA.game = function(ns, $, _, C) {
 			});
 			
 			_pauseMenu.addListItem({
-				text: "End Game",
-				callback: function(arg) {
-					console.log("End Game...");
-					HA.m.publish(HA.e.END_GAME);
-				}
-			});
-			
-			_pauseMenu.addListItem({
 				text: "Instructions",
 				callback: function(arg) {
 					HA.game.closeModals();
@@ -225,11 +217,19 @@ HA.game = function(ns, $, _, C) {
 			});
 			
 			_pauseMenu.addListItem({
-        text: "Give us Feedback!",
+        text: "Share",
         callback: function(arg) {
-          window.open('/survey', '_blank');
+          window.open('/share', '_blank');
         }
-      });				
+      });			
+      
+			_pauseMenu.addListItem({
+				text: "End Game",
+				callback: function(arg) {
+					console.log("End Game...");
+					HA.m.publish(HA.e.END_GAME);
+				}
+			});	
       
       _pauseMenu.renderListNav();
 	}
