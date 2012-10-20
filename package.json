@@ -4,7 +4,8 @@
   "version": "0.2.3",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "predeploy": "grunt min"
   },
   "dependencies": {
     "express": "3.0.0rc1",
@@ -15,10 +16,10 @@
     "lodash": "0.7.0",
     "q": "0.8.8",
     "cron": "1.0.1",
-    "time": "0.8.3", // compiled
+    "time": "0.8.3",
     "useragent": "1.1.0",
     "querystring": "0.1.0",
-    "nodemailer": "0.3.28" // compiled
+    "nodemailer": "0.3.28"
   },
   "subdomain": "hotair",
   "domains": [

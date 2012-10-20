@@ -11,7 +11,7 @@ jQuery(function($){
 	
 	function _handleContactFormSubmit(e) {
 		var token = HA.getCsrfToken();
-						
+		$(this).attr("disabled", true);				
 		$.ajax({
 			url : "/contact/send",
 			type : "post",
@@ -41,6 +41,11 @@ jQuery(function($){
 						.addClass('success')
 						.html('<li>Submitted successfully! :)</li>')
 						.show();
+						
+					$('#fromName').val('');
+					$('#fromEmail').val('');
+					$('#emailBody').val('');
+					$('#submit').removeAttr('disabled');
 				} 	
 			}
 		});		

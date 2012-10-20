@@ -2,7 +2,9 @@ doctype 5
 html
 	head
 		title #{title}
-		meta(name="csrf-token", content=token)
+		- var token = token ? token : false
+		- if(token)
+			meta(name="csrf-token", content=token)
 		meta(property="fb:app_id", content="155380987937796")
 		block meta
 		
