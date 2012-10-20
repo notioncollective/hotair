@@ -541,7 +541,24 @@ exports.contact_send = function(req, res) {
  * GET
  */
 exports.share = function(req, res) {
-	if(req.params.service) {
+	if(!req.params.service) {
+		res.render('share', {
+				title: "Share hot air!",
+				slug: 'share',
+		});
+	} else {
+		var doc = {
+			type: "share",
+			ip: req.ip,
+			timestamp: Date.now(),
+			service: req.params.service
+		},
+		// callback for the share data db insert
+		share_insert = function(err, body, header) {
+			if(err) console.error('error saving share data', err);
+			else console.log('saved share data to db');
+		};
+
 		switch(req.params.service) {
 			case "twitter":
 				// twitter score share
@@ -549,10 +566,19 @@ exports.share = function(req, res) {
 					// get score data then build share url
 					db.get(req.params.id, function(err, data) {
 						if(err) res.send(404, "Not found!");
-						else res.redirect(_buildTweetUrl(data));
+						else {
+							doc.score_id = req.params.id;
+							// insert doc for share
+							db.insert(doc, share_insert);
+							// redirect no matter what
+							res.redirect(_buildTweetUrl(data));	
+						}
 					});
 				// otherwise, generic twitter share
-				} else res.redirect(_buildTweetUrl());
+				} else {
+					db.insert(doc, share_insert);
+					res.redirect(_buildTweetUrl())
+				};
 				break;
 			case "facebook":
 				// facebook score share
@@ -560,20 +586,25 @@ exports.share = function(req, res) {
 					// get score data then build share url
 					db.get(req.params.id, function(err, data) {
 						if(err) res.send(404, "Not found!");
-						else res.redirect(_buildFacebookUrl(data));
+						else {
+							doc.score_id = req.params.id;
+							// insert doc for share
+							db.insert(doc, share_insert);
+							// redirect no matter what
+							res.redirect(_buildFacebookUrl(data));	
+						}
 					});
 				// otherwise, generic facebook share
-				} else res.redirect(_buildFacebookUrl());
+				} else {
+					res.redirect(_buildFacebookUrl());
+				}
 				break;
 			default:
 				res.send(404, "Not found!");
 				break;
 		}
 	// otherwise, render generic share page
-	} else res.render('share', {
-				title: "Share hot air!",
-				slug: 'share',
-		});
+	}
 }
 
 /*
