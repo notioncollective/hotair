@@ -19,6 +19,8 @@ Crafty.scene("loading", function() {
 		"img/lives_score_clouds.png?_="+cacheBuster,
 		"img/parachutex2.png?_="+cacheBuster,
 		"img/startscreen_basket.png?_="+cacheBuster,
+		"img/sndx2.png?_="+cacheBuster,
+		"img/snd_mutex2.png?_="+cacheBuster,
 		"img/tweet_display.png?_="+cacheBuster,
 		"img/fonts/blue_score_16x16.png?_="+cacheBuster,
 		"img/fonts/grey_score_16x16.png?_="+cacheBuster,
