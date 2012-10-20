@@ -112,13 +112,6 @@ Crafty.scene("start", function() {
 	function createAboutMenu() {
 		aboutMenuNav = Crafty.e('ListNav')
 			.attr({wrappingId: "AboutMenuNav"});
-
-		aboutMenuNav.addListItem({
-			text: "Contact Us",
-			callback: function() {
-				window.open('/contact');
-			}
-		});
 		
 		aboutMenuNav.addListItem({
 			text: "Ok!",
@@ -126,6 +119,13 @@ Crafty.scene("start", function() {
 				this.destroy();
 				HA.game.closeModals();
 				createMainStartMenu();
+			}
+		});
+		
+		aboutMenuNav.addListItem({
+			text: "Contact Us",
+			callback: function() {
+				window.open('/contact');
 			}
 		});
 		
