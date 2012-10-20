@@ -38,7 +38,7 @@ Crafty.scene("start", function() {
 			.attr({wrappingId: "StartListNav"});
 	
 		startMenuNav.addListItem({
-			text: "New Game",
+			text: "Play!",
 			callback: function(arg) {
 				console.log("New Game!");
 				HA.game.closeModals();
@@ -78,7 +78,7 @@ Crafty.scene("start", function() {
 		
 		// TODO: This templating could probably get moved to an HTMLTemplate entity? 
 		startMenuNav.addListItem({
-			text: "High Scores",
+			text: "Scores",
 			callback: function(arg) {
 				HA.game.closeModals();
 				HA.game.openModal("HighScoresDisplay");
@@ -96,6 +96,15 @@ Crafty.scene("start", function() {
 			},
 			args: ["High Scores!"]
 		});
+		
+		startMenuNav.addListItem({
+			text: "Share",
+			callback: function() {
+				this.destroy();
+				createShareMenu();
+			}
+		});
+				
 		startMenuNav.renderListNav();
 	}
 		
@@ -103,14 +112,6 @@ Crafty.scene("start", function() {
 	function createAboutMenu() {
 		aboutMenuNav = Crafty.e('ListNav')
 			.attr({wrappingId: "AboutMenuNav"});
-		
-		aboutMenuNav.addListItem({
-			text: "Share",
-			callback: function() {
-				this.destroy();
-				createShareMenu();
-			}
-		});
 
 		aboutMenuNav.addListItem({
 			text: "Contact Us",
@@ -120,7 +121,7 @@ Crafty.scene("start", function() {
 		});
 		
 		aboutMenuNav.addListItem({
-			text: "Back",
+			text: "Ok!",
 			callback: function() {
 				this.destroy();
 				HA.game.closeModals();
@@ -150,10 +151,10 @@ Crafty.scene("start", function() {
 		});								
 		
 		shareMenuNav.addListItem({
-			text: "Back",
+			text: "Ok!",
 			callback: function() {
 				this.destroy();
-				createAboutMenu();
+				createMainStartMenu();
 			}
 		});	
 		
@@ -221,7 +222,7 @@ Crafty.scene("start", function() {
 		});
 		
 		partySelectNav.addListItem({
-      text: "Back",
+      text: "&lt; Back",
       callback: function(arg) {
         this.destroy();
         createMainStartMenu();
