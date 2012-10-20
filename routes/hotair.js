@@ -1,20 +1,16 @@
 
-// prod user/pass: hotair_user:Gr33nP01nt#
+// couchdb connection credentials
 var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
-// var nano_url = process.env.NODE_ENV === 'production' ? 'http://nodejitsudb198990392151.iriscouch.com:5984' : 'http://127.0.0.1:5984';
 console.log("Connecting to couchdb");
-var nano = require('nano')(nano_url),
-	Twit = require('twit'),
-	_ = require('lodash'),
-	Q = require('q'),
-	useragent = require('useragent'),
-	querystring = require('querystring');
+
+var nano = require('nano')(nano_url)
+	, Twit = require('twit')
+	, _ = require('lodash')
+	, Q = require('q')
+	, useragent = require('useragent')
+	, querystring = require('querystring')
+	, nodemailer = require("nodemailer");
   
-
-
-
-// var conn = new(cradle.Connection)(),
-	// db = conn.database('hotair'),
 var	db = nano.use('hotair'),
 	T = new Twit({
  	   consumer_key:         '5uH2QAOgqIVQfe2typ5w'
@@ -153,6 +149,31 @@ function _buildFacebookUrl(score) {
 
 	console.log("facebook url: ", facebook_url);
 	return facebook_url;
+}
+
+function _sendEmail(from_name, from_email, email_body, callback, context) {
+	console.log("sending email");
+	var smtp = nodemailer.createTransport(
+				"SMTP",
+				{
+					service: "Gmail",
+					auth: {
+						user: 'hotair@notioncollective.com',
+						pass: 'Madi50nW1'
+					}
+				}
+			),
+			options = {
+				from: from_name+' <'+from_email+'>',
+				to: "Hot Air <hotair@notioncollective.com>",
+				subject: "Hot Air contact form submission",
+				text: email_body,
+				html: '<p>'+email_body+'<p>'
+			},
+			context = context || this;
+			
+		
+	smtp.sendMail(options, function(err, res){ callback.apply(context, [err, res]); });
 }
 
 /*
@@ -458,7 +479,17 @@ exports.contact = function(req, res) {
 
 /* POST */
 exports.contact_send = function(req, res) {
-	console.log("send email: ", req.params );
+	console.log("send email: ", req.body );
+	_sendEmail(
+			req.body.from_name,
+			req.body.from_email,
+			req.body.email_body,
+			function(em_err, em_res){
+				console.log("send email response ",em_err,em_res);
+				if(em_err) res.send({"errors":["There was an error sending the email"]});
+				else res.send(JSON.stringify(em_res));
+			}
+	);
 }
 
 /*

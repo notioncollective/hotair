@@ -114,16 +114,17 @@ p.note {
 	margin: 5% auto;
 	width: 600px;
 	padding: 30px;
-	background: #fff;
+	background: transparent url('../img/pause_bg.png') 0 0 repeat;
+	border: 6px solid #fff;
 	opacity: 0.9;
 	-moz-opacity: 0.9;
-	filter:alpha(opacity=90);
+	filter:alpha(opacity=90);	
 }
 
 ul#actions {
 	font-family: "Press Start 2P", Courier;
 	list-style: none;
-	margin: 0;
+	margin: 1em 0 0 0;
 	padding: 0;
 }
 ul#actions li {
@@ -138,6 +139,67 @@ ul#actions li a {
 	padding: 15px
 }
 
+ul#messages {
+	padding: 1em;
+	margin: 0 0 1em 0;
+	list-style: none;
+}
+ul#messages li {
+	display: block;
+	margin: 0;
+	text-align: center;
+	font-family: "Press Start 2P", Courier;
+}
+
+ul#messages.error {
+	background: #000;
+	color: #fff;
+}
+ul#messages.success {
+	background: #8CD0FF;
+}
+
+/* FORMS */
+
+form {}
+form label {
+	font-weight: bold;
+	display: block;
+	margin-bottom: .5em;
+}
+form input {
+	width: 568px;
+	height: 30px;
+	font-family: "Press Start 2P", Courier;
+	font-size: 18px;
+	border: none;
+	margin-bottom: 1em;
+}
+
+form input[type="text"],
+form input[type="email"]
+ {
+	padding: 15px;
+}
+
+form textarea {
+	font-family: "Courier", monospace;
+	font-size: 16px;
+	width: 568px;
+	height: 150px;
+	border: none;
+	padding: 15px;
+	margin-bottom: 1em;
+}
+
+form button {
+	width: 598px;
+	height: 50px;
+	font-family: "Press Start 2P", Courier;
+	font-size: 18px;
+	border: none;
+	border: 3px solid #fff;
+}
 
 #mc_embed_signup {
 	margin-top: 1em;
@@ -200,6 +262,12 @@ body#share #Main {
 }
 
 /* SURVEY PAGE */
+body#survey iframe {
+	border: 1px solid #ccc;
+	border-width: 4px 2px;
+}
+
+/* CONTACT PAGE */
 body#survey iframe {
 	border: 1px solid #ccc;
 	border-width: 4px 2px;
@@ -281,7 +349,7 @@ body#home #Footer {
 
 
 #Footer {
-	position: absolute;
+	position: fixed;
 	left: 0;
 	bottom: 0;
 	height: 600px;

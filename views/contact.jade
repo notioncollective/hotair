@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	#Main
+		h1 #{title}
+		p Send us a message and let us know what you think!
+		ul#messages
+		form#ContactForm(method="post", action="/contact/send")
+			label(for="fromName") Your name
+			input(name="fromName", type="text", id="fromName", placeholder="Joe Schmo")
+			label(for="fromEmail") Your email address
+			input(name="fromEmail", type="email", id="fromEmail", placeholder="joe@schmo.org")
+			label(for="emailBody") Your message
+			textarea(name="emailBody", id="emailBody")
+			button(id="submit") Send!
+			
+		ul#actions.cf
+			li: a(href="/play", id="play") Play Hot Air!

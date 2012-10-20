@@ -30,13 +30,6 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.init();
 		HA.sceneManager.init();
 		
-		$.ajaxSetup({
-			beforeSend: function(xhr) {
-				var token = _getCsrfToken();
-				xhr.setRequestHeader('X-CSRF-Token', token);
-			}
-		});
-		
 		// High scores are now loaded on demand.	
 		// _fetchHighScores();
 		
@@ -490,7 +483,7 @@ HA.game = function(ns, $, _, C) {
 	 */
 	function _saveScore(initials, score, party) {
 		console.log("save score", initials, score, party);
-		var token = _getCsrfToken();
+		var token = HA.getCsrfToken();
 		$.ajax({
 			url : "/highscore",
 			type : "post",
@@ -516,7 +509,7 @@ HA.game = function(ns, $, _, C) {
 	
 	function _saveData(data) {
 		console.log("SAVING DATA: ", data);
-		var token = _getCsrfToken();
+		var token = HA.getCsrfToken();
 		$.ajax({
 			url : "/data",
 			type : "post",
@@ -527,17 +520,6 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 		_gaq.push(['_trackEvent', 'Gameplay', 'EnemyHit', data.tweet_party]);
-	}
-	
-	/**
-	 * Get the CSRF token from the meta tag.
-	 * @private
-	 * @method _getCsrfToken
-	 * @return {string} The CSRF token.
-	 */
-	function _getCsrfToken() {
-		var token = $("meta[name='csrf-token']").attr("content");
-		return token;
 	}
 	
 	/**
