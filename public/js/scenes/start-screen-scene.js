@@ -4,6 +4,8 @@ Crafty.scene("start", function() {
 	var startMenuNav,
 			partySelectNav,
 			closeMenuNav,
+			aboutMenuNav,
+			shareMenuNav,
 			startScreenMainGraphic;
 			
   HA.sm.fullScreenKeyEnabled(true); // enable full-screen mode
@@ -69,7 +71,7 @@ Crafty.scene("start", function() {
 				HA.game.closeModals();
 				HA.game.openModal("AboutDisplay"); 
 				this.destroy();
-				createCloseMenu();
+				createAboutMenu();
 			},
 			args: ["About!!"]
 		});
@@ -97,6 +99,68 @@ Crafty.scene("start", function() {
 		startMenuNav.renderListNav();
 	}
 		
+		
+	function createAboutMenu() {
+		aboutMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "AboutMenuNav"});
+		
+		aboutMenuNav.addListItem({
+			text: "Share",
+			callback: function() {
+				this.destroy();
+				createShareMenu();
+			}
+		});
+
+		aboutMenuNav.addListItem({
+			text: "Contact Us",
+			callback: function() {
+				window.open('/contact');
+			}
+		});
+		
+		aboutMenuNav.addListItem({
+			text: "Back",
+			callback: function() {
+				this.destroy();
+				HA.game.closeModals();
+				createMainStartMenu();
+			}
+		});
+		
+		aboutMenuNav.renderListNav();
+	}
+	
+	function createShareMenu() {	
+		shareMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "AboutMenuNav"});
+		
+		shareMenuNav.addListItem({
+			text: "Twitter",
+			callback: function() {
+				window.open("/share/twitter");
+			}
+		});		
+		
+		shareMenuNav.addListItem({
+			text: "Facebook",
+			callback: function() {
+				window.open("/share/facebook");
+			}
+		});								
+		
+		shareMenuNav.addListItem({
+			text: "Back",
+			callback: function() {
+				this.destroy();
+				createAboutMenu();
+			}
+		});	
+		
+		shareMenuNav.renderListNav();
+					
+	}
+	
 
 	function createCloseMenu(selectParty) {
 		closeMenuNav = Crafty.e('ListNav')

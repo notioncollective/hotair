@@ -1,0 +1,15 @@
+extends layout
+
+block meta
+	meta(property="og:title", content="#{title}")
+	meta(property="og:image", content="/img/share_img.png")
+
+block content
+	#Main
+		h1 #{title}
+		ul#actions.cf
+			li: a(href="/share/twitter", id="share_twitter", target="_blank") Share on Twitter 
+			li: a(href="/share/facebook", id="share_facebook", target="_blank") Share on Facebook
+			li: a(href="/play", id="play") Play Hot Air!
+
+	
