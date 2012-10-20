@@ -18,7 +18,8 @@ HA.game = function(ns, $, _, C) {
 			_state = 0,
 			_highScores,
 			_scoreObj,
-			_cacheBuster;
+			_cacheBuster,
+			_muted = false;
 
 	// private methods
 	function _init(options) {
@@ -554,6 +555,21 @@ HA.game = function(ns, $, _, C) {
 		});
 	}
 	
+	
+	function _mute() {
+		Crafty.audio.mute();
+		_muted = true;
+	}
+	
+	function _unmute() {
+		Crafty.audio.unmute();
+		_muted = false; 
+	}
+	
+	function _isMuted() {
+		return _muted;
+	}
+	
 	// public methods
 
 	/**
@@ -640,6 +656,12 @@ HA.game = function(ns, $, _, C) {
 		} else return _cacheBuster;
 	}
 	
+	ns.isMuted = _isMuted;
+	
+	ns.mute = _mute;
+	
+	ns.unmute = _unmute;
+
 	return ns;
 
 }(HA.namespace("HA.game"), jQuery, _, Crafty);

@@ -120,7 +120,7 @@ div.list-nav {
 }
 
 div.list-nav span {
-	margin: 20px;
+	margin: 0px 20px;
 	padding: 5px;
 	color: #000;
 	cursor: pointer;
@@ -379,4 +379,16 @@ body.loaded #Footer { display: block; }
 
 .tweet-info-screenname {
 	font-size: .6em;
+}
+
+.icon {
+	padding: 20px;
+}
+
+.icon-snd {
+	background: url("../img/sndx2.png") center center no-repeat;
+}
+
+.icon-snd-mute {
+	background: url("../img/snd_mutex2.png") center center no-repeat;
 }

@@ -104,10 +104,27 @@ Crafty.scene("start", function() {
 				createShareMenu();
 			}
 		});
+		
+		startMenuNav.addListItem({
+			text: function() {
+				var mute = HA.game.isMuted() ? "-mute" : "";
+				var icon = "<i id='icon-snd' class='icon icon-snd" + mute +"'></i>";
+				return icon;
+			},
+			// text: "Test",
+			callback: function() {
+				if(HA.game.isMuted()) {
+					HA.game.unmute();
+					$('#icon-snd').removeClass('icon-snd-mute').addClass('icon-snd');
+				} else {
+					HA.game.mute();
+					$('#icon-snd').removeClass('icon-snd').addClass('icon-snd-mute');
+				}
+			}
+		});
 				
 		startMenuNav.renderListNav();
 	}
-		
 		
 	function createAboutMenu() {
 		aboutMenuNav = Crafty.e('ListNav')

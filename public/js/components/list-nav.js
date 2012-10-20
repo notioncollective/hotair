@@ -19,7 +19,6 @@ Crafty.c("ListNav", {
 		this.z = 2000;
 		
 		this.bind("KeyDown", function(e) {
-			// console.log("selecting...", e.key);
 			if (e.key === Crafty.keys.LEFT_ARROW) {
 				this.selectPrevItem();
 			} else if(e.key === Crafty.keys.RIGHT_ARROW) {
@@ -53,10 +52,15 @@ Crafty.c("ListNav", {
 	/**
 	 * Add a list nav item object in the form: 
 	 * 
-	 * { text: "Text To Display", callback: function() {}, args: [] }
+	 * { text: "Text To Display", callback: function() {}, args: [], options }
 	 * 
 	 * The callback function will be called upon chosing a list item, and will be passed the args supplied by the args array.
 	 * Note that the callback function will be called in the context of the ListNav entity from which it is called.
+	 * 
+	 * The options object can contain the following options:
+	 * 
+	 * // a string of classes to add to the list-item element
+	 * extraClasses: "class_one class_two"
 	 */
 	addListItem: function(listNavItem) {
 		// console.log("addListItem");
@@ -66,8 +70,9 @@ Crafty.c("ListNav", {
 	renderListNav: function() {
 		var output = "", that = this, active;
 		_.each(this.listNavItems, function(item, index) {
+			var text = (typeof item.text === 'function') ? item.text() : item.text;
 			active = (index === that.selectedItem) ? "active" : '';
-			output += "<span class='"+active+"' data-index='"+index+"'>"+item.text+"</span>";
+			output += "<span class='"+active+"' data-index='"+index+"'>"+text+"</span>";
 		});
 		this.replace("<div id='"+this.wrappingId+"'class='"+this.wrappingClass+"'>"+output+"</div>");
 		this._bindClickEvents();
