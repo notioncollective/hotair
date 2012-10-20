@@ -218,7 +218,9 @@ exports.alphacomplete = function(req, res) {
 
 
 exports.notsupported = function(req, res) {
-	if(useragent.is(req.headers['user-agent']).chrome || useragent.is(req.headers['user-agent']).safari) res.redirect('/');
+	if(useragent.is(req.headers['user-agent']).chrome 
+		|| (useragent.is(req.headers['user-agent']).safari && !useragent.is(req.headers['user-agent']).mobile_safari)
+		|| useragent.is(req.headers['user-agent']).firefox) res.redirect('/');
 	res.render('notsupported', { title: 'Console not supported!', slug: 'notsupported'});
 }
 
