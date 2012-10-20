@@ -445,28 +445,64 @@ exports.score = function(req, res) {
 				data: db_res,
 				title: "Score!",
 				slug: 'score',
-				twitter_url: _buildScoreTweetUrl(db_res),
-				facebook_url: _buildScoreFacebookUrl(db_res)
 			});
 		});		
 	} else res.redirect('/'); // redirect if no id
 
 }
 
+/*
+ * Handles share actions for the following endpoints
+ * 
+ * /share/score/{service}/{score id}
+ * redirect to a share action for the selected service for a specific score
+ * 
+ * /share/{service}
+ * redirect to a general share action for the selected service
+ * 
+ * /share
+ * render the share page
+ * 
+ * Available share services:
+ * - facebook
+ * - twitter
+ * 
+ * GET
+ */
 exports.share = function(req, res) {
 	if(req.params.service) {
 		switch(req.params.service) {
 			case "twitter":
-				res.redirect(_buildTweetUrl());
+				// twitter score share
+				if(req.params.action && req.params.action === 'score') {
+					// get score data then build share url
+					db.get(req.params.id, function(err, data) {
+						if(err) res.send(404, "Not found!");
+						else res.redirect(_buildTweetUrl(data));
+					});
+				// otherwise, generic twitter share
+				} else res.redirect(_buildTweetUrl());
 				break;
 			case "facebook":
-				res.redirect(_buildFacebookUrl());
+				// facebook score share
+				if(req.params.action && req.params.action === 'score') {
+					// get score data then build share url
+					db.get(req.params.id, function(err, data) {
+						if(err) res.send(404, "Not found!");
+						else res.redirect(_buildFacebookUrl(data));
+					});
+				// otherwise, generic facebook share
+				} else res.redirect(_buildFacebookUrl());
 				break;
 			default:
-				res.send(404, "Share service not available");
+				res.send(404, "Not found!");
 				break;
 		}
-	} else res.redirect('/')
+	// otherwise, render generic share page
+	} else res.render('share', {
+				title: "Share hot air!",
+				slug: 'share',
+		});
 }
 
 /*
