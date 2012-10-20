@@ -82,9 +82,9 @@ function agent(req, res, next) {
 
 app.get('/', routes.home);
 app.get('/play', agent, auth, csrf, routes.play);
-app.get('/share/:action/:service/:id', routes.share);
-app.get('/share/:service', routes.share);
-app.get('/share', routes.share);
+app.get('/share/:action/:service/:id', auth, routes.share);
+app.get('/share/:service', auth, routes.share);
+app.get('/share', auth, routes.share);
 app.get('/survey', auth, routes.survey);
 // app.get('/privatealpha', auth, routes.privatealpha);
 app.get('/privatealpha', routes.alphacomplete); // use this when priv alpha is over
@@ -96,7 +96,7 @@ app.get('/democrats', auth, routes.democrats);
 app.get('/republican', auth, routes.republican);
 app.get('/load_tweets', auth, routes.load_tweets);
 app.get('/highscores', auth, routes.highscores);
-app.get('/score/:id', routes.score);
+app.get('/score/:id', auth, routes.score);
 
 app.post('/highscore', auth, routes.highscore);
 app.post('/data', auth, routes.data);
