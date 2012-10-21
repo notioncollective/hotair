@@ -1,3 +1,13 @@
+var ignition = ['\n\n\n    )                               \n\
+ ( /(          )     (              \n\
+ )\\())      ( /(     )\\    (   (    \n\
+((_)\\   (   )\\()) ((((_)(  )\\  )(   \n\
+ _((_)  )\\ (_))/   )\\ _ )\\((_)(()\\  \n\
+| || | ((_)| |_    (_)_\\(_)(_) ((_) \n\
+| __ |/ _ \\|  _|    / _ \\  | || \'_| \n\
+|_||_|\\___/ \\__|   /_/ \\_\\ |_||_|   \n\
+                                    \n\n'];
+
 
 /**
  * Module dependencies.
@@ -9,6 +19,7 @@ var express = require('express')
   , path = require('path')
   , nano = require('nano')
   , useragent = require('useragent')
+  , fs = require('fs')
   , cronJob = require('cron').CronJob;
 
 
@@ -19,6 +30,15 @@ new cronJob('0 */12 * * * *', function(){
 }, null, true, "America/New_York");;
 
 var app = express();
+
+
+var npm_package = JSON.parse(fs.readFileSync('package.json'));
+console.log("npm_package", npm_package);
+console.log(ignition[0]);
+
+
+app.locals.app_version = npm_package.version;
+
 // var auth = express.basicAuth('notion', 'Madi50nW1'); 
 var auth = express.basicAuth(function(username, password) {
   var valid_logins = {

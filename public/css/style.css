@@ -273,7 +273,7 @@ div#PauseNav span, div#GameOverNav span {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 80px;
+	height: 120px;
 /*	background: #fff;*/
 	background: transparent url(../img/tweet_display.png) 0 0 repeat-x;
 /*	opacity: .8;*/
@@ -282,6 +282,16 @@ div#PauseNav span, div#GameOverNav span {
 	line-height: 1.4em;
 	padding: 0;
 	overflow:hidden;
+}
+
+#TweetDisplayArrow {
+		background: transparent url(../img/tweet-display-arrow.png) 0px 0px no-repeat;
+		width: 64px;
+		height: 64px;
+		position: absolute;
+		z-index: 1001;
+		left: 14px;
+		top: 66px;
 }
 
 #FullScreenPrompt {
@@ -297,6 +307,21 @@ div#PauseNav span, div#GameOverNav span {
 	text-transform: uppercase;
 	line-height: 2;	
 }
+
+
+#PublicBetaPrompt {
+	position: absolute;
+	text-align: center;
+	bottom: 20px;
+	left: 0;
+	width: 100%;
+	height: 30px;
+	z-index: 1000;
+	color: #fff;
+	text-transform: uppercase;
+	line-height: 2;	
+}
+
 
 #TweetDisplay .content, .tweet-display .content {
 	margin: 10px 20px 20px 20px;

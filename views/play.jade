@@ -91,6 +91,7 @@ html(lang="en")
 			// TWEET DISPLAY TEMPLATE
 			script(id='TweetDisplayTemplate',type='text/template')
 				| <div id="TweetDisplay">
+				| 	<div id="TweetDisplayArrow"></div>
 				|		<div class='content'><%= text %></div>
 				| </div>
 
@@ -116,9 +117,13 @@ html(lang="en")
 				|			<label for='gameover-name'>Enter your initials:</label>
 				|			<div><input id="gameover-name" type='text' maxlength='3' size="3" /></div>
 							
-			// FULL SCREEN
-			#FullScreenPrompt
-				.prompt Press Esc for Fullscreen Mode
+			//- FULL SCREEN
+			//- #FullScreenPrompt
+				//- .prompt Press Esc for Fullscreen Mode
+				
+			#PublicBetaPrompt
+				.prompt Public Beta v#{app_version}
+
 
 		#Footer
 		
