@@ -108,6 +108,7 @@ HA.game = function(ns, $, _, C) {
 		_perfectLevel = true;
 		HA.player.setScore(0);
 		HA.player.setLives(3);
+		C.settings.modify("autoPause", true);
 		_bindGameplayKeyboardEvents();
 		_state = 1;
 		HA.m.publish(HA.e.START_LEVEL, [_level]);
