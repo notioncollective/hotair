@@ -201,7 +201,7 @@ Crafty.scene("start", function() {
 	}
 	
 	function resizeViewportHandler(e, width, height) {
-	  	startScreenMainGrapic.reposition();
+	  	startScreenMainGraphic.reposition();
 	 }
 
 	function createPartySelectMenu() {

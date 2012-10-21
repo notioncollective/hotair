@@ -18,7 +18,7 @@ Crafty.c('StartScreenMainGraphic', {
 	},
 	
 	reposition: function() {
-		console.log("Reposition start screen main graphic");
+		// console.log("Reposition start screen main graphic");
 		this.x = (Crafty.DOM.window.width/2) - (this.w/2);
 		this.y = (Crafty.DOM.window.height/15) - (this.h/2);	
 	}
