@@ -317,15 +317,20 @@ exports.all = function(req, res) {
 	@param {Number} limit Number of responses to retrieve. If this is an odd number it will be reduced by 1.
 */
 exports.load_tweets = function(req, res) {
-	var startkey = req.query.startkey || 0,
+	var numPerSet = req.query.numPerSet || 10,
 			limit = req.query.limit || 100,
-			numPerSet = req.query.numPerSet || 10,
+			params = {
+				limit: Math.floor(limit/2)+1,
+				descending: true
+			},
 			i = 0, // counts the number of lists recieved
 			a = [],
 			b = [],
 			aLen,
 			bLen,
 			smallerSetLen,
+			lastRow,
+			minKey,
 			numSets,
 			merged = { // new response object
 				"total_rows": 0, 
@@ -342,12 +347,17 @@ exports.load_tweets = function(req, res) {
 					// merged.rows = merged.rows.concat(resp.rows);
 					if(i == 1) {
 						a = resp.rows;
+						lastRow = _.last(a);
+						minKey = lastRow.key;
+						a.pop();
 						aLen = a.length;
 					}
 					if(i == 2) { //if both lists have been merged in
 						b = resp.rows;
+						lastRow = _.last(b);
+						minKey = lastRow.key < minKey ? lastRow.key : minKey;
+						b.pop();
 						bLen = b.length;
-						
 						smallerSetLen = aLen < bLen ? aLen : bLen;
 						
 						for(var j=0; j<smallerSetLen; j+=1) {
@@ -366,14 +376,20 @@ exports.load_tweets = function(req, res) {
 							Array.prototype.splice.apply(merged.rows, args);
 						}
 						
+						merged.nextStartkey = minKey;
+						
 						res.send(merged); // send response
 					}					
 				}
 			};
+			
+	if(req.query.startkey) {
+		params.startkey = req.query.startkey;
+	}
 
 	// query database
-	db.view('hotair', 'democrats', {startKey: parseInt(startkey), limit: Math.floor(limit/2), descending: true}, merge);
-	db.view('hotair', 'republican', {startKey: parseInt(startkey), limit: Math.floor(limit/2), descending: true}, merge);
+	db.view('hotair', 'democrats', params, merge);
+	db.view('hotair', 'republican', params, merge);
 	
 }
 
