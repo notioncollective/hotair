@@ -672,9 +672,9 @@ exports.data = function(req, res) {
 	});
 }
 
-exports.notfound = function(req, res) {
-	res.send(404, "Page not found!");
-}
+// exports.notfound = function(req, res) {
+	// res.send(404, "Page not found!");
+// }
 
 
 

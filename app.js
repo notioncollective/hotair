@@ -52,7 +52,7 @@ var auth = express.basicAuth(function(username, password) {
   }
   
   if(typeof valid_logins[username]   === 'string' && valid_logins[username] === password) {
-    console.log("basicAuth login ", username, password);
+    // console.log("basicAuth login ", username, password);
     return true;
   } else return false;
   
@@ -69,10 +69,30 @@ app.configure(function(){
   app.use(express.cookieParser('hotair'));
   app.use(express.session({secret: 'hotair'}));
   app.use(express.csrf());
-  app.use(app.router);
   app.use(express.favicon(path.join(__dirname, '/public/favicon.ico')));
   app.use(express.static(path.join(__dirname, 'public'), {maxAge:  86400000}));
-
+  app.use(app.router);
+	app.use(function(req, res, next){
+	  // respond with html page
+	  if (req.accepts('html')) {
+	    res.status(404);
+	    res.render('404', {
+	    	title: "404 &mdash; page not found :(",
+	    	url: req.url,
+	    	slug: 'notsupported'
+	    });
+	    return;
+	  }
+	
+	  // respond with json
+	  if (req.accepts('json')) {
+	    res.send({ error: 'Not found' });
+	    return;
+	  }
+	
+	  // default to plain-text. send()
+	  res.type('txt').send('Not found');
+	});
 });
 
 // configure dev-specific settings
@@ -122,10 +142,10 @@ app.get('/contact', csrf, routes.contact);
 app.post('/contact/send', routes.contact_send);
 
 // gameplay-related endpoints
-app.get('/fetch_tweets', routes.fetch_tweets);
-app.get('/all', routes.all);
-app.get('/democrats', routes.democrats);
-app.get('/republican', routes.republican);
+app.get('/fetch_tweets', auth, routes.fetch_tweets);
+// app.get('/all', routes.all);
+// app.get('/democrats', routes.democrats);
+// app.get('/republican', routes.republican);
 app.get('/load_tweets', routes.load_tweets);
 app.get('/highscores', routes.highscores);
 
@@ -133,7 +153,7 @@ app.get('/highscores', routes.highscores);
 app.post('/highscore', routes.highscore);
 app.post('/data', routes.data);
 
-// app.get('/*', routes.notfound);
+// app.get('*', routes.notfound);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
