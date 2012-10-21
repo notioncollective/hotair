@@ -37,7 +37,7 @@ Crafty.scene("gameplay", function() {
 	});
 	
 	// HA.twitter.loadTweets({ startkey: 0, limit: 100, numPerSet: HA.game.getNumEnemiesPerLevel() });
-	HA.twitter.loadTweets({ limit: 100, numPerSet: HA.game.getNumEnemiesPerLevel() }, true);
+	HA.twitter.loadTweets({ limit: 400, numPerSet: HA.game.getNumEnemiesPerLevel() }, true);
 	
 	
 }, function() {
