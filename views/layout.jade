@@ -2,10 +2,24 @@ doctype 5
 html
 	head
 		title #{title}
+		
+		<!-- standard meta tags -->
+		meta(charset="utf-8")
+		meta(name="description", content="Hot Air is a web-based arcade game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.")
+		meta(name="keywords", content="game, politics, twitter, democrat, republican, balloons, clouds, arcade, 8bit, congress")
+		
 		- var token = token ? token : false
 		- if(token)
+			<!-- security -->
 			meta(name="csrf-token", content=token)
+			
+		<!-- fb/og -->
 		meta(property="fb:app_id", content="155380987937796")
+		meta(property="og:type", content="game")
+		meta(property="og:site_name", content="Hot Air")
+		meta(property="og:description", content="Hot Air is a web-based arcade game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.")
+		meta(property="og:image", content="/img/share_img.png")
+			
 		block meta
 		
 		link(rel='stylesheet', type='text/css', href='/css/static.css')
@@ -15,12 +29,16 @@ html
 		script(src="/js/lib/jquery-min.js", type="text/javascript", charset="utf-8")
 		script(src="/js/lib/underscore-min.js", type="text/javascript", charset="utf-8")	
 		script(src="/js/modules/HA.js", type="text/javascript", charset="utf-8")
-		script(src="/js/static.js", type="text/javascript", charset="utf-8")
-		- var html = '<script style="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-35454107-1"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>'
-		!{html}
-
+		
+		<!-- analytics -->
+		- var google_analytics = '<script style="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-35454107-1"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>'
+		!{google_analytics}
+		
 	body(id="#{slug}")
 
 		block content
-		
+				
 		#Footer
+		
+		script(src="/js/static.js", type="text/javascript", charset="utf-8")
+		
