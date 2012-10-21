@@ -15,8 +15,10 @@ Crafty.scene("gameplay", function() {
 	var messageDisplay = Crafty.e("MessageDisplay");
 	messageDisplay.showMessage("Loading...");
 
+	var gameStarted = false;
 	
 	HA.m.subscribe(HA.e.TWEETS_LOADED, function() {
+		if(gameStarted) return;
 		var player = Crafty.e("Player")
 			// .setPartySpriteTemplate('%p_avatarx2')
 			.setParty(HA.player.getParty())
@@ -31,9 +33,11 @@ Crafty.scene("gameplay", function() {
 		var scoreDisplay = Crafty.e("ScoreDisplay");
 		var livesDisplay = Crafty.e("LivesDisplay");
 		HA.m.publish(HA.events.START_NEW_GAME);
+		gameStarted = true;
 	});
 	
-	HA.twitter.loadTweets({ startKey: 0, limit: 100, numPerSet: HA.game.getNumEnemiesPerLevel() });
+	// HA.twitter.loadTweets({ startkey: 0, limit: 100, numPerSet: HA.game.getNumEnemiesPerLevel() });
+	HA.twitter.loadTweets({ limit: 400, numPerSet: HA.game.getNumEnemiesPerLevel() }, true);
 	
 	
 }, function() {

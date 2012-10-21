@@ -14,6 +14,7 @@ HA.twitter = function(ns, $, _, C) {
 				test: false
 			},
 			_tweets = [],
+			_nextStartkey,
 			_loaded = false;
 	
 	/**
@@ -33,14 +34,15 @@ HA.twitter = function(ns, $, _, C) {
 		@private
     @method _loadTweets
 		@param {Object} params A map of querystring parameters for the request. Common parameters are `startKey` and `limit`.
+		@param {boolean} reset If true, reset _nextStartkey so that the most recent tweets are loaded
    */
-	// TODO: refactor this function! many arguments aren't even used!
-	function _loadTweets(params) {
-		// var uri = _options.protocol;
-				// uri += _options.domain;
-				// uri += _options.load_tweets_endpoint;
+	function _loadTweets(params, reset) {
 		var uri = _options.load_tweets_endpoint;
 		params = params || {};
+		
+		if(reset) _nextStartkey = null;
+		
+		if(_nextStartkey) params.startkey = _nextStartkey;
 		
 		// ping the server for twitter data
 		$.getJSON(uri, params)
@@ -63,23 +65,29 @@ HA.twitter = function(ns, $, _, C) {
    */
 	function _handleLoadTweets(data, textStatus, jqHXR) {
 		if(data && data.rows && _.isArray(data.rows)) {
-			_tweets = _tweets.concat(data.rows);
+			_tweets = data.rows;
+			// _tweets = _tweets.concat(data.rows);
+			_nextStartkey = data.nextStartkey;
 		}
 		HA.m.publish(HA.e.TWEETS_LOADED);
 		_loaded = true;
 	}
 		
 	/**
-    See public method `getTweetSet'
+    See public method 'getTweetSet'
 		@private
     @method _getTweetSet
    */	
 	function _getTweetSet(start, count) {
 		var end = start+count,
 				set = _tweets.slice(start, end);
-		// console.log("TWEET SET: ", set);
-		var vals = _.pluck(set, "value");
-		console.log("TWEET SET: ", _.pluck(vals, "party"));
+		console.log("TWEET SET: ", set);
+		
+		// if(set.length < count) {
+			// _loadTweets
+		// } else {
+// 			
+		// }
 		return set;
 	}
 		
