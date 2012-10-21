@@ -103,33 +103,35 @@ function agent(req, res, next) {
 }
 
 
-app.get('/', routes.home);
-app.get('/play', agent, auth, csrf, routes.play);
+app.get('/', agent, csrf, routes.home);
+app.get('/play', agent, csrf, routes.play);
+app.get('/score/:id', routes.score);
+app.get('/notsupported', routes.notsupported);
+app.get('/newsletter', routes.newsletter)
+// app.get('/survey', auth, routes.survey);
+// app.get('/privatealpha', auth, routes.privatealpha);
+// app.get('/privatealpha', routes.alphacomplete); // use this when priv alpha is over
 
 // share services
-app.get('/share/:action/:service/:id', auth, routes.share);
-app.get('/share/:service', auth, routes.share);
-app.get('/share', auth, routes.share);
+app.get('/share/:action/:service/:id', routes.share);
+app.get('/share/:service', routes.share);
+app.get('/share', routes.share);
 
 // contact form
-app.get('/contact', auth, csrf, routes.contact);
-app.post('/contact/send', auth, routes.contact_send);
+app.get('/contact', csrf, routes.contact);
+app.post('/contact/send', routes.contact_send);
 
-app.get('/survey', auth, routes.survey);
-// app.get('/privatealpha', auth, routes.privatealpha);
-app.get('/privatealpha', routes.alphacomplete); // use this when priv alpha is over
-app.get('/notsupported', routes.notsupported);
-// app.get('/reset', auth, agent, routes.reset);
-app.get('/fetch_tweets', auth, routes.fetch_tweets);
-app.get('/all', auth, agent, routes.all);
-app.get('/democrats', auth, routes.democrats);
-app.get('/republican', auth, routes.republican);
-app.get('/load_tweets', auth, routes.load_tweets);
-app.get('/highscores', auth, routes.highscores);
-app.get('/score/:id', auth, routes.score);
+// gameplay-related endpoints
+app.get('/fetch_tweets', routes.fetch_tweets);
+app.get('/all', routes.all);
+app.get('/democrats', routes.democrats);
+app.get('/republican', routes.republican);
+app.get('/load_tweets', routes.load_tweets);
+app.get('/highscores', routes.highscores);
 
-app.post('/highscore', auth, routes.highscore);
-app.post('/data', auth, routes.data);
+// other POST endpoints
+app.post('/highscore', routes.highscore);
+app.post('/data', routes.data);
 
 // app.get('/*', routes.notfound);
 
