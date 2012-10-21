@@ -140,13 +140,13 @@ ul#actions li a {
 }
 
 ul#messages {
-	padding: 1em;
+	padding: .5em 1em;
 	margin: 0 0 1em 0;
 	list-style: none;
 }
 ul#messages li {
 	display: block;
-	margin: 0;
+	margin: .5em 0;
 	text-align: center;
 	font-family: "Press Start 2P", Courier;
 }
