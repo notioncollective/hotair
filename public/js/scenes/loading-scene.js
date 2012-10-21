@@ -24,6 +24,7 @@ Crafty.scene("loading", function() {
 		"img/tweet_display.png?_="+cacheBuster,
 		"img/fonts/blue_score_16x16.png?_="+cacheBuster,
 		"img/fonts/grey_score_16x16.png?_="+cacheBuster,
+		"img/tweet-display-arrow.png?_="+cacheBuster,
 		"/snd/cloud_loops.mp3?_="+cacheBuster,
 		"/snd/cloud_loops.ogg?_="+cacheBuster,
 		"/snd/drop.mp3?_="+cacheBuster,

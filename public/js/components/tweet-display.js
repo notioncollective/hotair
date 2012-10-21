@@ -15,8 +15,8 @@ Crafty.c("TweetDisplay", {
 	},
 	_handleEnemySelectedEvent: function(e, enemy) {
 		this.updateContent({text: enemy.tweet.text});
-		$(this.arrowSelector).css('left', enemy.x);
-		$(this.mainSelector).css('background-position', '10px 10px');
+		$(this.arrowSelector).css('left', enemy.x+14);
+		$(this.mainSelector).css('background-position', enemy.x+'px 0px');
 	},
 	_hideTweetText: function(e) {
 		$(this.textSelector).hide();
