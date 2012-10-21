@@ -51,11 +51,13 @@ HA.game = function(ns, $, _, C) {
 		
 		// For window blur, when changing browser windows or application
 		C.bind("Pause", function(e) {
+			console.log("C.bind('Pause')");
 			if(_state !== 1) return;
 			C.audio.pause("game_music");
-			HA.enemyController.stopProducing();
+			if(HA.enemyController.isProducing()) HA.enemyController.stopProducing();
 		});
 		C.bind("Unpause", function(e) {
+			console.log("C.bind('Unpause')");
 			if(_state !== 1) return;
 			if(!C.isPaused()) return;
 			C.audio.unpause("game_music");
@@ -272,6 +274,7 @@ HA.game = function(ns, $, _, C) {
 			C.unbind("EnterFrame", _doPause);
 			C.pause();
 			C.audio.play('pause');
+			C.settings.modify("autoPause", true);
 			HA.sceneManager.loadScene("start");
 		}
 		return false;

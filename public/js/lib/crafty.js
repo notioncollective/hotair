@@ -841,8 +841,8 @@
                 if (onFrame) {
                     tick = function () {
                         Crafty.timer.step();
-                        requestID = onFrame(tick);
-                        //console.log(requestID + ', ' + frame)
+                        // console.log("tick", tick);
+                        if(tick) requestID = onFrame(tick);
                     }
 
                     tick();
