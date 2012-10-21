@@ -6,7 +6,8 @@ Crafty.scene("start", function() {
 			closeMenuNav,
 			aboutMenuNav,
 			shareMenuNav,
-			startScreenMainGraphic;
+			startScreenMainGraphic = new Crafty.e('StartScreenMainGraphic');
+
 			
   HA.sm.fullScreenKeyEnabled(true); // enable full-screen mode
   
@@ -200,17 +201,8 @@ Crafty.scene("start", function() {
 	}
 	
 	function resizeViewportHandler(e, width, height) {
-	  createStartScreenMainGraphic(width, height);
+	  	startScreenMainGraphic.reposition();
 	 }
-
-  function createStartScreenMainGraphic(width, height) {  
-    startScreenMainGraphic = startScreenMainGraphic || Crafty.e('StartScreenMainGraphic');
-    startScreenMainGraphic.attr(
-         {
-           x:(Crafty.DOM.window.width/2)-256,
-           y:(Crafty.DOM.window.height/2)-256
-        });
-  }
 
 	function createPartySelectMenu() {
 		console.log("party select menu...");
@@ -249,9 +241,7 @@ Crafty.scene("start", function() {
 		partySelectNav.selectItem(defaultSelected);
 		partySelectNav.renderListNav();
 	}
-
-		
-	createStartScreenMainGraphic();
+	
 	createMainStartMenu();
 	
 }, function () {

@@ -91,8 +91,14 @@ html(lang="en")
 			// TWEET DISPLAY TEMPLATE
 			script(id='TweetDisplayTemplate',type='text/template')
 				| <div id="TweetDisplay">
-				| 	<div id="TweetDisplayArrow"></div>
 				|		<div class='content'><%= text %></div>
+				| </div>
+				
+			// TWEET DISPLAY TEMPLATE
+			script(id='TweetDisplayColumnTemplate',type='text/template')				
+				| <div id="TweetDisplayColumn">
+				| 	<div id="TweetDisplayArrow"></div>
+				| 	<div id="TweetDisplayFooter"></div>
 				| </div>
 
 			// PAUSE DISPLAY TEMPLATE
@@ -126,6 +132,7 @@ html(lang="en")
 
 
 		#Footer
+	
 		
 		- if (env === 'prod')
 			include includes/prod-scripts
