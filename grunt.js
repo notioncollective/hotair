@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 	  // minify & concat in one step
 	  min: {
 	    dist: {
-	      src: ['<banner>', 'public/js/lib/*.js', 'public/js/modules/HA.js', 'public/js/modules/HA.*.js', 'public/js/components/*.js', 'public/js/scenes/*.js', 'public/js/main.js'],
+	      src: ['<banner>', 'public/js/lib/*.js', 'public/js/modules/HA.js', 'public/js/modules/HA.*.js', 'public/js/components/*.js', 'public/js/scenes/*.js', 'public/js/main_prod.js'],
 	      dest: 'public/js/dist/build.js'
 	    }
 	  }
