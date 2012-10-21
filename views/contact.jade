@@ -3,7 +3,7 @@ extends layout
 block content
 	#Main
 		h1 #{title}
-		p Send us a message and let us know what you think!
+		p Send us a message and let us know what you think! You can also <a href="/newsletter">sign up for our newsletter</a> or <a target="_blank" href="http://twitter.com/hotairgame">follow us on Twitter</a>.
 		ul#messages
 		form#ContactForm(method="post", action="/contact/send")
 			label(for="fromName") Your name

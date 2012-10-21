@@ -218,6 +218,10 @@ exports.alphacomplete = function(req, res) {
   res.render('alphacomplete', { title: 'Hot Air private alpha testing expired! :(', slug: 'privatealpha' });
 }
 
+exports.newsletter = function(req, res) {
+	res.render('newsletter', {title: "Sign up for the Hot Air newsletter!", slug: "newsletter"})
+}
+
 
 exports.notsupported = function(req, res) {
 	if(useragent.is(req.headers['user-agent']).chrome 

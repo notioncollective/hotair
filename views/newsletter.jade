@@ -1,0 +1,11 @@
+extends layout
+
+block content
+	#Main
+		h1 #{title}
+		p Send us a message and let us know what you think! You can also <a href="/newsletter">sign up for our newsletter</a> or <a target="_blank" href="http://twitter.com/hotairgame">follow us on Twitter</a>.
+		#mc_embed_signup
+			form(action="http://hotairgame.us5.list-manage.com/subscribe/post?u=3e6fa1e44c44e4055b17c4070&amp;id=8e2569d77f", method="post", id="mc-embedded-subscribe-form", name="mc-embedded-subscribe-form", class="validate", target="_blank", novalidate="novalidate")
+				label#subscribe(for="mce-EMAIL") Subscribe to our mailing list:
+				input(type="email", value="", name="EMAIL", class="email", id="mce-EMAIL", placeholder="email address", required="requred")
+				.clear: input(type="submit", value="Subscribe", name="subscribe", id="mc-embedded-subscribe", class="button")

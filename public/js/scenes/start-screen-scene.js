@@ -147,6 +147,21 @@ Crafty.scene("start", function() {
 			}
 		});
 		
+		aboutMenuNav.addListItem({
+			text: "Newsletter",
+			callback: function() {
+				window.open('/newsletter');
+			}
+		});
+		
+		aboutMenuNav.addListItem({
+			text: "@hotairgame",
+			callback: function() {
+				window.open('http://twitter.com/hotairgame');
+			}
+		});
+		
+		
 		aboutMenuNav.renderListNav();
 	}
 	
