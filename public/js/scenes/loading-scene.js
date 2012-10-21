@@ -137,14 +137,11 @@ Crafty.scene("loading", function() {
 					cloud4: [3, 0],
 					cloud5: [4, 0]
 				})
-				.sprite(512, 'img/startscreen_basket.png?_='+cacheBuster, {
+				.sprite(800, 'img/startscreen_basket.png?_='+cacheBuster, {
 					startscreen_basket: [0, 0]
 				})
 				.sprite(60, 'img/balloon_select_arrowx2.png?_='+cacheBuster, {
 					balloon_select_arrow: [0, 0]
-				})
-				.sprite(100, 'img/startscreen_balloonx2.png?_='+cacheBuster, {
-					startscreen_balloon_d: [0, 0]
 				});
 			window.setTimeout(function(){
 				$('body').addClass('loaded');
