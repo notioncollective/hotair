@@ -197,11 +197,13 @@ function _sendEmail(data, callback, context) {
 
 exports.home = function(req, res){
   _getSinceId();
-  res.render('home', { title: 'Hot Air', slug: 'home' });
+  // res.render('home', { title: 'Hot Air', slug: 'home' });
+  res.render('play', { title: 'Hot Air', slug: 'play' });
 };
 
 exports.play = function(req, res) {
-	res.render('play', { title: 'Hot Air', slug: 'play' });
+	// res.render('play', { title: 'Hot Air', slug: 'play' });
+	res.redirect('/');
 }
 
 exports.survey = function(req, res) {

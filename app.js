@@ -103,7 +103,7 @@ function agent(req, res, next) {
 }
 
 
-app.get('/', routes.home);
+app.get('/', agent, auth, csrf, routes.home);
 app.get('/play', agent, auth, csrf, routes.play);
 
 // share services
