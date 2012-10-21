@@ -62,6 +62,14 @@ Crafty.scene("gameover", function() {
 			.attr({wrappingId: "GameOverNav"});
 				
 		gameOverMenu.addListItem({
+			text: "Play Again!",
+			callback: function(arg) {
+				HA.m.publish(HA.events.LOAD_SCENE, ["gameplay"]);
+				this.destroy();
+			}
+		});
+		
+		gameOverMenu.addListItem({
 			text: "Start Screen",
 			callback: function(arg) {
 				HA.m.publish(HA.events.LOAD_SCENE, ["start"]);
@@ -69,13 +77,6 @@ Crafty.scene("gameover", function() {
 			}
 		});
 		
-		gameOverMenu.addListItem({
-			text: "Play Again!",
-			callback: function(arg) {
-				HA.m.publish(HA.events.LOAD_SCENE, ["gameplay"]);
-				this.destroy();
-			}
-		});
 		
 		gameOverMenu.renderListNav();
 	}
