@@ -36,8 +36,8 @@ var npm_package = JSON.parse(fs.readFileSync('package.json'));
 console.log("npm_package", npm_package);
 console.log(ignition[0]);
 
-
-app.locals.app_version = npm_package.version;
+// removes minor versions added by nodejitsu deploy, i,e XX.XX.XX[-XX]
+app.locals.app_version = npm_package.version.split('-')[0];
 
 // var auth = express.basicAuth('notion', 'Madi50nW1'); 
 var auth = express.basicAuth(function(username, password) {
