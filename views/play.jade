@@ -58,7 +58,7 @@ html(lang="en")
 					p <a href="http://notioncollective.com" target="_blank">The Notion Collective</a> is an art-making group based in Brooklyn, NY.
 					
 			#HighScoresDisplay.modal
-				h1 High Scores!
+				h1 High scores!
 				.modal-inner
 					| loading...
 					
@@ -69,18 +69,21 @@ html(lang="en")
 						
 			// HIGH SCORES TEMPLATE
 			script(id='HighScoresTemplate',type='text/template')
-				| <div id="HighScores">	
-				|		<ol class="highscores">
-				|		<% _.each(highscores, function(highscore) { %>
-				|			<li class="<%= highscore.party %>"><i class="<%= highscore.party %>"></i><%= highscore.user %> (<%= highscore.party.toUpperCase() %>) - <%= highscore.score %></li>
-				|		<% }); %>
-				|		</ol>
-				|		<h2>Total Scores</h2>
-				|		<ul class="cum">
-				|			<li id="cumscore_d"><i class="d"></i><%= cumscore_d %></li>
-				|			<li id="cumscore_r"><i class="r"></i><%= cumscore_r %></li>
-				|		</ul>
-				| </div>
+				|	<h1><%= title %></h1>
+				|	<div class="modal-inner">
+				| 	<div id="HighScores">	
+				|			<ol class="highscores">
+				|			<% _.each(highscores, function(highscore) { %>
+				|				<li class="<%= highscore.party %>"><i class="<%= highscore.party %>"></i><%= highscore.user %> (<%= highscore.party.toUpperCase() %>) - <%= highscore.score %></li>
+				|			<% }); %>
+				|			</ol>
+				|			<h2>Total Scores</h2>
+				|			<ul class="cum">
+				|				<li id="cumscore_d"><i class="d"></i><%= cumscore_d %></li>
+				|				<li id="cumscore_r"><i class="r"></i><%= cumscore_r %></li>
+				|			</ul>
+				| 	</div>
+				|	</div>
 
 			// MESSAGE DISPLAY TEMPLATE
 			script(id='MessageDisplayTemplate',type='text/template')
