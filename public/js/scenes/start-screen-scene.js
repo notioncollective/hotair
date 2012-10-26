@@ -188,37 +188,17 @@ Crafty.scene("start", function() {
 	function createHighScoresMenu(scrn) {
 		highScoresMenuNav = Crafty.e('ListNav')
 			.attr({wrappingId: "HighScoresListNav"});		
-			
-		var scrn = scrn || 'daily',
-				tmpl_sel = "#HighScoresTemplate",
-				modal_title =  "High scores!",
-				endpoint = "/highscores";		
-
-		// determine which menu items to show
-		switch(scrn) {
-			case 'all-time': // show all-time highscores	
-				modal_title =  "All-time high scores!";		
-				highScoresMenuNav.addListItem({
-					text: "Daily",
-					callback: function() {
-						this.destroy();
-						createHighScoresMenu('daily');
-					}
-				});	
-				break;
-			case 'daily':  // daily high-scores
-				modal_title =  "Today's high scores!";
-				endpoint = "/highscores/daily";		
-				highScoresMenuNav.addListItem({
-					text: "All-time",
-					callback: function() {
-						this.destroy();
-						createHighScoresMenu('all-time');
-					}
-				});
-				break;
-		}
 		
+
+		
+		highScoresMenuNav.addListItem({
+			text: "Daily",
+			callback: function() { update_score_display('daily'); }
+		});	
+		highScoresMenuNav.addListItem({
+			text: "All-time",
+			callback: function() { update_score_display('all-time'); }
+		});
 		// always show this
 		highScoresMenuNav.addListItem({
 			text: "Ok!",
@@ -229,22 +209,43 @@ Crafty.scene("start", function() {
 			}
 		});		
 		
-		// get the data
-		HA.game.closeModals();
-		$("#HighScoresDisplay .modal-inner").html('<span class="loading">Loading...</span>');
-		$.getJSON(endpoint, function(resp) {
-					var temp = _.template($(tmpl_sel).html());
-					var tempHtml = temp({
-							title: modal_title,
-							highscores: resp.highscores,
-							cumscore_d: resp.stats.d,
-							cumscore_r: resp.stats.r
-					});
-					$("#HighScoresDisplay").html(tempHtml); 
-		});
-		HA.game.openModal("HighScoresDisplay");
 		
+		function update_score_display(scrn) {	
+			console.log("open modal score screen: ",scrn);
+			var scrn = scrn || 'daily',
+					tmpl_sel = "#HighScoresTemplate",
+					modal_title =  "High scores!",
+					endpoint = "/highscores";	
+					
+			// determine which menu items to show
+			switch(scrn) {
+				case 'all-time': // show all-time highscores	
+					modal_title =  "All-time high scores!";		
+					break;
+				case 'daily':  // daily high-scores
+					modal_title =  "Today's high scores!";
+					endpoint = "/highscores/daily";		
+					break;
+			}
+			
+			HA.game.closeModals();
+			$("#HighScoresDisplay .modal-inner").html('<span class="loading">Loading...</span>');
+			$.getJSON(endpoint, function(resp) {
+						var temp = _.template($(tmpl_sel).html());
+						var tempHtml = temp({
+								title: modal_title,
+								highscores: resp.highscores,
+								cumscore_d: resp.stats.d,
+								cumscore_r: resp.stats.r
+						});
+						$("#HighScoresDisplay").html(tempHtml); 
+			});
+			HA.game.openModal("HighScoresDisplay");			
+		};
+		
+		update_score_display('daily');
 		highScoresMenuNav.renderListNav();
+
 			
 	}
 
