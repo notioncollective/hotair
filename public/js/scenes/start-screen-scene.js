@@ -208,7 +208,7 @@ Crafty.scene("start", function() {
 				break;
 			case 'daily':  // daily high-scores
 				modal_title =  "Today's high scores!";
-				endpoint = "/daily_highscores";		
+				endpoint = "/highscores/daily";		
 				highScoresMenuNav.addListItem({
 					text: "All-time",
 					callback: function() {
@@ -224,6 +224,7 @@ Crafty.scene("start", function() {
 			text: "Ok!",
 			callback: function() {
 				this.destroy();
+				HA.game.closeModals();
 				createMainStartMenu();
 			}
 		});		

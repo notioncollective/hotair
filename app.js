@@ -147,10 +147,15 @@ app.get('/fetch_tweets', auth, routes.fetch_tweets);
 // app.get('/democrats', routes.democrats);
 // app.get('/republican', routes.republican);
 app.get('/load_tweets', routes.load_tweets);
+
+
+// highscores
 app.get('/highscores', routes.highscores);
+app.get('/highscores/:interval', routes.highscores); // daily, monthly, yearly, etc.
+app.post('/highscore', routes.highscore);
+
 
 // other POST endpoints
-app.post('/highscore', routes.highscore);
 app.post('/data', routes.data);
 
 // app.get('*', routes.notfound);

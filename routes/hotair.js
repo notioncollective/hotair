@@ -448,7 +448,16 @@ exports.republican = function(req, res) {
  */
 exports.highscores = function(req, res) {
 	
-	var data = {
+	var interval = req.params.interval || 'all-time',
+			scores_view = 'highscores',
+			r_stats_view = 'cumscore_r',
+			d_stats_view = 'cumscore_d',
+			hs_params = {
+				limit: 5,
+				descending: true
+			},
+			stats_params = {},
+			data = {
 				'stats': {
 					'r': null, // number
 					'd': null // number
@@ -484,11 +493,50 @@ exports.highscores = function(req, res) {
 			}
 			if(checkData()) res.send(JSON.stringify(data));			
 		}
+		
+	switch(interval) {
+		case 'all-time':
+			// stick with defaults
+			break;
+		case 'daily':
+			scores_view = 'highscores_by_timestamp';
+			r_stats_view = 'cumscore_r_by_day';
+			d_stats_view = 'cumscore_d_by_day';
+			stats_params.key = parseInt(Date.parse(new Date().toDateString())); // today at 12am
+			hs_params.endkey = [stats_params.key];
+			break;
+		default:
+			res.send(404, "Sorry, we can't find that!");
+			return;
+			break;
+	}
 	
-	db.view('hotair', 'cumscore_r', {limit: 5, descending: true}, handle_cumscore_r);
-	db.view('hotair', 'cumscore_d', {limit: 5, descending: true}, handle_cumscore_d);
-	db.view('hotair', 'highscores', {limit: 5, descending: true}, handle_highscores);
+	// aparently nano does some sort of manipulation on passed params,
+	// so need to clone stats_params so it isn't changed next time we pass it
+	db.view('hotair', d_stats_view, _.clone(stats_params), handle_cumscore_d);
+	db.view('hotair', r_stats_view, _.clone(stats_params), handle_cumscore_r);
+	db.view('hotair', scores_view, hs_params, handle_highscores);
 }
+
+/*
+ * Save a highscore
+ * POST
+ */
+exports.highscore = function(req, res) {
+	var data = req.body,
+		respBody = {};
+	console.log("highscore: ", data);
+	// db.save(data, function(db_err, db_res) {
+	db.insert(data, function(err, body, header) {
+		if (err) {
+			console.error("Error saving high score", err)
+			respBody.error = err;
+		} else {
+			respBody = body;
+		}
+		res.send(respBody);
+	});
+};
 
 exports.score = function(req, res) {
 	if(req.params.id) {
@@ -631,25 +679,7 @@ exports.share = function(req, res) {
 	}
 }
 
-/*
- * Save a highscore
- * POST
- */
-exports.highscore = function(req, res) {
-	var data = req.body,
-		respBody = {};
-	console.log("highscore: ", data);
-	// db.save(data, function(db_err, db_res) {
-	db.insert(data, function(err, body, header) {
-		if (err) {
-			console.error("Error saving high score", err)
-			respBody.error = err;
-		} else {
-			respBody = body;
-		}
-		res.send(respBody);
-	});
-};
+
 
 /**
  * Save a data point to the db and to google analytics
