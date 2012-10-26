@@ -15,11 +15,18 @@ Crafty.c("Dart", {
 		this.addComponent("2D, DOM, Color, Collision, Party");
 		this.setPartySpriteTemplate('%p_dartx2');
 		
-		this.w = 10;
-		this.h = 20;
+		this.w = 40;
+		this.h = 40;
 		this.dy = 1;
 		this.ay = .2;
-				
+
+		this.collision(new Crafty.polygon([
+			[15, 10],
+			[this.w-15, 10],
+			[this.w-15, this.h-10],
+			[15, this.h-10]
+		]));
+		
 		/**
 		 * Trigger the ENEMY_HIT event.
 		 */
@@ -30,6 +37,8 @@ Crafty.c("Dart", {
 			HA.m.publish(HA.e.ENEMY_HIT_START, [e[0].obj]);
 			this.destroy();
 		});
+		
+		
 		
 		this.bind("EnterFrame", function() {
 			this.y += this.dy;

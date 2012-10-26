@@ -25,6 +25,16 @@ Crafty.c("Enemy", {
 			.animate("normal", 0, 2, 15)		
 			.animate("normal", this.BALLOON_DURATION, -1)			
 
+
+		this.collision(new Crafty.polygon([
+			[20,40],
+			[this.w/4,10],
+			[this.w/2, 0],
+			[3*(this.w/4),10],
+			[this.w-20,40],
+			[this.w/2, this.h],
+		]));
+		
 		this.startMovement();
 		
 	},
