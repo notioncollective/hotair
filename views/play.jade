@@ -121,7 +121,7 @@ html(lang="en")
 			script(id='HighScoreFormDisplayTemplate',type='text/template')
 				|	<div id="HighScoreFormDisplay">
 				|		<div id="NewHighscore">
-				|			<h3>New High Score!</h3>
+				|			<h3>New <%= type %> High Score!</h3>
 				|			<h2><%= score %></h2>
 				|			<label for='gameover-name'>Enter your initials:</label>
 				|			<div><input id="gameover-name" type='text' maxlength='3' size="3" /></div>

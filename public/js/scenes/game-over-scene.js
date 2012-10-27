@@ -21,19 +21,36 @@ Crafty.scene("gameover", function() {
 	
 	HA.m.subscribe(HA.e.SCORE_SAVED_TO_DB, handleScoreSavedEvent);
 	
-	HA.game.fetchHighScores(function() {
-			console.log("Fetched high scores");
-			if(HA.game.isHighScore(score)) {
-				console.log("High score! ", score);
-				createHighScoreForm();
-			} else {
-				console.log("Not high score");
-				if(score > 0) HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
-				createGameOverMenu();		
+	// the check endpoint tells you how many scores are higher
+	// than yours for each score interval
+	$.getJSON('/highscores/check/'+score, function(resp) {
+		console.log("highscore check returned fetched", resp);
+		
+		// goes through the highscore types in order and
+		// checks to see if you have one
+		var resp = resp;
+				score_checks = ['all-time', 'daily'];		
+		_.each(score_checks, function(interval) {
+			if(!_.isUndefined(resp[interval]) && resp[interval] < 5) {
+				createHighScoreForm(interval);
+				return;
 			}
-	}, this)
+		});
+	});
+	
+	// HA.game.fetchHighScores(function() {
+			// console.log("Fetched high scores");
+			// if(HA.game.isHighScore(score)) {
+				// console.log("High score! ", score);
+				// createHighScoreForm();
+			// } else {
+				// console.log("Not high score");
+				// if(score > 0) HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
+				// createGameOverMenu();		
+			// }
+	// }, this)
 
-	function createHighScoreForm() {
+	function createHighScoreForm(interval) {
 		highScoreFormMenu = Crafty.e("ListNav")
 			.attr({wrappingId: "HighScoreFormNav"});
 			
@@ -51,7 +68,7 @@ Crafty.scene("gameover", function() {
 		highScoreFormMenu.renderListNav();
 
 		highScoreForm = Crafty.e("HighScoreFormDisplay");
-		highScoreForm.updateContent({score:score});
+		highScoreForm.updateContent({score:score, type:interval});
 		highScoreForm.showHighScoreFormDisplay();
 		$("#gameover-name").focus();
 	}
