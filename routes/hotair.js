@@ -9,7 +9,9 @@ var nano = require('nano')(nano_url)
 	, Q = require('q')
 	, useragent = require('useragent')
 	, querystring = require('querystring')
-	, nodemailer = require("nodemailer");
+	, nodemailer = require("nodemailer")
+	, hash = require("node_hash")
+	, uuid = require("node-uuid");
   
 var	db = nano.use('hotair'),
 	T = new Twit({
@@ -196,6 +198,7 @@ function _sendEmail(data, callback, context) {
  */
 
 exports.home = function(req, res){
+	console.log("session: ", req.session);
   _getSinceId();
   // res.render('home', { title: 'Hot Air', slug: 'home' });
   res.render('play', { title: 'Hot Air', slug: 'play' });
@@ -637,9 +640,21 @@ exports.share = function(req, res) {
  */
 exports.highscore = function(req, res) {
 	var data = req.body,
-		respBody = {};
+		respBody = {},
+		sess = req.session;
 	console.log("highscore: ", data);
-	// db.save(data, function(db_err, db_res) {
+	console.log("session: ", sess);
+	
+	// make sure there is an active game in this session, and that the hit count matches the expected (in session's game object)
+	if(!sess.game || (data.hits !== sess.game.hitCount+1 && data.hits !== sess.game.hitCount)) {
+		res.send({"error": "Error saving score."});
+		return;
+	}
+	
+		// add IP address and user_token
+	data.user_token = sess.user_token;
+	data.ip = req.ip;
+	
 	db.insert(data, function(err, body, header) {
 		if (err) {
 			console.error("Error saving high score", err)
@@ -647,6 +662,7 @@ exports.highscore = function(req, res) {
 		} else {
 			respBody = body;
 		}
+		delete sess.game;
 		res.send(respBody);
 	});
 };
@@ -658,13 +674,57 @@ exports.highscore = function(req, res) {
  */
 exports.data = function(req, res) {
 	var data = req.body,
-		respBody = {};
+		respBody = {},
+		sess = req.session;
+	
+	// add IP address and user_token
+	data.user_token = sess.user_token;
+	data.ip = req.ip;
+	
+	// if this is a "hit", add to session game.
+	if(data.type === "hit") {
+		sess.game.hitCount += 1;
+	}
+	
 	console.log("data: ", data);
 	// db.save(data, function(db_err, db_res) {
 	db.insert(data, function(db_err, db_res) {
 		if (db_err) {
 			console.error("Error saving data", db_err)
 			respBody.error = db_err;
+		} else {
+			respBody.success = true;
+		}
+		res.send(respBody);
+	});
+}
+
+
+/**
+ * Create a new game object in the db
+ * @param {Object} req
+ * @param {Object} res
+ */
+exports.startGame = function(req, res) {
+	var 
+		sess = req.session,
+		data = req.body,
+		game_id = uuid.v1(),
+		data = {
+			_id: game_id,
+			type: "game",
+			timestamp: Date.now(),
+			party: data.party,
+			user_token: sess.user_token,
+			ip: req.ip
+		},
+		respBody = {};
+	sess.game = {"_id":game_id, hitCount: 0};
+	// db.save(data, function(db_err, db_res) {
+	db.insert(data, function(db_err, db_res) {
+		if (db_err) {
+			console.error("Error saving data", db_err)
+			respBody.error = true;
 		} else {
 			respBody.success = true;
 		}

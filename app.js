@@ -20,7 +20,8 @@ var express = require('express')
   , nano = require('nano')
   , useragent = require('useragent')
   , fs = require('fs')
-  , cronJob = require('cron').CronJob;
+  , cronJob = require('cron').CronJob
+  , uuid = require('node-uuid');
 
 
 // Cron Job to go grab new tweets every 5 minutes.
@@ -122,8 +123,16 @@ function agent(req, res, next) {
 	} else next();
 }
 
+// generate a uuid for this session (i.e. user, in our terms)
+function user_token(req, res, next) {
+	var sess = req.session;
+	if(sess && !sess.user_token) {
+		sess.user_token = uuid.v1();
+	}
+	next();
+}
 
-app.get('/', agent, csrf, routes.home);
+app.get('/', agent, csrf, user_token, routes.home);
 app.get('/play', agent, csrf, routes.play);
 app.get('/score/:id', routes.score);
 app.get('/notsupported', routes.notsupported);
@@ -152,6 +161,7 @@ app.get('/highscores', routes.highscores);
 // other POST endpoints
 app.post('/highscore', routes.highscore);
 app.post('/data', routes.data);
+app.post('/start', routes.startGame);
 
 // app.get('*', routes.notfound);
 

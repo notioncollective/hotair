@@ -19,6 +19,7 @@ HA.game = function(ns, $, _, C) {
 			_highScores,
 			_scoreObj,
 			_cacheBuster,
+			_gameHitCount = 0,
 			_muted = false;
 
 	// private methods
@@ -111,8 +112,29 @@ HA.game = function(ns, $, _, C) {
 		C.settings.modify("autoPause", true);
 		_bindGameplayKeyboardEvents();
 		_state = 1;
+		_gameHitCount = 0;
+		_initNewGame();
 		HA.m.publish(HA.e.START_LEVEL, [_level]);
 	}
+	
+	function _initNewGame() {
+		var token = HA.getCsrfToken();
+		$.ajax({
+			url : "/start",
+			type : "post",
+			contentType : "application/json",
+			data : JSON.stringify({
+				party: HA.player.getParty()
+			}),
+			success : function(resp) {
+				if(resp.success) {
+					console.log("Game Started!");
+				} else {
+					console.error("error starting game");
+				} 	
+			}
+		});
+	} 
 	
 	/**
 	 * Handles GAME_OVER event.
@@ -314,6 +336,7 @@ HA.game = function(ns, $, _, C) {
 			C.audio.play('hit_good');
 		}
 		
+		_gameHitCount += 1;
 		_saveData(data);
 		
 		HA.m.publish(HA.e.ENEMY_HIT_COMPLETE, [enemy, scoreInc]);
@@ -498,6 +521,7 @@ HA.game = function(ns, $, _, C) {
 				user : initials,
 				score : score,
 				party : party,
+				hits: _gameHitCount,
 				timestamp: Date.now()
 			}),
 			success : function(resp) {
