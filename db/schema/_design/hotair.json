@@ -1,41 +1,47 @@
 {
    "_id": "_design/hotair",
    "views": {
-       "since_id": {
-           "map": "function(doc) {\nif(doc.type === 'tweet') emit(parseInt(doc._id), parseInt(doc.id));\n}",
-           "reduce": "_stats"
-       },
-       "democrats": {
-           "map": "function(doc) {\n  if(doc.type === 'tweet' && doc.party === \"democrats\") emit(doc.id, {\"name\": doc.user.name, \"screen_name\": doc.user.screen_name, \"party\": \"d\", \"text\": doc.text});\n}"
-       },
-       "republican": {
-           "map": "function(doc) {\n  if(doc.type === 'tweet' && doc.party === \"republican\") emit(doc.id, {\"name\": doc.user.name, \"screen_name\": doc.user.screen_name, \"party\": \"r\", \"text\": doc.text});\n}"
-       },
-       "all_tweets": {
-           "map": "function(doc) {\nif(doc.type === 'tweet') emit(doc.id, {\"name\": doc.user.name, \"screen_name\": doc.user.screen_name, \"party\": doc.party, \"text\": doc.text});\n}"
-       },
-       "highscores": {
-           "map": "function(doc) {\n  if(doc.type === 'score') emit([doc.score, doc.timestamp], {user: doc.user, score: doc.score, party: doc.party, timestamp: doc.timestamp});\n}"
-       },
-       "cumscore_r": {
-           "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'r') emit(parseInt(doc.score), parseInt(doc.score));\n}",
-           "reduce": "_sum"
-       },
-       "cumscore_d": {
-           "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'd') emit(parseInt(doc.score), parseInt(doc.score));\n}",
-           "reduce": "_sum"
-       },
-       "highscores_by_timestamp": {
-           "map": "function(doc) {\n  if(doc.type === 'score') emit([doc.timestamp, doc.score], {user: doc.user, score: doc.score, party: doc.party, timestamp: doc.timestamp});\n}"
-       },
-       "cumscore_d_by_day": {
-           "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'd') emit(Date.parse(new Date(doc.timestamp).toDateString()), parseInt(doc.score));\n}",
-           "reduce": "_sum"
-       },
-       "cumscore_r_by_day": {
-           "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'r') emit(Date.parse(new Date(doc.timestamp).toDateString()), parseInt(doc.score));\n}",
-           "reduce": "_sum"
-       }
+   "since_id": {
+       "map": "function(doc) {\nif(doc.type === 'tweet') emit(parseInt(doc._id), parseInt(doc.id));\n}",
+       "reduce": "_stats"
    },
+   "democrats": {
+       "map": "function(doc) {\n  if(doc.type === 'tweet' && doc.party === \"democrats\") emit(doc.id, {\"name\": doc.user.name, \"screen_name\": doc.user.screen_name, \"party\": \"d\", \"text\": doc.text});\n}"
+   },
+   "republican": {
+       "map": "function(doc) {\n  if(doc.type === 'tweet' && doc.party === \"republican\") emit(doc.id, {\"name\": doc.user.name, \"screen_name\": doc.user.screen_name, \"party\": \"r\", \"text\": doc.text});\n}"
+   },
+   "all_tweets": {
+       "map": "function(doc) {\nif(doc.type === 'tweet') emit(doc.id, {\"name\": doc.user.name, \"screen_name\": doc.user.screen_name, \"party\": doc.party, \"text\": doc.text});\n}"
+   },
+   "highscores": {
+       "map": "function(doc) {\n  if(doc.type === 'score' && doc.score > 0) emit([doc.score, Date.parse(new Date(doc.timestamp).toDateString()), doc.timestamp], {user: doc.user, score: doc.score, party: doc.party, timestamp: doc.timestamp});\n}",
+       "reduce": "_count"
+   },
+   "cumscore_r": {
+       "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'r') emit(parseInt(doc.score), parseInt(doc.score));\n}",
+       "reduce": "_sum"
+   },
+   "cumscore_d": {
+       "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'd') emit(parseInt(doc.score), parseInt(doc.score));\n}",
+       "reduce": "_sum"
+   },
+   "highscores_by_timestamp": {
+       "map": "function(doc) {\n  if(doc.type === 'score' && doc.score > 0) emit([Date.parse(new Date(doc.timestamp).toDateString()), doc.score, doc.timestamp], {user: doc.user, score: doc.score, party: doc.party, timestamp: doc.timestamp});\n}",
+       "reduce": "_count"
+   },
+   "cumscore_d_by_day": {
+       "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'd') emit(Date.parse(new Date(doc.timestamp).toDateString()), parseInt(doc.score));\n}",
+       "reduce": "_sum"
+   },
+   "cumscore_r_by_day": {
+       "map": "function(doc) {\n  if(doc.type === 'score' && doc.party === 'r') emit(Date.parse(new Date(doc.timestamp).toDateString()), parseInt(doc.score));\n}",
+       "reduce": "_sum"
+   },
+   "cumscore": {
+       "map": "function(doc) {\n  if(doc.type === 'score') emit([doc.party, Date.parse(new Date(doc.timestamp).toDateString())], parseInt(doc.score));\n}",
+       "reduce": "_sum"
+   }
+},
    "language": "javascript"
 }

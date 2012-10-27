@@ -191,8 +191,52 @@ function _sendEmail(data, callback, context) {
 	smtp.sendMail(options, function(err, res){ callback.apply(context, [err, res]); });
 }
 
+function _checkHighScore(score, interval) {
+	if(!_.isNumber(score) || !_.isString(interval)) throw new Error("Illegal arguments in _checkHighScore");
+	
+	console.log("_checkHighScore", score, interval);
+	var deferred = Q.defer(),
+			today = Date.parse(new Date().toDateString()),
+			scores_view = 'highscores',
+			params = {
+				reduce: true,
+				group: false,
+				descending: true
+			};
+			
+	switch(interval) {
+		case 'all-time':
+			params.endkey = [score+1];
+			break;
+		case 'daily':
+			scores_view = 'highscores_by_timestamp';
+			params.endkey = [parseInt(today),score+1];
+			break
+	}
+	
+	function handle_db_response(err, body) {
+		console.log("handle_db_response");
+		if(err) {
+			console.error("error checking score");			
+			deferred.reject(err);
+		}
+		console.log("check high scores resp body", body);
+		if(body && body.rows) {
+			var value = (body.rows.length < 1) ? 0 : body.rows[0].value;
+			deferred.resolve(value);				
+		} else deferred.reject("unable to parse db response");
+	};
+	
+	
+	db.view('hotair', scores_view, _.clone(params), handle_db_response);	
+	
+	return deferred.promise;
+}
+
 function _getHighScores(interval) {
 	if(!_.isString(interval)) throw new Error("must pass interval to _getHighScores");
+
+	console.log("_getHighScores: ", interval);
 
 	var q = Q.defer(),
 			cumscore_q = Q.defer(),
@@ -202,7 +246,8 @@ function _getHighScores(interval) {
 			stats_view = 'cumscore',
 			highscores_params = {
 				limit: 5,
-				descending: true
+				descending: true,
+				reduce: false
 			},
 			stats_params = {},
 			response = {};
@@ -224,7 +269,11 @@ function _getHighScores(interval) {
 	
 	// deferred functions	
 	function handle_cumscore(err, body) {
-		if(err) cumscore_q.reject(err);
+		console.log("handle_cumscore");
+		if(err) {
+			console.error("error getting cumscores from couchdb");			
+			cumscore_q.reject(err);
+		}
 		if(body && body.rows) {
 			cumscore_q.resolve(body.rows);
 		}
@@ -232,7 +281,11 @@ function _getHighScores(interval) {
 	};
 	
 	function handle_highscores(err, body) {
-		if(err) highscores_q.reject(err);
+		console.log("handle_highscores");
+		if(err) {
+			console.error("error getting highscores from couchdb");
+			highscores_q.reject(err);
+		}
 	  if(body && body.rows) {
 			highscores_q.resolve(body.rows);
 		}
@@ -256,8 +309,9 @@ function _getHighScores(interval) {
 	.then(function(promises) { q.resolve(response); });
 	
 	// couchdb calls
-	db.view('hotair', stats_view, stats_params, handle_cumscore);
-	db.view('hotair', scores_view, highscores_params, handle_highscores);
+	console.log("stats_params", stats_params);
+	db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
+	db.view('hotair', scores_view, _.clone(highscores_params), handle_highscores);
 	
 	return q.promise;
 }
@@ -512,6 +566,17 @@ exports.republican = function(req, res) {
 		// 	   	console.log("out", out);
 		// res.send(out);
 	});
+}
+
+exports.check_highscore = function(req, res) {
+	console.log("check_highscore");
+	var allowed = ['all-time', 'daily'],
+			interval = _.indexOf(allowed, req.params.interval) >= 0 ? req.params.interval : undefined;
+	if(interval && req.params.score) {
+		_checkHighScore(parseInt(req.params.score), interval)
+			.then(function(n) { res.send(JSON.stringify(n)); })
+			.fail(function(error) { console.error(error); })		
+	}	
 }
 
 /**

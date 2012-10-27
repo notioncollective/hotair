@@ -150,8 +150,10 @@ app.get('/load_tweets', routes.load_tweets);
 
 
 // highscores
-app.get('/highscores', routes.highscores);
+app.get('/highscores/check/:interval/:score', routes.check_highscore);
+app.get('/highscores/check/:score', routes.check_highscore);
 app.get('/highscores/:interval', routes.highscores); // daily, monthly, yearly, etc.
+app.get('/highscores', routes.highscores);
 app.post('/highscore', routes.highscore);
 
 
