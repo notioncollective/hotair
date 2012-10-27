@@ -215,7 +215,7 @@ Crafty.scene("start", function() {
 			var scrn = scrn || 'daily',
 					tmpl_sel = "#HighScoresTemplate",
 					modal_title =  "High scores!",
-					endpoint = "/highscores";	
+					endpoint = "/highscores/all-time";	
 					
 			// determine which menu items to show
 			switch(scrn) {

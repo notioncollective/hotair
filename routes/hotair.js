@@ -191,6 +191,77 @@ function _sendEmail(data, callback, context) {
 	smtp.sendMail(options, function(err, res){ callback.apply(context, [err, res]); });
 }
 
+function _getHighScores(interval) {
+	if(!_.isString(interval)) throw new Error("must pass interval to _getHighScores");
+
+	var q = Q.defer(),
+			cumscore_q = Q.defer(),
+			highscores_q = Q.defer(),
+			today = Date.parse(new Date().toDateString()),
+			scores_view = 'highscores',
+			stats_view = 'cumscore',
+			highscores_params = {
+				limit: 5,
+				descending: true
+			},
+			stats_params = {},
+			response = {};
+	
+	switch(interval) {
+		case 'all-time':
+			stats_params.group_level = 1;
+			break;
+		case 'daily':
+			scores_view = 'highscores_by_timestamp';
+			stats_params.group = true;
+			stats_params.keys = [["d",parseInt(today)],["r",parseInt(today)]];
+			highscores_params.endkey = [parseInt(today)];
+			break;
+		default:
+			throw new Error("Invalid high score interval");
+			break;
+	}
+	
+	// deferred functions	
+	function handle_cumscore(err, body) {
+		if(err) cumscore_q.reject(err);
+		if(body && body.rows) {
+			cumscore_q.resolve(body.rows);
+		}
+		return cumscore_q.promise;
+	};
+	
+	function handle_highscores(err, body) {
+		if(err) highscores_q.reject(err);
+	  if(body && body.rows) {
+			highscores_q.resolve(body.rows);
+		}
+		return highscores_q.promise;
+	}	
+		
+	Q.when(highscores_q.promise, function(data){
+		response.highscores = _.map(data, function(obj) {
+			return obj.value;
+		});
+	});
+		
+	Q.when(cumscore_q.promise, function(data){
+		response.stats = {};		
+		_.each(data, function(obj){
+			response.stats[obj.key[0]] = obj.value;
+		});
+	});
+	
+	Q.allResolved(cumscore_q.promise, highscores_q.promise)
+	.then(function(promises) { q.resolve(response); });
+	
+	// couchdb calls
+	db.view('hotair', stats_view, stats_params, handle_cumscore);
+	db.view('hotair', scores_view, highscores_params, handle_highscores);
+	
+	return q.promise;
+}
+
 /*
  * GET home page.
  */
@@ -447,75 +518,31 @@ exports.republican = function(req, res) {
  * Get a list of highscores
  */
 exports.highscores = function(req, res) {
-	
-	var interval = req.params.interval || 'all-time',
-			scores_view = 'highscores',
-			r_stats_view = 'cumscore_r',
-			d_stats_view = 'cumscore_d',
-			hs_params = {
-				limit: 5,
-				descending: true
-			},
-			stats_params = {},
-			data = {
-				'stats': {
-					'r': null, // number
-					'd': null // number
-				},
-				'highscores': null // array
-		},
-		checkData = function() {
-			return (_.isNumber(data.stats.r) 
-							&& _.isNumber(data.stats.d)
-							&& _.isArray(data.highscores));
-		},
-		handle_cumscore_r = function(err, resp) {
-			if(err) console.error("Error loading republican cumulateive score from db", err);
-			if(resp && resp.rows) {
-				data.stats.r = resp.rows.length > 0 ? parseInt(resp.rows[0].value) : 0;
-			}
-			if(checkData()) res.send(JSON.stringify(data));
-		},
-		handle_cumscore_d = function(err, resp) {
-			if(err) console.error("Error loading democrat cumulateive score from db", err);
-			if(resp && resp.rows) {
-				data.stats.d =  resp.rows.length > 0 ? parseInt(resp.rows[0].value) : 0;
-			}
-			if(checkData()) res.send(JSON.stringify(data));			
-		},
-		handle_highscores = function(err, resp) {
-			if(err) console.error("Error loading highscores from db", err);
-		  if(resp && resp.rows) {
-		  	data.highscores = [];
-				resp.rows.forEach(function(row) {
-		   	  data.highscores.push(row.value);	
-		   	});
-			}
-			if(checkData()) res.send(JSON.stringify(data));			
-		}
+	// console.log("req.params.interval",req.params.interval);
+	var allowed = ['all-time', 'daily'],
+			interval = _.indexOf(allowed, req.params.interval) >= 0 ? req.params.interval : undefined;
+	// console.log("interval",interval);
+	if(interval) {
+		_getHighScores(interval)
+			.then(function(data) { res.send(JSON.stringify(data)); })
+			.fail(function(error) { console.error(error); })
+	} else {
+		var deferred = Q.defer(),
+				promises = [],
+				all_scores = {};
+		_.each(allowed, function(value){
+			promises.push(_getHighScores(value));
+			Q.when(promises[promises.length-1], function(data){
+				all_scores[value] = data;
+			})
+		})
 		
-	switch(interval) {
-		case 'all-time':
-			// stick with defaults
-			break;
-		case 'daily':
-			scores_view = 'highscores_by_timestamp';
-			r_stats_view = 'cumscore_r_by_day';
-			d_stats_view = 'cumscore_d_by_day';
-			stats_params.key = parseInt(Date.parse(new Date().toDateString())); // today at 12am
-			hs_params.endkey = [stats_params.key];
-			break;
-		default:
-			res.send(404, "Sorry, we can't find that!");
-			return;
-			break;
+		Q.allResolved(promises)
+		.then(function(){
+			res.send(JSON.stringify(all_scores));
+		});
 	}
-	
-	// aparently nano does some sort of manipulation on passed params,
-	// so need to clone stats_params so it isn't changed next time we pass it
-	db.view('hotair', d_stats_view, _.clone(stats_params), handle_cumscore_d);
-	db.view('hotair', r_stats_view, _.clone(stats_params), handle_cumscore_r);
-	db.view('hotair', scores_view, hs_params, handle_highscores);
+
 }
 
 /*
