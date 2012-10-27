@@ -576,7 +576,22 @@ exports.check_highscore = function(req, res) {
 		_checkHighScore(parseInt(req.params.score), interval)
 			.then(function(n) { res.send(JSON.stringify(n)); })
 			.fail(function(error) { console.error(error); })		
-	}	
+	}	else if(req.params.score) {
+		var deferred = Q.defer(),
+				promises = [],
+				all_checks = {};
+		_.each(allowed, function(value){
+			promises.push(_checkHighScore(parseInt(req.params.score), value));
+			Q.when(promises[promises.length-1], function(n){
+				all_checks[value] = n;
+			})
+		})
+		
+		Q.allResolved(promises)
+		.then(function(){
+			res.send(JSON.stringify(all_checks));
+		});		
+	}
 }
 
 /**
