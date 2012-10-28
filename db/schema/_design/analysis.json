@@ -1,0 +1,10 @@
+{
+   "_id": "_design/analysis",
+   "_rev": "1-77bb395a59a467bc9ab0740b594ab585",
+   "language": "javascript",
+   "views": {
+       "docs_from_the_future": {
+           "map": "function(doc) {\n  if(doc.timestamp && parseInt(doc.timestamp) > Date.now()) emit(new Date(doc.timestamp).toDateString(), doc);\n}"
+       }
+   }
+}

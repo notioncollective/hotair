@@ -18,7 +18,7 @@
            "map": "function(doc) {\n  if(doc.type === 'score' && doc.score > 0) emit([doc.score, Date.parse(new Date(doc.timestamp).toDateString()), doc.timestamp], {user: doc.user, score: doc.score, party: doc.party, timestamp: doc.timestamp});\n}",
            "reduce": "_count"
        },
-       "highscores_by_timestamp": {
+       "highscores_by_day": {
            "map": "function(doc) {\n  if(doc.type === 'score' && doc.score > 0) emit([Date.parse(new Date(doc.timestamp).toDateString()), doc.score, doc.timestamp], {user: doc.user, score: doc.score, party: doc.party, timestamp: doc.timestamp});\n}",
            "reduce": "_count"
        },
