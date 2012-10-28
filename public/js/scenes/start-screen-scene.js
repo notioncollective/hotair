@@ -193,11 +193,11 @@ Crafty.scene("start", function() {
 		
 		highScoresMenuNav.addListItem({
 			text: "Daily",
-			callback: function() { update_score_display('daily'); }
+			callback: function() { updateScoreDisplay('daily'); }
 		});	
 		highScoresMenuNav.addListItem({
 			text: "All-time",
-			callback: function() { update_score_display('all-time'); }
+			callback: function() { updateScoreDisplay('all-time'); }
 		});
 		// always show this
 		highScoresMenuNav.addListItem({
@@ -208,46 +208,44 @@ Crafty.scene("start", function() {
 				createMainStartMenu();
 			}
 		});		
-		
-		
-		function update_score_display(scrn) {	
-			console.log("open modal score screen: ",scrn);
-			var scrn = scrn || 'daily',
-					tmpl_sel = "#HighScoresTemplate",
-					modal_title =  "High scores!",
-					endpoint = "/highscores/all-time";	
-					
-			// determine which menu items to show
-			switch(scrn) {
-				case 'all-time': // show all-time highscores	
-					modal_title =  "All-time high scores!";		
-					break;
-				case 'daily':  // daily high-scores
-					modal_title =  "Today's high scores!";
-					endpoint = "/highscores/daily";		
-					break;
-			}
-			
-			HA.game.closeModals();
-			$("#HighScoresDisplay .modal-inner").html('<span class="loading">Loading...</span>');
-			$.getJSON(endpoint, function(resp) {
-						var temp = _.template($(tmpl_sel).html());
-						var tempHtml = temp({
-								title: modal_title,
-								highscores: resp.highscores,
-								cumscore_d: resp.stats.d,
-								cumscore_r: resp.stats.r
-						});
-						$("#HighScoresDisplay").html(tempHtml); 
-			});
-			HA.game.openModal("HighScoresDisplay");			
-		};
-		
-		update_score_display('daily');
+				
+		updateScoreDisplay('daily');
 		highScoresMenuNav.renderListNav();
-
-			
 	}
+
+
+	function updateScoreDisplay(scrn) {	
+		console.log("open modal score screen: ",scrn);
+		var scrn = scrn || 'daily',
+				tmpl_sel = "#HighScoresTemplate",
+				modal_title =  "High scores!",
+				endpoint = "/highscores/all-time";	
+				
+		// determine which menu items to show
+		switch(scrn) {
+			case 'all-time': // show all-time highscores	
+				modal_title =  "All-time high scores!";		
+				break;
+			case 'daily':  // daily high-scores
+				modal_title =  "Today's high scores!";
+				endpoint = "/highscores/daily";		
+				break;
+		}
+		
+		$("#HighScoresDisplay .modal-inner").html('<span class="loading">Loading...</span>');
+		$.getJSON(endpoint, function(resp) {
+					var temp = _.template($(tmpl_sel).html()),
+							tempHtml = temp({
+									title: modal_title,
+									highscores: resp.highscores,
+									cumscore_d: resp.stats.d,
+									cumscore_r: resp.stats.r
+							});
+					HA.game.closeModals();
+					$("#HighScoresDisplay").html(tempHtml);
+					HA.game.openModal("HighScoresDisplay");			
+		});
+	};	
 
 	function createCloseMenu(selectParty) {
 		closeMenuNav = Crafty.e('ListNav')

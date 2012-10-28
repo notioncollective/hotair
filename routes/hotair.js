@@ -281,6 +281,9 @@ function _getHighScores(interval) {
 			cumscore_q.reject(err);
 		}
 		if(body && body.rows) {
+			_.each(body.rows, function(obj){
+				response.stats[obj.key[0]] = obj.value;
+			});
 			cumscore_q.resolve(body.rows);
 		}
 		return cumscore_q.promise;
@@ -293,30 +296,34 @@ function _getHighScores(interval) {
 			highscores_q.reject(err);
 		}
 	  if(body && body.rows) {
+			response.highscores = _.map(body.rows, function(obj) {
+				return obj.value;
+			});
 			highscores_q.resolve(body.rows);
+			db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
 		}
 		return highscores_q.promise;
 	}	
 		
 	Q.when(highscores_q.promise, function(data){
-		response.highscores = _.map(data, function(obj) {
-			return obj.value;
-		});
+		console.log("highscores resolved", data);
 	});
 		
 	Q.when(cumscore_q.promise, function(data){
-		_.each(data, function(obj){
-			response.stats[obj.key[0]] = obj.value;
-		});
+		console.log("cumscores resolved", data);
 	});
 	
 	Q.allResolved(cumscore_q.promise, highscores_q.promise)
-	.then(function(promises) { q.resolve(response); });
+	.then(function(promises) {
+		console.log("all resolved");
+		q.resolve(response);
+	});
 	
 	// couchdb calls
 	console.log("stats_params", stats_params);
-	db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
 	db.view('hotair', scores_view, _.clone(highscores_params), handle_highscores);
+	// db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
+
 	
 	return q.promise;
 }
