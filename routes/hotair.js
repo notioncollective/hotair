@@ -250,7 +250,13 @@ function _getHighScores(interval) {
 				reduce: false
 			},
 			stats_params = {},
-			response = {};
+			response = {
+				"stats" : {
+					"d" : 0,
+					"r" : 0
+				},
+				"highscores": []
+			};
 	
 	switch(interval) {
 		case 'all-time':
@@ -299,7 +305,6 @@ function _getHighScores(interval) {
 	});
 		
 	Q.when(cumscore_q.promise, function(data){
-		response.stats = {};		
 		_.each(data, function(obj){
 			response.stats[obj.key[0]] = obj.value;
 		});

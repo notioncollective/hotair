@@ -73,9 +73,13 @@ html(lang="en")
 				|	<div class="modal-inner">
 				| 	<div id="HighScores">	
 				|			<ol class="highscores">
+				|			<% if(highscores && highscores.length>0) { %>
 				|			<% _.each(highscores, function(highscore) { %>
 				|				<li class="<%= highscore.party %>"><i class="<%= highscore.party %>"></i><%= highscore.user %> (<%= highscore.party.toUpperCase() %>) - <%= highscore.score %></li>
 				|			<% }); %>
+				|			<% } else { %>
+				|				<li class="no-scores">This could be you!</li>
+				|			<% } %>
 				|			</ol>
 				|			<h2>Total Scores</h2>
 				|			<ul class="cum">
