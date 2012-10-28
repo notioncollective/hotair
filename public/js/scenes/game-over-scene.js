@@ -46,6 +46,7 @@ Crafty.scene("gameover", function() {
 			
 			if(!showHighScoreForm && score > 0) {
 				HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
+				createGameOverMenu();
 			}
 		});
 	} else createGameOverMenu();
@@ -73,6 +74,7 @@ Crafty.scene("gameover", function() {
 				HA.m.publish(HA.e.SAVE_SCORE, [initials, score]);
 				highScoreForm.destroy();
 				createGameOverMenu();
+				messageDisplay.flashMessage("Saving score of "+score);
 				this.destroy();
 			}
 		});
@@ -122,7 +124,7 @@ Crafty.scene("gameover", function() {
    }
 
 	function handleSavingScoreEvent(e, initials, score) {
-			messageDisplay.flashMessage("Saving score of "+score);
+			// messageDisplay.flashMessage("Saving score of "+score);
 	}
 	
 }, function() {
