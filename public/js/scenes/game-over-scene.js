@@ -14,29 +14,41 @@ Crafty.scene("gameover", function() {
 		// isHighscore = HA.game.isHighScore(score), // hard coded for the moment 
 		gameOverDisplay, 
 		gameOverMenu, 
-		highScoreForm;
+		highScoreForm,
+		messageDisplay = Crafty.e("MessageDisplay");
+
 	
 	gameOverDisplay = Crafty.e("GameOverDisplay");
 	gameOverDisplay.showGameOverDisplay();
 	
 	HA.m.subscribe(HA.e.SCORE_SAVED_TO_DB, handleScoreSavedEvent);
+	HA.m.subscribe(HA.e.SAVE_SCORE, handleSavingScoreEvent)
 	
 	// the check endpoint tells you how many scores are higher
 	// than yours for each score interval
-	$.getJSON('/highscores/check/'+score, function(resp) {
-		console.log("highscore check returned fetched", resp);
-		
-		// goes through the highscore types in order and
-		// checks to see if you have one
-		var resp = resp;
-				score_checks = ['all-time', 'daily'];		
-		_.each(score_checks, function(interval) {
-			if(!_.isUndefined(resp[interval]) && resp[interval] < 5) {
-				createHighScoreForm(interval);
-				return;
+	
+	if(score > 0) {
+		$.getJSON('/highscores/check/'+score, function(resp) {
+			console.log("highscore check returned fetched", resp);
+			
+			// goes through the highscore types in order and
+			// checks to see if you have one
+			var resp = resp,
+					score_checks = ['all-time', 'daily'],
+					showHighScoreForm;
+							
+			showHighScoreForm = _.any(score_checks, function(interval) {
+				console.log("checking score against interval", interval, score, resp[interval]);
+				var isHigh = (!_.isUndefined(resp[interval]) && resp[interval] < 5);
+				if(isHigh) createHighScoreForm(interval);
+				return isHigh; // returning false breaks out of iterator
+			});
+			
+			if(!showHighScoreForm && score > 0) {
+				HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
 			}
 		});
-	});
+	} else createGameOverMenu();
 	
 	// HA.game.fetchHighScores(function() {
 			// console.log("Fetched high scores");
@@ -109,6 +121,9 @@ Crafty.scene("gameover", function() {
 		gameOverMenu.renderListNav();    
    }
 
+	function handleSavingScoreEvent(e, initials, score) {
+			messageDisplay.flashMessage("Saving score of "+score);
+	}
 	
 }, function() {
 	$("#GameOverDisplay").hide();

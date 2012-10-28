@@ -209,7 +209,7 @@ function _checkHighScore(score, interval) {
 			params.endkey = [score+1];
 			break;
 		case 'daily':
-			scores_view = 'highscores_by_timestamp';
+			scores_view = 'highscores_by_day';
 			params.endkey = [parseInt(today),score+1];
 			break
 	}
@@ -263,7 +263,7 @@ function _getHighScores(interval) {
 			stats_params.group_level = 1;
 			break;
 		case 'daily':
-			scores_view = 'highscores_by_timestamp';
+			scores_view = 'highscores_by_day';
 			stats_params.group = true;
 			stats_params.keys = [["d",parseInt(today)],["r",parseInt(today)]];
 			highscores_params.endkey = [parseInt(today)];
