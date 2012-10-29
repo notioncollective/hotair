@@ -645,6 +645,7 @@ exports.highscore = function(req, res) {
 	var data = req.body,
 		respBody = {};
 	console.log("highscore: ", data);
+	data.timestamp = Date.now();
 	// db.save(data, function(db_err, db_res) {
 	db.insert(data, function(err, body, header) {
 		if (err) {
@@ -809,6 +810,7 @@ exports.data = function(req, res) {
 	var data = req.body,
 		respBody = {};
 	console.log("data: ", data);
+	data.timestamp = Date.now();
 	// db.save(data, function(db_err, db_res) {
 	db.insert(data, function(db_err, db_res) {
 		if (db_err) {
