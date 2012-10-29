@@ -19,6 +19,7 @@ HA.game = function(ns, $, _, C) {
 			_highScores,
 			_scoreObj,
 			_cacheBuster,
+			_gameHitCount = 0,
 			_muted = false;
 
 	// private methods
@@ -111,8 +112,29 @@ HA.game = function(ns, $, _, C) {
 		C.settings.modify("autoPause", true);
 		_bindGameplayKeyboardEvents();
 		_state = 1;
+		_gameHitCount = 0;
+		_initNewGame();
 		HA.m.publish(HA.e.START_LEVEL, [_level]);
 	}
+	
+	function _initNewGame() {
+		var token = HA.getCsrfToken();
+		$.ajax({
+			url : "/start",
+			type : "post",
+			contentType : "application/json",
+			data : JSON.stringify({
+				party: HA.player.getParty()
+			}),
+			success : function(resp) {
+				if(resp.success) {
+					console.log("Game Started!");
+				} else {
+					console.error("error starting game");
+				} 	
+			}
+		});
+	} 
 	
 	/**
 	 * Handles GAME_OVER event.
@@ -144,7 +166,7 @@ HA.game = function(ns, $, _, C) {
 			// remove event bindings from Gameplay
 			_unbindGameplayKeyboardEvents();
 			
-			_createPauseDisplay()
+			_createPauseDisplay();
 
 			// Pause the music, but leave other sounds alone.
 			C.audio.pause("game_music");
@@ -232,7 +254,25 @@ HA.game = function(ns, $, _, C) {
 					console.log("End Game...");
 					HA.m.publish(HA.e.END_GAME);
 				}
-			});	
+			});
+			
+			_pauseMenu.addListItem({
+				text: function() {
+					var mute = HA.game.isMuted() ? "-mute" : "";
+					var icon = "<i id='icon-snd' class='icon icon-snd" + mute +"'></i>";
+					return icon;
+				},
+				// text: "Test",
+				callback: function() {
+					if(HA.game.isMuted()) {
+						HA.game.unmute();
+						$('#icon-snd').removeClass('icon-snd-mute').addClass('icon-snd');
+					} else {
+						HA.game.mute();
+						$('#icon-snd').removeClass('icon-snd').addClass('icon-snd-mute');
+					}
+				}
+			})
       
       _pauseMenu.renderListNav();
 	}
@@ -298,8 +338,7 @@ HA.game = function(ns, $, _, C) {
 					tweet_id: enemy.tweet.id,
 					tweet_screen_name: enemy.tweet.screen_name,
 					tweet_party: enemy.tweet.party,
-					player_party: HA.player.getParty(),
-					timestamp: Date.now()
+					player_party: HA.player.getParty()
 				};
 		if(enemy.tweet.party == HA.player.getParty()) {
 			// _decrementScore();
@@ -314,6 +353,7 @@ HA.game = function(ns, $, _, C) {
 			C.audio.play('hit_good');
 		}
 		
+		_gameHitCount += 1;
 		_saveData(data);
 		
 		HA.m.publish(HA.e.ENEMY_HIT_COMPLETE, [enemy, scoreInc]);
@@ -498,7 +538,7 @@ HA.game = function(ns, $, _, C) {
 				user : initials,
 				score : score,
 				party : party,
-				timestamp: Date.now()
+				hits: _gameHitCount
 			}),
 			success : function(resp) {
 				// var resp = JSON.parse(resp);

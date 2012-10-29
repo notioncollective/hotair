@@ -25,6 +25,9 @@
        "cumscore": {
            "map": "function(doc) {\n  if(doc.type === 'score') emit([doc.party, Date.parse(new Date(doc.timestamp).toDateString())], parseInt(doc.score));\n}",
            "reduce": "_sum"
+       },
+       "games": {
+           "map": "function(doc) {\n  if(doc.type === 'game') emit(doc._id, doc);\n}"
        }
    },
    "language": "javascript"
