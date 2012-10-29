@@ -720,7 +720,6 @@ exports.startGame = function(req, res) {
 		},
 		respBody = {};
 	sess.game = {"_id":game_id, hitCount: 0};
-	// db.save(data, function(db_err, db_res) {
 	db.insert(data, function(db_err, db_res) {
 		if (db_err) {
 			console.error("Error saving data", db_err)
