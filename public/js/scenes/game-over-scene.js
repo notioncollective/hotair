@@ -35,14 +35,17 @@ Crafty.scene("gameover", function() {
 			// checks to see if you have one
 			var resp = resp,
 					score_checks = ['all-time', 'daily'],
-					showHighScoreForm;
+					showHighScoreForm,
+					isHigh;
 							
 			showHighScoreForm = _.any(score_checks, function(interval) {
 				console.log("checking score against interval", interval, score, resp[interval]);
-				var isHigh = (!_.isUndefined(resp[interval]) && resp[interval] < 5);
+				isHigh = (!_.isUndefined(resp[interval]) && resp[interval] < 5);
 				if(isHigh) createHighScoreForm(interval);
-				return isHigh; // returning false breaks out of iterator
+				return isHigh;
 			});
+			
+			console.log("showHighScoreForm", showHighScoreForm);
 			
 			if(!showHighScoreForm && score > 0) {
 				HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
