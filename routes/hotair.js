@@ -193,6 +193,143 @@ function _sendEmail(data, callback, context) {
 	smtp.sendMail(options, function(err, res){ callback.apply(context, [err, res]); });
 }
 
+function _checkHighScore(score, interval) {
+	if(!_.isNumber(score) || !_.isString(interval)) throw new Error("Illegal arguments in _checkHighScore");
+	
+	console.log("_checkHighScore", score, interval);
+	var deferred = Q.defer(),
+			today = Date.parse(new Date().toDateString()),
+			scores_view = 'highscores',
+			params = {
+				reduce: true,
+				group: false,
+				descending: true
+			};
+			
+	switch(interval) {
+		case 'all-time':
+			params.endkey = [score+1];
+			break;
+		case 'daily':
+			scores_view = 'highscores_by_day';
+			params.endkey = [parseInt(today),score+1];
+			break
+	}
+	
+	function handle_db_response(err, body) {
+		console.log("handle_db_response");
+		if(err) {
+			console.error("error checking score");			
+			deferred.reject(err);
+		}
+		console.log("check high scores resp body", body);
+		if(body && body.rows) {
+			var value = (body.rows.length < 1) ? 0 : body.rows[0].value;
+			deferred.resolve(value);				
+		} else deferred.reject("unable to parse db response");
+	};
+	
+	
+	db.view('hotair', scores_view, _.clone(params), handle_db_response);	
+	
+	return deferred.promise;
+}
+
+function _getHighScores(interval) {
+	if(!_.isString(interval)) throw new Error("must pass interval to _getHighScores");
+
+	console.log("_getHighScores: ", interval);
+
+	var q = Q.defer(),
+			cumscore_q = Q.defer(),
+			highscores_q = Q.defer(),
+			today = Date.parse(new Date().toDateString()),
+			scores_view = 'highscores',
+			stats_view = 'cumscore',
+			highscores_params = {
+				limit: 5,
+				descending: true,
+				reduce: false
+			},
+			stats_params = {},
+			response = {
+				"stats" : {
+					"d" : 0,
+					"r" : 0
+				},
+				"highscores": []
+			};
+	
+	switch(interval) {
+		case 'all-time':
+			stats_params.group_level = 1;
+			break;
+		case 'daily':
+			scores_view = 'highscores_by_day';
+			stats_params.group = true;
+			stats_params.keys = [["d",parseInt(today)],["r",parseInt(today)]];
+			highscores_params.endkey = [parseInt(today)];
+			break;
+		default:
+			throw new Error("Invalid high score interval");
+			break;
+	}
+	
+	// deferred functions	
+	function handle_cumscore(err, body) {
+		console.log("handle_cumscore");
+		if(err) {
+			console.error("error getting cumscores from couchdb");			
+			cumscore_q.reject(err);
+		}
+		if(body && body.rows) {
+			_.each(body.rows, function(obj){
+				response.stats[obj.key[0]] = obj.value;
+			});
+			cumscore_q.resolve(body.rows);
+		}
+		return cumscore_q.promise;
+	};
+	
+	function handle_highscores(err, body) {
+		console.log("handle_highscores");
+		if(err) {
+			console.error("error getting highscores from couchdb");
+			highscores_q.reject(err);
+		}
+	  if(body && body.rows) {
+			response.highscores = _.map(body.rows, function(obj) {
+				return obj.value;
+			});
+			highscores_q.resolve(body.rows);
+			db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
+		}
+		return highscores_q.promise;
+	}	
+		
+	Q.when(highscores_q.promise, function(data){
+		console.log("highscores resolved", data);
+	});
+		
+	Q.when(cumscore_q.promise, function(data){
+		console.log("cumscores resolved", data);
+	});
+	
+	Q.allResolved(cumscore_q.promise, highscores_q.promise)
+	.then(function(promises) {
+		console.log("all resolved");
+		q.resolve(response);
+	});
+	
+	// couchdb calls
+	console.log("stats_params", stats_params);
+	db.view('hotair', scores_view, _.clone(highscores_params), handle_highscores);
+	// db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
+
+	
+	return q.promise;
+}
+
 /*
  * GET home page.
  */
@@ -446,51 +583,61 @@ exports.republican = function(req, res) {
 	});
 }
 
+exports.check_highscore = function(req, res) {
+	console.log("check_highscore");
+	var allowed = ['all-time', 'daily'],
+			interval = _.indexOf(allowed, req.params.interval) >= 0 ? req.params.interval : undefined;
+	if(interval && req.params.score) {
+		_checkHighScore(parseInt(req.params.score), interval)
+			.then(function(n) { res.send(JSON.stringify(n)); })
+			.fail(function(error) { console.error(error); })		
+	}	else if(req.params.score) {
+		var deferred = Q.defer(),
+				promises = [],
+				all_checks = {};
+		_.each(allowed, function(value){
+			promises.push(_checkHighScore(parseInt(req.params.score), value));
+			Q.when(promises[promises.length-1], function(n){
+				all_checks[value] = n;
+			})
+		})
+		
+		Q.allResolved(promises)
+		.then(function(){
+			res.send(JSON.stringify(all_checks));
+		});		
+	}
+}
+
 /**
  * Get a list of highscores
  */
 exports.highscores = function(req, res) {
-	
-	var data = {
-				'stats': {
-					'r': null, // number
-					'd': null // number
-				},
-				'highscores': null // array
-		},
-		checkData = function() {
-			return (_.isNumber(data.stats.r) 
-							&& _.isNumber(data.stats.d)
-							&& _.isArray(data.highscores));
-		},
-		handle_cumscore_r = function(err, resp) {
-			if(err) console.error("Error loading republican cumulateive score from db", err);
-			if(resp && resp.rows) {
-				data.stats.r = resp.rows.length > 0 ? parseInt(resp.rows[0].value) : 0;
-			}
-			if(checkData()) res.send(JSON.stringify(data));
-		},
-		handle_cumscore_d = function(err, resp) {
-			if(err) console.error("Error loading democrat cumulateive score from db", err);
-			if(resp && resp.rows) {
-				data.stats.d =  resp.rows.length > 0 ? parseInt(resp.rows[0].value) : 0;
-			}
-			if(checkData()) res.send(JSON.stringify(data));			
-		},
-		handle_highscores = function(err, resp) {
-			if(err) console.error("Error loading highscores from db", err);
-		  if(resp && resp.rows) {
-		  	data.highscores = [];
-				resp.rows.forEach(function(row) {
-		   	  data.highscores.push(row.value);	
-		   	});
-			}
-			if(checkData()) res.send(JSON.stringify(data));			
-		}
-	
-	db.view('hotair', 'cumscore_r', {limit: 5, descending: true}, handle_cumscore_r);
-	db.view('hotair', 'cumscore_d', {limit: 5, descending: true}, handle_cumscore_d);
-	db.view('hotair', 'highscores', {limit: 5, descending: true}, handle_highscores);
+	// console.log("req.params.interval",req.params.interval);
+	var allowed = ['all-time', 'daily'],
+			interval = _.indexOf(allowed, req.params.interval) >= 0 ? req.params.interval : undefined;
+	// console.log("interval",interval);
+	if(interval) {
+		_getHighScores(interval)
+			.then(function(data) { res.send(JSON.stringify(data)); })
+			.fail(function(error) { console.error(error); })
+	} else {
+		var deferred = Q.defer(),
+				promises = [],
+				all_scores = {};
+		_.each(allowed, function(value){
+			promises.push(_getHighScores(value));
+			Q.when(promises[promises.length-1], function(data){
+				all_scores[value] = data;
+			})
+		})
+		
+		Q.allResolved(promises)
+		.then(function(){
+			res.send(JSON.stringify(all_scores));
+		});
+	}
+
 }
 
 exports.score = function(req, res) {
@@ -651,7 +798,8 @@ exports.highscore = function(req, res) {
 		return;
 	}
 	
-		// add IP address and user_token
+	// add timestamp, IP address, and user_token
+	data.timestamp = Date.now();
 	data.user_token = sess.user_token;
 	data.ip = req.ip;
 	
@@ -680,6 +828,7 @@ exports.data = function(req, res) {
 	// add IP address and user_token
 	data.user_token = sess.user_token;
 	data.ip = req.ip;
+	data.timestamp = Date.now();
 	
 	// if this is a "hit", add to session game.
 	if(data.type === "hit") {

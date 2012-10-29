@@ -6,6 +6,7 @@ Crafty.scene("start", function() {
 			closeMenuNav,
 			aboutMenuNav,
 			shareMenuNav,
+			highScoresMenuNav,
 			startScreenMainGraphic = new Crafty.e('StartScreenMainGraphic');
 
 			
@@ -81,21 +82,10 @@ Crafty.scene("start", function() {
 		startMenuNav.addListItem({
 			text: "Scores",
 			callback: function(arg) {
-				HA.game.closeModals();
-				HA.game.openModal("HighScoresDisplay");
 				this.destroy();
-				createCloseMenu();
-				$.getJSON('/highscores', function(resp) {
-					var temp = _.template($("#HighScoresTemplate").html());
-					var tempHtml = temp({
-							highscores: resp.highscores,
-							cumscore_d: resp.stats.d,
-							cumscore_r: resp.stats.r
-					});
-					$("#HighScoresDisplay .modal-inner").html(tempHtml); 
-				});
+				createHighScoresMenu();
 			},
-			args: ["High Scores!"]
+			args: ["Daily High Scores!"]
 		});
 		
 		startMenuNav.addListItem({
@@ -195,6 +185,67 @@ Crafty.scene("start", function() {
 					
 	}
 	
+	function createHighScoresMenu(scrn) {
+		highScoresMenuNav = Crafty.e('ListNav')
+			.attr({wrappingId: "HighScoresListNav"});		
+		
+
+		
+		highScoresMenuNav.addListItem({
+			text: "Daily",
+			callback: function() { updateScoreDisplay('daily'); }
+		});	
+		highScoresMenuNav.addListItem({
+			text: "All-time",
+			callback: function() { updateScoreDisplay('all-time'); }
+		});
+		// always show this
+		highScoresMenuNav.addListItem({
+			text: "Ok!",
+			callback: function() {
+				this.destroy();
+				HA.game.closeModals();
+				createMainStartMenu();
+			}
+		});		
+				
+		updateScoreDisplay('daily');
+		highScoresMenuNav.renderListNav();
+	}
+
+
+	function updateScoreDisplay(scrn) {	
+		console.log("open modal score screen: ",scrn);
+		var scrn = scrn || 'daily',
+				tmpl_sel = "#HighScoresTemplate",
+				modal_title =  "High scores!",
+				endpoint = "/highscores/all-time";	
+				
+		// determine which menu items to show
+		switch(scrn) {
+			case 'all-time': // show all-time highscores	
+				modal_title =  "All-time high scores!";		
+				break;
+			case 'daily':  // daily high-scores
+				modal_title =  "Today's high scores!";
+				endpoint = "/highscores/daily";		
+				break;
+		}
+		
+		$("#HighScoresDisplay .modal-inner").html('<span class="loading">Loading...</span>');
+		$.getJSON(endpoint, function(resp) {
+					var temp = _.template($(tmpl_sel).html()),
+							tempHtml = temp({
+									title: modal_title,
+									highscores: resp.highscores,
+									cumscore_d: resp.stats.d,
+									cumscore_r: resp.stats.r
+							});
+					HA.game.closeModals();
+					$("#HighScoresDisplay").html(tempHtml);
+					HA.game.openModal("HighScoresDisplay");			
+		});
+	};	
 
 	function createCloseMenu(selectParty) {
 		closeMenuNav = Crafty.e('ListNav')

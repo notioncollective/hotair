@@ -320,8 +320,7 @@ HA.game = function(ns, $, _, C) {
 					tweet_id: enemy.tweet.id,
 					tweet_screen_name: enemy.tweet.screen_name,
 					tweet_party: enemy.tweet.party,
-					player_party: HA.player.getParty(),
-					timestamp: Date.now()
+					player_party: HA.player.getParty()
 				};
 		if(enemy.tweet.party == HA.player.getParty()) {
 			// _decrementScore();
@@ -521,8 +520,7 @@ HA.game = function(ns, $, _, C) {
 				user : initials,
 				score : score,
 				party : party,
-				hits: _gameHitCount,
-				timestamp: Date.now()
+				hits: _gameHitCount
 			}),
 			success : function(resp) {
 				// var resp = JSON.parse(resp);

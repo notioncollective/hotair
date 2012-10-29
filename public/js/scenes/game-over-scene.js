@@ -14,26 +14,56 @@ Crafty.scene("gameover", function() {
 		// isHighscore = HA.game.isHighScore(score), // hard coded for the moment 
 		gameOverDisplay, 
 		gameOverMenu, 
-		highScoreForm;
+		highScoreForm,
+		messageDisplay = Crafty.e("MessageDisplay");
+
 	
 	gameOverDisplay = Crafty.e("GameOverDisplay");
 	gameOverDisplay.showGameOverDisplay();
 	
 	HA.m.subscribe(HA.e.SCORE_SAVED_TO_DB, handleScoreSavedEvent);
+	HA.m.subscribe(HA.e.SAVE_SCORE, handleSavingScoreEvent)
 	
-	HA.game.fetchHighScores(function() {
-			console.log("Fetched high scores");
-			if(HA.game.isHighScore(score)) {
-				console.log("High score! ", score);
-				createHighScoreForm();
-			} else {
-				console.log("Not high score");
-				if(score > 0) HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
-				createGameOverMenu();		
+	// the check endpoint tells you how many scores are higher
+	// than yours for each score interval
+	
+	if(score > 0) {
+		$.getJSON('/highscores/check/'+score, function(resp) {
+			console.log("highscore check returned fetched", resp);
+			
+			// goes through the highscore types in order and
+			// checks to see if you have one
+			var resp = resp,
+					score_checks = ['all-time', 'daily'],
+					showHighScoreForm;
+							
+			showHighScoreForm = _.any(score_checks, function(interval) {
+				console.log("checking score against interval", interval, score, resp[interval]);
+				var isHigh = (!_.isUndefined(resp[interval]) && resp[interval] < 5);
+				if(isHigh) createHighScoreForm(interval);
+				return isHigh; // returning false breaks out of iterator
+			});
+			
+			if(!showHighScoreForm && score > 0) {
+				HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
+				createGameOverMenu();
 			}
-	}, this)
+		});
+	} else createGameOverMenu();
+	
+	// HA.game.fetchHighScores(function() {
+			// console.log("Fetched high scores");
+			// if(HA.game.isHighScore(score)) {
+				// console.log("High score! ", score);
+				// createHighScoreForm();
+			// } else {
+				// console.log("Not high score");
+				// if(score > 0) HA.m.publish(HA.e.SAVE_SCORE, [noInitials, score]);
+				// createGameOverMenu();		
+			// }
+	// }, this)
 
-	function createHighScoreForm() {
+	function createHighScoreForm(interval) {
 		highScoreFormMenu = Crafty.e("ListNav")
 			.attr({wrappingId: "HighScoreFormNav"});
 			
@@ -44,6 +74,7 @@ Crafty.scene("gameover", function() {
 				HA.m.publish(HA.e.SAVE_SCORE, [initials, score]);
 				highScoreForm.destroy();
 				createGameOverMenu();
+				messageDisplay.flashMessage("Saving score of "+score);
 				this.destroy();
 			}
 		});
@@ -51,7 +82,7 @@ Crafty.scene("gameover", function() {
 		highScoreFormMenu.renderListNav();
 
 		highScoreForm = Crafty.e("HighScoreFormDisplay");
-		highScoreForm.updateContent({score:score});
+		highScoreForm.updateContent({score:score, type:interval});
 		highScoreForm.showHighScoreFormDisplay();
 		$("#gameover-name").focus();
 	}
@@ -92,6 +123,9 @@ Crafty.scene("gameover", function() {
 		gameOverMenu.renderListNav();    
    }
 
+	function handleSavingScoreEvent(e, initials, score) {
+			// messageDisplay.flashMessage("Saving score of "+score);
+	}
 	
 }, function() {
 	$("#GameOverDisplay").hide();

@@ -58,7 +58,7 @@ html(lang="en")
 					p <a href="http://notioncollective.com" target="_blank">The Notion Collective</a> is an art-making group based in Brooklyn, NY.
 					
 			#HighScoresDisplay.modal
-				h1 High Scores!
+				h1 High scores!
 				.modal-inner
 					| loading...
 					
@@ -69,18 +69,25 @@ html(lang="en")
 						
 			// HIGH SCORES TEMPLATE
 			script(id='HighScoresTemplate',type='text/template')
-				| <div id="HighScores">	
-				|		<ol class="highscores">
-				|		<% _.each(highscores, function(highscore) { %>
-				|			<li class="<%= highscore.party %>"><i class="<%= highscore.party %>"></i><%= highscore.user %> (<%= highscore.party.toUpperCase() %>) - <%= highscore.score %></li>
-				|		<% }); %>
-				|		</ol>
-				|		<h2>Total Scores</h2>
-				|		<ul class="cum">
-				|			<li id="cumscore_d"><i class="d"></i><%= cumscore_d %></li>
-				|			<li id="cumscore_r"><i class="r"></i><%= cumscore_r %></li>
-				|		</ul>
-				| </div>
+				|	<h1><%= title %></h1>
+				|	<div class="modal-inner">
+				| 	<div id="HighScores">	
+				|			<ol class="highscores">
+				|			<% if(highscores && highscores.length>0) { %>
+				|			<% _.each(highscores, function(highscore) { %>
+				|				<li class="<%= highscore.party %>"><i class="<%= highscore.party %>"></i><%= highscore.user %> (<%= highscore.party.toUpperCase() %>) - <%= highscore.score %></li>
+				|			<% }); %>
+				|			<% } else { %>
+				|				<li class="no-scores">This could be you!</li>
+				|			<% } %>
+				|			</ol>
+				|			<h2>Total Scores</h2>
+				|			<ul class="cum">
+				|				<li id="cumscore_d"><i class="d"></i><%= cumscore_d %></li>
+				|				<li id="cumscore_r"><i class="r"></i><%= cumscore_r %></li>
+				|			</ul>
+				| 	</div>
+				|	</div>
 
 			// MESSAGE DISPLAY TEMPLATE
 			script(id='MessageDisplayTemplate',type='text/template')
@@ -118,7 +125,7 @@ html(lang="en")
 			script(id='HighScoreFormDisplayTemplate',type='text/template')
 				|	<div id="HighScoreFormDisplay">
 				|		<div id="NewHighscore">
-				|			<h3>New High Score!</h3>
+				|			<h3>New <%= type %> High Score!</h3>
 				|			<h2><%= score %></h2>
 				|			<label for='gameover-name'>Enter your initials:</label>
 				|			<div><input id="gameover-name" type='text' maxlength='3' size="3" /></div>
