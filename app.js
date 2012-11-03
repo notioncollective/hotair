@@ -169,7 +169,11 @@ app.post('/highscore', routes.highscore);
 // other POST endpoints
 app.post('/data', routes.data);
 app.post('/start', routes.startGame);
+app.post('/submitErrorReport', routes.submitErrorReport);
 
+
+// TEST ENDPOINTS
+app.get('/errorTest', routes.errorTest);
 // app.get('*', routes.notfound);
 
 http.createServer(app).listen(app.get('port'), function(){
