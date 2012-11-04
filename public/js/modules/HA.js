@@ -18,6 +18,16 @@ HA = function(ns, $, _) {
 		return token;
 	}	
 	
+	function _submitErrorReport(message, id) {
+		console.log(message, id);
+		$.ajax({
+			url: "/submitErrorReport",
+			type: "post",
+			contentType: "application/json",
+			data: JSON.stringify({userMessage: message, id: id})
+		});
+	}
+	
 	// http://www.zachleat.com/web/yui-code-review-yahoonamespace/
 	/**
 	 * Create a sub-namespace on the HA root object.
@@ -47,7 +57,14 @@ HA = function(ns, $, _) {
 				var token = _getCsrfToken();
 				xhr.setRequestHeader('X-CSRF-Token', token);
 			}
-		});	
+		});
+		
+		$(document).ajaxError(function(event, xhr, settings, thrownError) {
+			var resp = JSON.parse(xhr.responseText),
+					promptMessage = prompt("An Error!? What a bunch of Malarkey! It would help us greatly if you'd briefly describe what happened:");
+			_submitErrorReport(promptMessage, resp._id);
+		});
+
 	};
 	
 	ns.getCsrfToken = _getCsrfToken;

@@ -634,7 +634,7 @@ exports.highscores = function(req, res) {
 		
 		Q.allResolved(promises)
 		.then(function(){
-			res.send(JSON.stringify(all_scores));
+			res.send(500, JSON.stringify(all_scores));
 		});
 	}
 
@@ -658,7 +658,6 @@ exports.score = function(req, res) {
 			});
 		});		
 	} else res.redirect('/'); // redirect if no id
-
 }
 
 /* GET */
@@ -877,6 +876,57 @@ exports.startGame = function(req, res) {
 			respBody.success = true;
 		}
 		res.send(respBody);
+	});
+}
+
+/**
+ * Submit an error report
+ * @param {Object} req
+ * @param {Object} res
+ */
+exports.submitErrorReport = function(req, res) {
+	var data = req.body,
+		id = data.id,
+		userMessage = data.userMessage,
+		rev,
+		respBody = {};
+		
+	// get the revision number, then insert the message
+	db.get(id, { revs_info: true }, function(db_err, db_res) {
+	  if (db_err) {
+	  	console.log(db_err);
+	  	return;
+	  }
+	  rev = db_res._rev;
+		db.insert({_rev: rev, userMessage: userMessage}, id, function(db_err, db_res) {
+			if (db_err) {
+				console.error("Error saving data", db_err)
+				respBody.error = true;
+			} else {
+				console.log(db_res);
+				respBody.success = true;
+			}
+			res.send(respBody);
+		});
+	});
+	
+	
+}
+
+exports.errorTest = function(req, res) {
+	var error = {
+		message: "It's an error.",
+		_id: uuid.v1(),
+		type: "error"
+	};
+	
+	db.insert(error, function(db_err, db_res) {
+		if(db_err) {
+			console.log(db_err);
+		} else {
+			console.log(db_res);
+			res.send(500, error);			
+		}
 	});
 }
 
