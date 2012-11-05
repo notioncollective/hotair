@@ -59,11 +59,11 @@ HA = function(ns, $, _) {
 			}
 		});
 		
-		$(document).ajaxError(function(event, xhr, settings, thrownError) {
-			var resp = JSON.parse(xhr.responseText),
-					promptMessage = prompt("An Error!? What a bunch of Malarkey! It would help us greatly if you'd briefly describe what happened:");
-			_submitErrorReport(promptMessage, resp._id);
-		});
+		// $(document).ajaxError(function(event, xhr, settings, thrownError) {
+			// var resp = JSON.parse(xhr.responseText),
+					// promptMessage = prompt("An Error!? What a bunch of Malarkey! It would help us greatly if you'd briefly describe what happened:");
+			// _submitErrorReport(promptMessage, resp._id);
+		// });
 
 	};
 	
