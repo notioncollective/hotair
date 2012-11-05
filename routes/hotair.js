@@ -463,7 +463,7 @@ exports.all = function(req, res) {
 	@param {Number} limit Number of responses to retrieve. If this is an odd number it will be reduced by 1.
 */
 exports.load_tweets = function(req, res) {
-	var numPerSet = req.query.numPerSet || 10,
+	var numPerSet = parseInt(req.query.numPerSet) || 10,
 			limit = req.query.limit || 100,
 			params = {
 				limit: Math.floor(limit/2)+1,
@@ -478,9 +478,14 @@ exports.load_tweets = function(req, res) {
 			lastRow,
 			minKey,
 			numSets,
+			temp,
 			merged = { // new response object
 				"total_rows": 0, 
 				"rows": [],
+			},
+			shuffled = {
+				"total_rows": 0,
+				"rows": []
 			},
 			// handle merging data
 			merge = function(err, resp) {
@@ -511,21 +516,21 @@ exports.load_tweets = function(req, res) {
 							merged.rows.push(b[j]);
 						}
 						
-						numSets = Math.floor(smallerSetLen/numPerSet);
+						numSets = Math.floor(merged.rows.length/numPerSet);
+						
+						console.log(aLen, bLen, numSets, numPerSet, merged.rows.length);
 						
 						for(var k=0; k<numSets; k+=1) {
-							var temp = merged.rows.slice(k, numPerSet);
-							temp = _.shuffle(temp);
+							temp = _.shuffle(merged.rows.slice(k*numPerSet, k*numPerSet+numPerSet));
 							
 							// insert an array into another array
-							var args = [k, numPerSet].concat(temp);
+							var args = [k*numPerSet, numPerSet].concat(temp);
 							Array.prototype.splice.apply(merged.rows, args);
 						}
 						
 						merged.nextStartkey = minKey;
-						
 						res.send(merged); // send response
-					}					
+					}
 				}
 			};
 			
