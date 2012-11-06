@@ -110,6 +110,44 @@ p.note {
 	margin-top: 20px;
 }
 
+#Graphic {
+/*	position: absolute;
+	top: 0;
+	left: 50%;
+	margin-left: -400px;*/
+	width: 600px;
+	height: 400px;
+	background: transparent url('../img/startscreen_basket.png') center bottom repeat;
+}
+
+#NotSupportedWrap {
+	width: 100%;
+	text-align: center;
+}
+
+#NotSupported {
+	width: 600px;
+	margin: 0px auto;
+	text-align: left;
+}
+
+#NotSupported h1 {
+	text-align: center;
+}
+
+#Description {
+	margin: 40px 0px;
+}
+
+#Sorry {
+	padding: 30px;
+	background: transparent url('../img/pause_bg.png') 0 0 repeat;
+	border: 6px solid #fff;
+	opacity: 0.9;
+	-moz-opacity: 0.9;
+	filter:alpha(opacity=90);	
+}
+
 #Main {
 	margin: 5% auto;
 	width: 600px;
@@ -277,7 +315,7 @@ body#survey iframe {
 
 /* CONSOLE NOT SUPPORTED PAGE */
 body#notsupported {
-	background: #9dd9fe;
+/*	background: #9dd9fe;*/
 }
 
 
