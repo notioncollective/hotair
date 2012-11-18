@@ -11,19 +11,105 @@ var nano = require('nano')(nano_url)
 	, querystring = require('querystring')
 	, nodemailer = require("nodemailer")
 	, hash = require("node_hash")
-	, uuid = require("node-uuid");
+	, uuid = require("node-uuid")
+	, http = require('http');
   
 var	db = nano.use('hotair'),
 	T = new Twit({
  	   consumer_key:         '5uH2QAOgqIVQfe2typ5w'
 	  , consumer_secret:      'PAjuPDFxLq3VCjup47nBLX0qiVT5fSyl0efUFHO47D4'
-	  , access_token:         '121874224-PHWTBdicu45w3n3EI69oT84RUGoXhKN0Vw7nJVvU'
-	  , access_token_secret:  'AOaSNcoio81jhpwoX5VeuBeRpkWVqFWtJwxTApkDWs'
+	  , access_token:         '121874224-2qCDF7SXIMU1dCaP5l83lhPRMx9N2oqj6DOGFCdX'
+	  , access_token_secret:  'tKheInmjyIx32VEMzXtXV2LQffE1mfrzhCR9o0PA8'
 	}),
 	_since_id = null,
 	_params_r = { owner_screen_name: 'tweetcongress', per_page: 100, slug: "republican" },
 	_params_d = { owner_screen_name: 'tweetcongress', per_page: 100, slug: "democrats" };
 	
+
+function _updateLists() {
+	var url = 'api.nytimes.com',
+	houseOpts = {
+	  hostname: url,
+	  path: "/svc/politics/v3/us/legislative/congress/112/house/members.json?api-key=710c95e443ab4d2404efb1f3cfa30378:2:57464995"
+	},
+	senateOpts = {
+		host: url,
+	  path: '/svc/politics/v3/us/legislative/congress/112/senate/members.json?api-key=710c95e443ab4d2404efb1f3cfa30378:2:57464995'
+	};
+	
+	function updateList(listName, members) {
+		console.log("updateList");
+		var params_update = { owner_screen_name: 'notion_nyc', slug: listName },
+				chunkedMembers = [],
+				delay = 0;
+		if(members.length > 100) {
+			while(members.length) {
+				chunkedMembers = members.splice(0, 100);
+				//.log(chunkedMembers);
+				
+				_.delay(function() {
+					var params = _.clone(params_update);
+					params.screen_name = chunkedMembers.slice(0,100).join(",");
+					console.log(params.screen_name);
+					T.post('lists/members/create_all', params, function(err, reply) {
+					  if(err) console.log("error");
+					  if(reply) console.log("success");
+					});
+				}, delay);
+				delay += 2000;
+			}
+		} else {
+			params_update.screen_name = members.join(",");
+			T.post('lists/members/create_all', params_update, function(err, reply) {
+				  if(err) console.log("error", err);
+				  if(reply) console.log("success");
+				});
+		}
+	}
+	
+	function handleResponse(res) {
+		
+		var data = '';
+			//console.log('res', res);
+		  //console.log('STATUS: ' + res.statusCode);
+		  //console.log('HEADERS: ' + JSON.stringify(res.headers));
+		  res.setEncoding('utf8');
+		  
+		  res.on('data', function (chunk){
+	        data += chunk;
+	    });
+	
+	    res.on('end',function(){
+	        var obj = JSON.parse(data),
+	        		members,
+	        		handle,
+	        		demHandles = [],
+	        		repHandles = [];
+	        if(obj.status === "OK") {
+	        	members = obj.results[0].members;
+	        	if(_.isArray(members)) {
+	        		_.each(members, function(member) {
+	        			if(member.twitter_account && member.party === "D") demHandles.push(member.twitter_account);
+	        			if(member.twitter_account && member.party === "R") repHandles.push(member.twitter_account);
+	        		});
+	        	}
+	        }
+	        console.log("DEMS: ", demHandles.length);
+	        console.log("REPS: ", repHandles.length);
+	        updateList("democrats", demHandles);
+	        updateList("republicans", repHandles);
+	    });
+	};
+	
+	http.get(houseOpts, handleResponse).on('error', function(e) {
+		console.log("error!", e);
+	});
+	// http.get(senateOpts, handleResponse).on('error', function(e) {
+		// console.log("error!", e);
+	// });
+	
+}
+
 function _getTweets(params) {
 	console.log("_getTweets");
 	if(!_.isNull(_since_id)) params.since_id = _since_id;
@@ -934,6 +1020,11 @@ exports.errorTest = function(req, res) {
 		}
 	});
 }
+
+exports.update_lists = function(req, res) {
+	_updateLists();
+	res.send({"message":"Updating Lists"});
+};
 
 // exports.notfound = function(req, res) {
 	// res.send(404, "Page not found!");

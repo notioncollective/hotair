@@ -152,6 +152,7 @@ app.post('/contact/send', routes.contact_send);
 
 // gameplay-related endpoints
 app.get('/fetch_tweets', auth, routes.fetch_tweets);
+app.get('/update_lists', auth, routes.update_lists);
 // app.get('/all', routes.all);
 // app.get('/democrats', routes.democrats);
 // app.get('/republican', routes.republican);
