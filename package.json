@@ -12,7 +12,6 @@
     "jade": "0.27.2",
     "nano": "3.3.2",
     "path": "0.4.9",
-    "twit": "0.1.8",
     "lodash": "0.7.0",
     "q": "0.8.8",
     "cron": "1.0.1",
@@ -21,7 +20,8 @@
     "querystring": "0.1.0",
     "nodemailer": "0.3.28",
     "node_hash": "0.2.0",
-    "node-uuid": "1.4.0"
+    "node-uuid": "1.4.0",
+    "ntwitter": "~0.5.0"
   },
   "subdomain": "hotair",
   "domains": [

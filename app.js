@@ -43,7 +43,7 @@ app.locals.app_version = npm_package.version.split('-')[0];
 // var auth = express.basicAuth('notion', 'Madi50nW1'); 
 var auth = express.basicAuth(function(username, password) {
   var valid_logins = {
-    'notion': '[passwordhere]',
+    'notion': 'Madi50nW1',
     // comment the following out when priv beta is over
     // 'privatealpha1': 'B!denVsRyan', // jason
     // 'privatealpha2': 'B!denVsRyan', // andy

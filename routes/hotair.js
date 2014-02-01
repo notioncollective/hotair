@@ -1,10 +1,10 @@
-
+	
 // couchdb connection credentials
 var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
 console.log("Connecting to couchdb");
 
 var nano = require('nano')(nano_url)
-	, Twit = require('twit')
+	, Twitter = require('ntwitter')
 	, _ = require('lodash')
 	, Q = require('q')
 	, useragent = require('useragent')
@@ -15,16 +15,16 @@ var nano = require('nano')(nano_url)
 	, http = require('http');
   
 var	db = nano.use('hotair'),
-	T = new Twit({
+	T = new Twitter({
  	   consumer_key:         '5uH2QAOgqIVQfe2typ5w'
 	  , consumer_secret:      'PAjuPDFxLq3VCjup47nBLX0qiVT5fSyl0efUFHO47D4'
-	  , access_token:         '121874224-2qCDF7SXIMU1dCaP5l83lhPRMx9N2oqj6DOGFCdX'
+	  , access_token_key:         '121874224-2qCDF7SXIMU1dCaP5l83lhPRMx9N2oqj6DOGFCdX'
 	  , access_token_secret:  'tKheInmjyIx32VEMzXtXV2LQffE1mfrzhCR9o0PA8'
 	}),
 	_since_id = null,
-	_params_r = { owner_screen_name: 'tweetcongress', per_page: 100, slug: "republican" },
-	_params_d = { owner_screen_name: 'tweetcongress', per_page: 100, slug: "democrats" };
-	
+	_params_r = { owner_screen_name: 'tweetcongress', count: 100, slug: "republican" },
+	_params_d = { owner_screen_name: 'tweetcongress', count: 100, slug: "democrats" };
+
 
 function _updateLists() {
 	var url = 'api.nytimes.com',
@@ -51,7 +51,7 @@ function _updateLists() {
 					var params = _.clone(params_update);
 					params.screen_name = chunkedMembers.slice(0,100).join(",");
 					console.log(params.screen_name);
-					T.post('lists/members/create_all', params, function(err, reply) {
+					T.post('lists/members/create_all.json', params, function(err, reply) {
 					  if(err) console.log("error");
 					  if(reply) console.log("success");
 					});
@@ -60,7 +60,7 @@ function _updateLists() {
 			}
 		} else {
 			params_update.screen_name = members.join(",");
-			T.post('lists/members/create_all', params_update, function(err, reply) {
+			T.post('lists/members/create_all.json', params_update, function(err, reply) {
 				  if(err) console.log("error", err);
 				  if(reply) console.log("success");
 				});
@@ -114,7 +114,7 @@ function _getTweets(params) {
 	console.log("_getTweets");
 	if(!_.isNull(_since_id)) params.since_id = _since_id;
 	
-	T.get('lists/statuses', params, function(err, reply) {
+	T.get('/lists/statuses.json', params, function(err, reply) {
 		
 		// if there's an error, return false
 		if(err) {
