@@ -2,10 +2,9 @@
   "name": "hotair",
   "description": "A game for gasbags.",
   "version": "0.3.5",
-  "private": true,
   "scripts": {
     "start": "node app.js",
-    "predeploy": "grunt min"
+    "predeploy": "grunt"
   },
   "dependencies": {
     "express": "3.0.0rc1",
@@ -29,6 +28,10 @@
     "www.hotairgame.com"
   ],
   "engines": {
-    "node": "0.8.x"
+    "node": "0.10.X"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-uglify": "~0.3.2"
   }
 }
