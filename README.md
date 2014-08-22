@@ -7,8 +7,6 @@ Release Notes
 -------------
 
 
-### 0.3.7
-- Make node v explicit in package.json
 
 ### 0.3.6 
 - Added additional logging for couchdb
