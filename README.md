@@ -7,16 +7,11 @@ Release Notes
 -------------
 
 
-### 0.1.6 
+### 0.3.7
+- Make node v explicit in package.json
+
+### 0.3.6 
 - Added additional logging for couchdb
-
-### 0.1: Private beta
-
- - Major display bugs fixed
- - Game is playable
- - High scores are recorded
- - Basic analytics in place
- - Full gameplay cycle is operational
 
  
 Build
