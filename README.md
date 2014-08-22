@@ -6,6 +6,10 @@ An implementation of Hot Air using Node.js / CouchDB.
 Release Notes
 -------------
 
+
+### 0.1.6 
+- Added additional logging for couchdb
+
 ### 0.1: Private beta
 
  - Major display bugs fixed
@@ -13,11 +17,6 @@ Release Notes
  - High scores are recorded
  - Basic analytics in place
  - Full gameplay cycle is operational
-
-### 0.5 Public beta
-
- - Advanced analytics in place
- - Further bug fixes
 
  
 Build

@@ -3,7 +3,26 @@
 var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
 console.log("Connecting to couchdb");
 
-var nano = require('nano')(nano_url)
+var http = require('http');
+
+// this might solve socket connection issues?
+http.globalAgent.maxSockets = 50;
+
+// add couchdb connection logging
+var nano = require('nano')({
+		'url' : nano_url
+		, "log" : function(id, args) {
+			var resp = args[0]
+				, headers = resp.headers || { uri : null };
+
+
+			console.log('couchdb: '+id+' '+headers.uri);
+
+			if(resp.err) {
+				console.log('couchdb ERROR: ', resp.err);
+			}
+		}
+	})
 	, Twitter = require('ntwitter')
 	, _ = require('lodash')
 	, Q = require('q')
@@ -11,9 +30,10 @@ var nano = require('nano')(nano_url)
 	, querystring = require('querystring')
 	, nodemailer = require("nodemailer")
 	, hash = require("node_hash")
-	, uuid = require("node-uuid")
-	, http = require('http');
+	, uuid = require("node-uuid");
   
+
+
 var	db = nano.use('hotair'),
 	T = new Twitter({
  	   consumer_key:         '5uH2QAOgqIVQfe2typ5w'
