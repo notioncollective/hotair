@@ -32,7 +32,8 @@ var nano = require('nano')({
 	, hash = require("node_hash")
 	, uuid = require("node-uuid");
   
-
+// Create database if it doesn't exist
+nano.db.create('hotair');
 
 var	db = nano.use('hotair'),
 	T = new Twitter({
