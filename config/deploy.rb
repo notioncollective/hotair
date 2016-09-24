@@ -1,5 +1,5 @@
 # config valid only for Capistrano 3.1
-lock '3.2.1'
+lock '3.4.0'
 
 set :application, 'Hotair'
 set :repo_url, 'https://github.com/notioncollective/hotair.git'
