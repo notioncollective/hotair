@@ -24,11 +24,13 @@ var express = require('express')
   , uuid = require('node-uuid');
 
 
+// NOTICE - As of 2/20/2015, the periodic fetching of tweets is being moved to an actual cron job on the server.
+
 // Cron Job to go grab new tweets every 5 minutes.
-new cronJob('0 */12 * * * *', function(){
-    console.log('CRON - fetching tweets.');
-    routes.fetch_tweets();
-}, null, true, "America/New_York");;
+// new cronJob('0 */12 * * * *', function(){
+//     console.log('CRON - fetching tweets.');
+//     routes.fetch_tweets();
+// }, null, true, "America/New_York");
 
 var app = express();
 
@@ -40,10 +42,9 @@ console.log(ignition[0]);
 // removes minor versions added by nodejitsu deploy, i,e XX.XX.XX[-XX]
 app.locals.app_version = npm_package.version.split('-')[0];
 
-// var auth = express.basicAuth('notion', 'Madi50nW1'); 
 var auth = express.basicAuth(function(username, password) {
   var valid_logins = {
-    'notion': 'Madi50nW1',
+    'user': 'pass',
     // comment the following out when priv beta is over
     // 'privatealpha1': 'B!denVsRyan', // jason
     // 'privatealpha2': 'B!denVsRyan', // andy

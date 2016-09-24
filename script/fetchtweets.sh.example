@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -u user:pass http://staging.hotairgame.com/fetch_tweets
