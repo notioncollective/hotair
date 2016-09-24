@@ -1,6 +1,7 @@
 	
 // couchdb connection credentials
-var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
+// var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
+var nano_url = 'http://127.0.0.1:5984';
 console.log("Connecting to couchdb");
 
 var http = require('http');

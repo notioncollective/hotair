@@ -22,6 +22,9 @@ server '104.236.71.92', user: fetch(:user), roles: %w{web app}
 # PATHS
 set :deploy_to, "/var/www/hotairgame.com"
 set :log_path, "/var/log/#{fetch:application}/hotairgame.com-debug.log"
+set :default_env, {
+	'NODE_ENV' => 'production'
+}
 
 # set :forever_log_path, "/var/log/#{fetch:application}/staging.revisit.global-forever.log"
 
