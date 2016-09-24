@@ -8,20 +8,21 @@
     "predeploy": "npm run build"
   },
   "dependencies": {
+    "cron": "1.0.1",
+    "dotenv": "^2.0.0",
     "express": "3.0.0rc1",
     "jade": "0.27.2",
-    "nano": "3.3.2",
-    "path": "0.4.9",
     "lodash": "0.7.0",
+    "nano": "3.3.2",
+    "node-uuid": "1.4.0",
+    "node_hash": "0.2.0",
+    "nodemailer": "0.3.28",
+    "ntwitter": "~0.5.0",
+    "path": "0.4.9",
     "q": "0.8.8",
-    "cron": "1.0.1",
     "time": "0.11.4",
     "useragent": "1.1.0",
-    "querystring": "0.1.0",
-    "nodemailer": "0.3.28",
-    "node_hash": "0.2.0",
-    "node-uuid": "1.4.0",
-    "ntwitter": "~0.5.0"
+    "querystring": "0.1.0"
   },
   "subdomain": "hotair",
   "domains": [
