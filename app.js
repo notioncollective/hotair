@@ -8,6 +8,7 @@ var ignition = ['\n\n\n    )                               \n\
 |_||_|\\___/ \\__|   /_/ \\_\\ |_||_|   \n\
                                     \n\n'];
 
+require('dotenv').config();
 
 /**
  * Module dependencies.
@@ -40,28 +41,27 @@ console.log(ignition[0]);
 // removes minor versions added by nodejitsu deploy, i,e XX.XX.XX[-XX]
 app.locals.app_version = npm_package.version.split('-')[0];
 
-// var auth = express.basicAuth('notion', 'Madi50nW1'); 
 var auth = express.basicAuth(function(username, password) {
   var valid_logins = {
-    'notion': 'Madi50nW1',
     // comment the following out when priv beta is over
     // 'privatealpha1': 'B!denVsRyan', // jason
     // 'privatealpha2': 'B!denVsRyan', // andy
     // 'privatealpha3': 'B!denVsRyan', // michael
     // 'privatealpha4': 'B!denVsRyan', // candice
     // 'privatealpha5': 'B!denVsRyan', // jon
-  }
-  
-  if(typeof valid_logins[username]   === 'string' && valid_logins[username] === password) {
-    // console.log("basicAuth login ", username, password);
+  };
+
+  valid_logins[process.env.BASIC_AUTH_USER] = process.env.BASIC_AUTH_PASS;
+
+  if(typeof valid_logins[username] === 'string' && valid_logins[username] === password) {
     return true;
   } else return false;
-  
+
 })
 
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.APP_PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.logger('dev'));
@@ -84,13 +84,13 @@ app.configure(function(){
 	    });
 	    return;
 	  }
-	
+
 	  // respond with json
 	  if (req.accepts('json')) {
 	    res.send({ error: 'Not found' });
 	    return;
 	  }
-	
+
 	  // default to plain-text. send()
 	  res.type('txt').send('Not found');
 	});

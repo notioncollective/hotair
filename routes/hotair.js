@@ -1,7 +1,7 @@
-	
+
 // couchdb connection credentials
-var nano_url = process.env.NODE_ENV === 'production' ? 'https://hotair_user:manifest_destiny@nodejitsudb198990392151.iriscouch.com:6984' : 'http://127.0.0.1:5984';
-console.log("Connecting to couchdb");
+var nano_url = 'http://' + process.env.DB_HOST + ':' + process.env.DB_PORT;
+console.log("Connecting to couchdb on " + nano_url);
 
 var http = require('http');
 
@@ -31,15 +31,15 @@ var nano = require('nano')({
 	, nodemailer = require("nodemailer")
 	, hash = require("node_hash")
 	, uuid = require("node-uuid");
-  
+
 
 
 var	db = nano.use('hotair'),
 	T = new Twitter({
- 	   consumer_key:         '5uH2QAOgqIVQfe2typ5w'
-	  , consumer_secret:      'PAjuPDFxLq3VCjup47nBLX0qiVT5fSyl0efUFHO47D4'
-	  , access_token_key:         '121874224-2qCDF7SXIMU1dCaP5l83lhPRMx9N2oqj6DOGFCdX'
-	  , access_token_secret:  'tKheInmjyIx32VEMzXtXV2LQffE1mfrzhCR9o0PA8'
+ 	   consumer_key: process.env.TWITTER_CONSUMER_KEY
+	  , consumer_secret: process.env.TWITTER_CONSUMER_SECRET
+	  , access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY
+	  , access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 	}),
 	_since_id = null,
 	_params_r = { owner_screen_name: 'tweetcongress', count: 100, slug: "republican" },
@@ -50,13 +50,13 @@ function _updateLists() {
 	var url = 'api.nytimes.com',
 	houseOpts = {
 	  hostname: url,
-	  path: "/svc/politics/v3/us/legislative/congress/112/house/members.json?api-key=710c95e443ab4d2404efb1f3cfa30378:2:57464995"
+	  path: "/svc/politics/v3/us/legislative/congress/112/house/members.json?api-key=" + process.env.NYT_API_KEY
 	},
 	senateOpts = {
 		host: url,
-	  path: '/svc/politics/v3/us/legislative/congress/112/senate/members.json?api-key=710c95e443ab4d2404efb1f3cfa30378:2:57464995'
+	  path: '/svc/politics/v3/us/legislative/congress/112/senate/members.json?api-key=' + process.env.NYT_API_KEY
 	};
-	
+
 	function updateList(listName, members) {
 		console.log("updateList");
 		var params_update = { owner_screen_name: 'notion_nyc', slug: listName },
@@ -66,7 +66,7 @@ function _updateLists() {
 			while(members.length) {
 				chunkedMembers = members.splice(0, 100);
 				//.log(chunkedMembers);
-				
+
 				_.delay(function() {
 					var params = _.clone(params_update);
 					params.screen_name = chunkedMembers.slice(0,100).join(",");
@@ -86,19 +86,19 @@ function _updateLists() {
 				});
 		}
 	}
-	
+
 	function handleResponse(res) {
-		
+
 		var data = '';
 			//console.log('res', res);
 		  //console.log('STATUS: ' + res.statusCode);
 		  //console.log('HEADERS: ' + JSON.stringify(res.headers));
 		  res.setEncoding('utf8');
-		  
+
 		  res.on('data', function (chunk){
 	        data += chunk;
 	    });
-	
+
 	    res.on('end',function(){
 	        var obj = JSON.parse(data),
 	        		members,
@@ -120,33 +120,33 @@ function _updateLists() {
 	        updateList("republicans", repHandles);
 	    });
 	};
-	
+
 	http.get(houseOpts, handleResponse).on('error', function(e) {
 		console.log("error!", e);
 	});
 	// http.get(senateOpts, handleResponse).on('error', function(e) {
 		// console.log("error!", e);
 	// });
-	
+
 }
 
 function _getTweets(params) {
 	console.log("_getTweets");
 	if(!_.isNull(_since_id)) params.since_id = _since_id;
-	
+
 	T.get('/lists/statuses.json', params, function(err, reply) {
-		
+
 		// if there's an error, return false
 		if(err) {
 			console.error("Error getting tweets from Twitter API", err);
 			return false;
 		}
-		
+
 		// twitter response with since_id seems to return the since_id, so remove it to avoid duplication in db
 		// if(reply.length > 0 && reply[0].id === _since_id) {
 		// 			reply = reply.slice(1);
 		// 		}
-		
+
 		// add extra info
 		_.each(reply, function(tweet) {
 			tweet.type = "tweet";
@@ -156,19 +156,19 @@ function _getTweets(params) {
 			tweet._id = "" + tweet.id;
 			// console.log("Fetched tweet from API. ID:", tweet.id);
 		});
-		
+
 		// console.log(reply);
-		
+
 		// save to db
 		// db.save(reply, function(err, resp) {
 		db.bulk({ "docs": reply }, {}, function(err, resp) {
 			if(err) {
 				console.error("Error saving tweets to db", err);
 			} else {
-				console.log('saved tweets');	
+				console.log('saved tweets');
 			}
 		});
-		
+
 		// update _since_id based on response
 		/*console.log(params.slug, reply);
 		var max = _.max(reply, function(tweet){ console.log(tweet.id); return tweet.id; });
@@ -186,10 +186,10 @@ function _getTweets(params) {
  */
 function _getSinceId() {
 	console.log("_getSinceId", _since_id);
-	
+
 	var dfd = Q.defer(); // set up promise object
-	
-	// 
+
+	//
 	if(!_.isNull(_since_id)) {
 		dfd.resolve();
 		return dfd.promise;
@@ -218,15 +218,15 @@ function _buildTweetUrl(score) {
 			tweet_url = "https://twitter.com/share?",
 			params = {
 				url:"http://hotairgame.com/",
-				text: "Test your political meddle with @"+hotAirTwitter+"!"		
+				text: "Test your political meddle with @"+hotAirTwitter+"!"
 			};
 
-			
+
 	if(_.isObject(score) && score.type === 'score') {
 		params.url = "http://hotairgame.com/score/"+score._id;
-		params.text = "I just got a #score of "+score.score+" on @"+hotAirTwitter+"!";		
+		params.text = "I just got a #score of "+score.score+" on @"+hotAirTwitter+"!";
 	}
-			
+
 	tweet_url = tweet_url+querystring.stringify(params);
 
 	console.log("tweet url: ", tweet_url);
@@ -237,14 +237,14 @@ function _buildFacebookUrl(score) {
 	var facebook_url = "http://www.facebook.com/dialog/feed?",
 			params = {
 				name: "Test your political meddle with Hot Air!",
-				app_id: "155380987937796",
+				app_id: process.env.FB_APP_ID,
 				link: "http://hotairgame.com/",
 				caption: "Play the game",
 				description: "Hot Air is a web-based arcade game that uses congressional Twitter data to test your ability to understand the Democrat-vs-Republican divide.",
 				picture: "http://hotairgame.com/img/share_img.png",
 				redirect_uri: "http://hotairgame.com/"
 			};
-			
+
 	if(_.isObject(score) && score.type === 'score') {
 		params.name = "I just scored "+score.score+" points playing Hot Air!";
 		params.link = "http://hotairgame.com/score/"+score._id;
@@ -252,7 +252,7 @@ function _buildFacebookUrl(score) {
 		params.picture = "http://hotairgame.com/img/" + score.party + "_share_img.png";
 		params.redirect_uri = "http://hotairgame.com/score/"+score._id;
 	}
-	
+
 	facebook_url = facebook_url+querystring.stringify(params);
 
 	console.log("facebook url: ", facebook_url);
@@ -266,7 +266,7 @@ function _sendEmail(data, callback, context) {
 			|| !_.isString(data.from_email)
 			|| !_.isString(data.message)
 	) { callback.apply(context, [["All form fields are required."]])}
-	
+
 	var from_name = data.from_name,
 			from_email = data.from_email,
 			message = data.message,
@@ -275,8 +275,8 @@ function _sendEmail(data, callback, context) {
 				{
 					service: "Gmail",
 					auth: {
-						user: 'hotair@notioncollective.com',
-						pass: 'Madi50nW1'
+						user: process.env.EMAIL_USER,
+						pass: process.env.EMAIL_PASS
 					}
 				}
 			),
@@ -290,18 +290,18 @@ function _sendEmail(data, callback, context) {
 			context = context || this,
 			text = "",
 			html = "";
-	
+
 	_.each(data, function(value, key) {
 		options.text += key+":\n"+value+"\n-----\n";
 		options.html += '<p><b>'+key+'</b></p>'+'<p>'+value+'</p><hr/>';
 	});
-		
+
 	smtp.sendMail(options, function(err, res){ callback.apply(context, [err, res]); });
 }
 
 function _checkHighScore(score, interval) {
 	if(!_.isNumber(score) || !_.isString(interval)) throw new Error("Illegal arguments in _checkHighScore");
-	
+
 	console.log("_checkHighScore", score, interval);
 	var deferred = Q.defer(),
 			today = Date.parse(new Date().toDateString()),
@@ -311,7 +311,7 @@ function _checkHighScore(score, interval) {
 				group: false,
 				descending: true
 			};
-			
+
 	switch(interval) {
 		case 'all-time':
 			params.endkey = [score+1];
@@ -321,23 +321,23 @@ function _checkHighScore(score, interval) {
 			params.endkey = [parseInt(today),score+1];
 			break
 	}
-	
+
 	function handle_db_response(err, body) {
 		console.log("handle_db_response");
 		if(err) {
-			console.error("error checking score");			
+			console.error("error checking score");
 			deferred.reject(err);
 		}
 		console.log("check high scores resp body", body);
 		if(body && body.rows) {
 			var value = (body.rows.length < 1) ? 0 : body.rows[0].value;
-			deferred.resolve(value);				
+			deferred.resolve(value);
 		} else deferred.reject("unable to parse db response");
 	};
-	
-	
-	db.view('hotair', scores_view, _.clone(params), handle_db_response);	
-	
+
+
+	db.view('hotair', scores_view, _.clone(params), handle_db_response);
+
 	return deferred.promise;
 }
 
@@ -365,7 +365,7 @@ function _getHighScores(interval) {
 				},
 				"highscores": []
 			};
-	
+
 	switch(interval) {
 		case 'all-time':
 			stats_params.group_level = 1;
@@ -380,12 +380,12 @@ function _getHighScores(interval) {
 			throw new Error("Invalid high score interval");
 			break;
 	}
-	
-	// deferred functions	
+
+	// deferred functions
 	function handle_cumscore(err, body) {
 		console.log("handle_cumscore");
 		if(err) {
-			console.error("error getting cumscores from couchdb");			
+			console.error("error getting cumscores from couchdb");
 			cumscore_q.reject(err);
 		}
 		if(body && body.rows) {
@@ -396,7 +396,7 @@ function _getHighScores(interval) {
 		}
 		return cumscore_q.promise;
 	};
-	
+
 	function handle_highscores(err, body) {
 		console.log("handle_highscores");
 		if(err) {
@@ -411,28 +411,28 @@ function _getHighScores(interval) {
 			db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
 		}
 		return highscores_q.promise;
-	}	
-		
+	}
+
 	Q.when(highscores_q.promise, function(data){
 		console.log("highscores resolved", data);
 	});
-		
+
 	Q.when(cumscore_q.promise, function(data){
 		console.log("cumscores resolved", data);
 	});
-	
+
 	Q.allResolved(cumscore_q.promise, highscores_q.promise)
 	.then(function(promises) {
 		console.log("all resolved");
 		q.resolve(response);
 	});
-	
+
 	// couchdb calls
 	console.log("stats_params", stats_params);
 	db.view('hotair', scores_view, _.clone(highscores_params), handle_highscores);
 	// db.view('hotair', stats_view, _.clone(stats_params), handle_cumscore);
 
-	
+
 	return q.promise;
 }
 
@@ -470,7 +470,7 @@ exports.newsletter = function(req, res) {
 
 
 exports.notsupported = function(req, res) {
-	if(useragent.is(req.headers['user-agent']).chrome 
+	if(useragent.is(req.headers['user-agent']).chrome
 		|| (useragent.is(req.headers['user-agent']).safari && !useragent.is(req.headers['user-agent']).mobile_safari)
 		|| useragent.is(req.headers['user-agent']).firefox) res.redirect('/');
 	res.render('notsupported', { title: 'Hot Air - Master the (arcade) game of #politics.', slug: 'notsupported'});
@@ -479,7 +479,7 @@ exports.notsupported = function(req, res) {
 
 exports.reset = function(rew, res) {
 	console.log("reset");
-	
+
 	db.view('hotair', 'all', {limit: 50000}, function(err, resp) {
 		console.log(resp);
 	  resp.rows.forEach(function(tweet) {
@@ -496,10 +496,10 @@ exports.reset = function(rew, res) {
 */
 exports.fetch_tweets = function(req, res) {
 	console.log("fetch_tweets");
-	
-	
+
+
 	// Check if database is populated, if so use since_id
-	
+
 	_getSinceId()
 		.then(function(value) {
 			_getTweets(_params_r)
@@ -514,13 +514,13 @@ exports.fetch_tweets = function(req, res) {
 		.fail(function(err) {
 			console.error("getSinceId() failed", error);
 		});
-	
+
 	// _getTweets(_params_r);
 	// _getTweets(_params_d);
-	
+
 	if(!res) return;
 	res.send("loading tweets");
-	
+
 	// db.save('_design/tweets', {
 	// 		all: {
 	// 			map: function (doc) {
@@ -528,15 +528,15 @@ exports.fetch_tweets = function(req, res) {
 	// 			}
 	// 		}
 	// 	});
-	
+
 	// var data = req.body;
-	
+
 	// db.view('tweets/all', function(err, resp) {
 	//    	console.log("resp", resp);
 	// 	var out = [];
 	//     if(resp) {
 	// 		resp.forEach(function(row) {
-	// 	   	  out.push(row);	
+	// 	   	  out.push(row);
 	// 	   	});
 	// 	}
 	//    	console.log("out", out);
@@ -555,7 +555,7 @@ exports.all = function(req, res) {
 			res.send(resp);
 			return;
 			resp.forEach(function(row) {
-		   	  out.push(row);	
+		   	  out.push(row);
 		   	});
 		}
 	   	console.log("out", out);
@@ -586,7 +586,7 @@ exports.load_tweets = function(req, res) {
 			numSets,
 			temp,
 			merged = { // new response object
-				"total_rows": 0, 
+				"total_rows": 0,
 				"rows": [],
 			},
 			shuffled = {
@@ -616,30 +616,30 @@ exports.load_tweets = function(req, res) {
 						b.pop();
 						bLen = b.length;
 						smallerSetLen = aLen < bLen ? aLen : bLen;
-						
+
 						for(var j=0; j<smallerSetLen; j+=1) {
 							merged.rows.push(a[j]);
 							merged.rows.push(b[j]);
 						}
-						
+
 						numSets = Math.floor(merged.rows.length/numPerSet);
-						
+
 						console.log(aLen, bLen, numSets, numPerSet, merged.rows.length);
-						
+
 						for(var k=0; k<numSets; k+=1) {
 							temp = _.shuffle(merged.rows.slice(k*numPerSet, k*numPerSet+numPerSet));
-							
+
 							// insert an array into another array
 							var args = [k*numPerSet, numPerSet].concat(temp);
 							Array.prototype.splice.apply(merged.rows, args);
 						}
-						
+
 						merged.nextStartkey = minKey;
 						res.send(merged); // send response
 					}
 				}
 			};
-			
+
 	if(req.query.startkey) {
 		params.startkey = req.query.startkey;
 	}
@@ -647,7 +647,7 @@ exports.load_tweets = function(req, res) {
 	// query database
 	db.view('hotair', 'democrats', params, merge);
 	db.view('hotair', 'republican', params, merge);
-	
+
 }
 
 /**
@@ -666,7 +666,7 @@ exports.democrats = function(req, res) {
 			res.send(resp);
 			return;
 			// resp.forEach(function(row) {
-			// 		   	  out.push(row);	
+			// 		   	  out.push(row);
 			// 		   	});
 		}
 		// 	   	console.log("out", out);
@@ -686,7 +686,7 @@ exports.republican = function(req, res) {
 			res.send(resp);
 			return;
 			// resp.forEach(function(row) {
-			// 		   	  out.push(row);	
+			// 		   	  out.push(row);
 			// 		   	});
 		}
 		// 	   	console.log("out", out);
@@ -701,7 +701,7 @@ exports.check_highscore = function(req, res) {
 	if(interval && req.params.score) {
 		_checkHighScore(parseInt(req.params.score), interval)
 			.then(function(n) { res.send(JSON.stringify(n)); })
-			.fail(function(error) { console.error(error); })		
+			.fail(function(error) { console.error(error); })
 	}	else if(req.params.score) {
 		var deferred = Q.defer(),
 				promises = [],
@@ -712,11 +712,11 @@ exports.check_highscore = function(req, res) {
 				all_checks[value] = n;
 			})
 		})
-		
+
 		Q.allResolved(promises)
 		.then(function(){
 			res.send(JSON.stringify(all_checks));
-		});		
+		});
 	}
 }
 
@@ -742,7 +742,7 @@ exports.highscores = function(req, res) {
 				all_scores[value] = data;
 			})
 		})
-		
+
 		Q.allResolved(promises)
 		.then(function(){
 			res.send(500, JSON.stringify(all_scores));
@@ -767,7 +767,7 @@ exports.score = function(req, res) {
 				title: "Score!",
 				slug: 'score',
 			});
-		});		
+		});
 	} else res.redirect('/'); // redirect if no id
 }
 
@@ -792,7 +792,7 @@ exports.contact_send = function(req, res) {
 				if(em_err) res.send({"errors":["There was an error sending the email"]});
 				else res.send(JSON.stringify(em_res));
 	};
-	
+
 	// insert the email
 	db.insert(data, function(err, body, header) {
 		if (err) {
@@ -808,20 +808,20 @@ exports.contact_send = function(req, res) {
 
 /*
  * Handles share actions for the following endpoints
- * 
+ *
  * /share/score/{service}/{score id}
  * redirect to a share action for the selected service for a specific score
- * 
+ *
  * /share/{service}
  * redirect to a general share action for the selected service
- * 
+ *
  * /share
  * render the share page
- * 
+ *
  * Available share services:
  * - facebook
  * - twitter
- * 
+ *
  * GET
  */
 exports.share = function(req, res) {
@@ -855,7 +855,7 @@ exports.share = function(req, res) {
 							// insert doc for share
 							db.insert(doc, share_insert);
 							// redirect no matter what
-							res.redirect(_buildTweetUrl(data));	
+							res.redirect(_buildTweetUrl(data));
 						}
 					});
 				// otherwise, generic twitter share
@@ -875,7 +875,7 @@ exports.share = function(req, res) {
 							// insert doc for share
 							db.insert(doc, share_insert);
 							// redirect no matter what
-							res.redirect(_buildFacebookUrl(data));	
+							res.redirect(_buildFacebookUrl(data));
 						}
 					});
 				// otherwise, generic facebook share
@@ -901,18 +901,18 @@ exports.highscore = function(req, res) {
 		sess = req.session;
 	console.log("highscore: ", data);
 	console.log("session: ", sess);
-	
+
 	// make sure there is an active game in this session, and that the hit count matches the expected (in session's game object)
 	if(!sess.game || (data.hits !== sess.game.hitCount+1 && data.hits !== sess.game.hitCount)) {
 		res.send({"error": "Error saving score."});
 		return;
 	}
-	
+
 	// add timestamp, IP address, and user_token
 	data.timestamp = Date.now();
 	data.user_token = sess.user_token;
 	data.ip = req.ip;
-	
+
 	db.insert(data, function(err, body, header) {
 		if (err) {
 			console.error("Error saving high score", err)
@@ -934,17 +934,17 @@ exports.data = function(req, res) {
 	var data = req.body,
 		respBody = {},
 		sess = req.session;
-	
+
 	// add IP address and user_token
 	data.user_token = sess.user_token;
 	data.ip = req.ip;
 	data.timestamp = Date.now();
-	
+
 	// if this is a "hit", add to session game.
 	if(data.type === "hit") {
 		sess.game.hitCount += 1;
 	}
-	
+
 	console.log("data: ", data);
 	// db.save(data, function(db_err, db_res) {
 	db.insert(data, function(db_err, db_res) {
@@ -965,7 +965,7 @@ exports.data = function(req, res) {
  * @param {Object} res
  */
 exports.startGame = function(req, res) {
-	var 
+	var
 		sess = req.session,
 		data = req.body,
 		game_id = uuid.v1(),
@@ -1001,7 +1001,7 @@ exports.submitErrorReport = function(req, res) {
 		userMessage = data.userMessage,
 		rev,
 		respBody = {};
-		
+
 	// get the revision number, then insert the message
 	db.get(id, { revs_info: true }, function(db_err, db_res) {
 	  if (db_err) {
@@ -1020,8 +1020,8 @@ exports.submitErrorReport = function(req, res) {
 			res.send(respBody);
 		});
 	});
-	
-	
+
+
 }
 
 exports.errorTest = function(req, res) {
@@ -1030,13 +1030,13 @@ exports.errorTest = function(req, res) {
 		_id: uuid.v1(),
 		type: "error"
 	};
-	
+
 	db.insert(error, function(db_err, db_res) {
 		if(db_err) {
 			console.log(db_err);
 		} else {
 			console.log(db_res);
-			res.send(500, error);			
+			res.send(500, error);
 		}
 	});
 }
@@ -1054,16 +1054,16 @@ exports.update_lists = function(req, res) {
 
 // exports.register = function(req, res) {
   // var data = req.body;
-// 
+//
   // // Check if username is in use
   // db.get(data.username, function(err, doc) {
     // if(doc) {
       // res.render('add', {flash: 'Username is in use'});
-// 
+//
     // // Check if confirm password does not match
     // } else if(data.password != data.confirm_password) {
       // res.render('add', {flash: 'Password does not match'});
-// 
+//
     // // Create user in database
     // } else {
       // delete data.confirm_password;
