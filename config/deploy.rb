@@ -7,6 +7,8 @@ set :repo_url, 'https://github.com/notioncollective/hotair.git'
 set :node_bin_path, '/usr/local/bin/node'
 set :npm_roles, :web
 
+append :linked_files, ".env"
+
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
