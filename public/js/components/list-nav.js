@@ -18,12 +18,12 @@ Crafty.c("ListNav", {
 		this.chooseSelectionKeys = [Crafty.keys.ENTER, Crafty.keys.SPACE];
 		this.z = 2000;
 		
-		this.bind("KeyDown", function(e) {
-			if (e.key === Crafty.keys.LEFT_ARROW) {
+		this.bind("KeyDown", function(e) {			
+			if (e.keyCode === Crafty.keys.LEFT_ARROW) {
 				this.selectPrevItem();
-			} else if(e.key === Crafty.keys.RIGHT_ARROW) {
+			} else if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
 				this.selectNextItem();				
-			} else if(_.indexOf(this.chooseSelectionKeys, e.key) !== -1) {
+			} else if(_.indexOf(this.chooseSelectionKeys, e.keyCode) !== -1) {
 				this.chooseSelectedListItem();
 			}
 		});

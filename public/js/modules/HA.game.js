@@ -64,6 +64,7 @@ HA.game = function(ns, $, _, C) {
 			C.audio.unpause("game_music");
 			if(!HA.enemyController.isProducing()) HA.enemyController.startProducing();
 		});
+
 		
 		// using jQuery here, wasn't sure of the Crafty equiv
 		$(window).on('resize orientationChanged', function(e) {
@@ -443,7 +444,6 @@ HA.game = function(ns, $, _, C) {
 	 * @method _gameplayKeyboardEventHandler
 	 */
 	function _gameplayKeyboardEventHandler(e) {
-		console.log("keydown");
 		if(e.keyCode == Crafty.keys['ENTER']) {
 			if(!Crafty.isPaused()) {
 				HA.m.publish(HA.events.PAUSE_GAME);
