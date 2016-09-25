@@ -8,7 +8,8 @@ Crafty.scene("loading", function() {
 	var cacheBuster = HA.game.cacheBuster();
 	console.log(cacheBuster);
 	
-	Crafty.load([
+	Crafty.load({
+		images: [ 
 		"img/20x2.png?_="+cacheBuster,
 		"img/40x2.png?_="+cacheBuster,
 		"img/balloonx2.png?_="+cacheBuster,
@@ -45,7 +46,7 @@ Crafty.scene("loading", function() {
 		"/snd/select2.mp3?_="+cacheBuster,
 		"/snd/addLife.mp3?_="+cacheBuster,
 		"/snd/addLife.ogg?_="+cacheBuster
-		],
+		]},
 		function() {
 			
 			// audio loading

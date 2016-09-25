@@ -6,8 +6,8 @@ Crafty.c("MessageDisplay", {
 		this.setTemplate($("#MessageDisplayTemplate").html());
 		this.x = 0;
 		this.y = 0;
-		this.w = Crafty.DOM.window.width;
-		this.h = Crafty.DOM.window.height;
+		this.w = Crafty.viewport._width;
+		this.h = Crafty.viewport._height;
 		this.css("display", "none");
 		this.showMessage(" ");
 		this._blinkCount = 3;
