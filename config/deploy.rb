@@ -1,5 +1,5 @@
-# config valid only for Capistrano 3.1
-lock '3.4.0'
+# config valid only for Capistrano 3.4
+lock '3.6.1'
 
 set :application, 'Hotair'
 set :repo_url, 'ncgitolite@notioncollective.com:hotairnode'
@@ -37,8 +37,8 @@ set :linked_files, %w{.env}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
+
 set :keep_releases, ENV['CAP_KEEP_RELEASES'].to_i || 5
-# 
 
 namespace :node do
 

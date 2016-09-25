@@ -10,3 +10,4 @@ venv
 public/img/build/psd/*.png
 public/img/build//psd*.css
 public/js/dist/*
+log/*
