@@ -5,8 +5,8 @@
 HA.enemyController = function(ns, $, _, C) {
 
 
-	
-	
+
+
 	// Private Scoped Members
 	var _producing = false, _curEnemy = 0, _numEnemies = 0, _numEnemiesLeft = null, _timer = null, _interval = 5000, _speed = 1, _selectedEnemy = null, _tweets = [], _enemies = [];
 
@@ -19,69 +19,80 @@ HA.enemyController = function(ns, $, _, C) {
 		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, _handleEnemyHitCompleteEvent);
 		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, _handleEnemyOffScreenCompleteEvent);
 		HA.m.subscribe(HA.e.ENEMY_DESTROYED, _handleEnemyDestroyedEvent);
-		
-		_bindKeyboardEvents();
+		HA.m.subscribe(HA.e.ENEMY_SELECTED, _handleEnemySelectedEvent);
+
+		// _bindKeyboardEvents();
 	}
 
 	/**** EVENT HANDLERS *****/
-	
-	function _bindKeyboardEvents() {
-		_unbindKeyboardEvents();
-		C.bind("KeyDown", _selectEnemy);
-	}
-	
-	function _unbindKeyboardEvents() {
-		C.unbind("KeyDown", _selectEnemy);		
-	}
+
+	// function _bindKeyboardEvents() {
+	// 	_unbindKeyboardEvents();
+	// 	C.bind("KeyDown", _selectEnemy);
+	// }
+
+	// function _unbindKeyboardEvents() {
+	// 	C.unbind("KeyDown", _selectEnemy);
+	// }
 
 	function _handleStartNewGameEvent(e) {
-		_bindKeyboardEvents();
+		// _bindKeyboardEvents();
 	}
 
 	function _handlePauseGameEvent(e) {
 		_stopProducing();
-		_unbindKeyboardEvents();
+		// _unbindKeyboardEvents();
 	}
 
 	function _handleResumeGameEvent(e) {
 		console.log("HA.enemyController _handleResumeGameEvent");
 		_startProducing();
-		_bindKeyboardEvents();
+		// _bindKeyboardEvents();
 	}
-	
+
 	function _handleEndGameEvent(e) {
 		_stopProducing();
-		_unbindKeyboardEvents();
+		// _unbindKeyboardEvents();
 		_removeAllEnemies();
 	}
-	
+
 	/**
 	 * Handle GAME_OVER event.  Stops production, destroys all enemies, clears out _enemies array.
 	 * @private _handleGameOverEvent
 	 */
 	function _handleGameOverEvent(e) {
 		_stopProducing();
-		_unbindKeyboardEvents();
+		// _unbindKeyboardEvents();
 		_removeAllEnemies();
 	}
-	
+
 	function _handleEnemyHitStartEvent(e, enemy) {
 		console.log('HA.enemyController _handleEnemyHitStartEvent');
-		
+
 	}
-	
+
 	function _handleEnemyHitCompleteEvent(e, enemy) {
 		console.log('HA.enemyController _handleEnemyHitCompleteEvent');
 		_removeEnemy(enemy);
 	}
-	
+
 	function _handleEnemyOffScreenCompleteEvent(e, enemy) {
 		console.log('HA.enemyController _handleEnemyOffScreenEvent');
 		_removeEnemy(enemy);
 	}
-	
+
 	function _handleEnemyDestroyedEvent(e, enemy) {
 		console.log('HA.enemyController _handleEnemyDestroyedEvent');
+	}
+
+	// When an enemy is selected, unselect the rest
+	function _handleEnemySelectedEvent(e, selectedEnemy) {
+		console.log('HA.enemyController _handleEnemySelectedEvent');
+		_.filter(_enemies, function(enemy) {
+			if (enemy.getId() !== selectedEnemy.getId()) {
+				enemy.unselect();
+			}
+		});
 	}
 
 	/***** PRIVATE METHODS *****/
@@ -131,17 +142,6 @@ HA.enemyController = function(ns, $, _, C) {
 		_curEnemy += 1;
 	}
 
-	function _selectEnemy(e) {
-		_setSelectedEnemy();
-
-		if(e.keyCode === C.keys.DOWN_ARROW) {
-			_selectNextEnemy();
-		} else if(e.keyCode === C.keys.UP_ARROW) {
-			_selectPreviousEnemy();
-			console.log("game.selectedEnemy: " + _selectedEnemy);
-		}
-	}
-
 	function _selectNextEnemy() {
 		_setSelectedEnemy();
 		if(_selectedEnemy < _enemies.length - 1) {
@@ -177,7 +177,7 @@ HA.enemyController = function(ns, $, _, C) {
 			return enemy.selected;
 		});
 	}
-	
+
 	function _removeEnemy(enemy) {
 		var index = _.indexOf(_enemies, enemy);
 		console.log("Removing Visible Enemy: " + enemy);
@@ -196,7 +196,7 @@ HA.enemyController = function(ns, $, _, C) {
 				_enemies.splice(index, 1);
 				console.log("000000000 unselected enemy destroyed");
 			}
-			
+
 			// _destroyEnemy(enemy);
 			_numEnemiesLeft -= 1;
 			if(_numEnemiesLeft === 0) {
@@ -215,7 +215,7 @@ HA.enemyController = function(ns, $, _, C) {
 			enemy.destroy();
 		}
 	}
-	
+
 	function _removeAllEnemies() {
 		// _.each(_enemies, function(enemy) {
 			// enemy.unbindAllMediatorEvents();
@@ -224,7 +224,7 @@ HA.enemyController = function(ns, $, _, C) {
 		_destroyAllEnemies();
 		_enemies = [];
 	}
-	
+
 	function _destroyAllEnemies() {
 		_.each(_enemies, function(enemy) {
 			_destroyEnemy(enemy);
@@ -232,7 +232,7 @@ HA.enemyController = function(ns, $, _, C) {
 			// enemy.destroy();
 		});
 	}
-	
+
 	// Public interface
 
 	/**

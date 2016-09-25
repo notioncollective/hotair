@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 	  	main: {
 		  	options: {
 		  		banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-		  			'<%= grunt.template.today("yyyy-mm-dd") %> */' 
+		  			'<%= grunt.template.today("yyyy-mm-dd") %> */'
 		  	},
 		    files: {
 		      'public/js/dist/build.js': ['public/js/lib/*.js', 'public/js/modules/HA.js', 'public/js/modules/HA.*.js', 'public/js/components/*.js', 'public/js/scenes/*.js', 'public/js/main_prod.js'],
