@@ -5,16 +5,16 @@ Crafty.c("HighScoreFormDisplay", {
 		this.setTemplate($("#HighScoreFormDisplayTemplate").html());
 		this.x = 0;
 		this.y = 0;
-		this.w = Crafty.DOM.window.width;
-		this.h = Crafty.DOM.window.height;
+		this.w = Crafty.viewport.width;
+		this.h = Crafty.viewport.height;
 	},
 	/**
-	 * 
+	 *
 	 */
 	showHighScoreFormDisplay: function() {
 		$("#HighScoreFormDisplay").show();
 	},
-	
+
 	hideHighScoreFormDisplay: function() {
 		$("#HighScoreFormDisplay").hide();
 	}

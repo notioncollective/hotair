@@ -2,10 +2,10 @@ Crafty.c("EnemySelection", {
 	init: function() {
 		this.addComponent("2D, DOM, SpriteAnimation, balloonx2");
 		this
-			.animate("selected", 0, 1, 3)		
-			.animate("selected", 30, -1);
-			
-		this.bind('EnterFrame', this._enterFrame);         
+			.reel("selected", 1000, 0, 1, 4)
+			.animate("selected", -1);
+
+		this.bind('EnterFrame', this._enterFrame);
 	},
 	// setParent: function(obj) {
 		// console.log("EnemySelection :: Set parent", obj);

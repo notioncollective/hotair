@@ -2,23 +2,23 @@ Crafty.c("HitScore", {
 	init: function() {
 		console.log("HitScore : init()");
 		this.addComponent("2D, DOM, SpriteAnimation, SpriteFont, cloud_scorex2");
-		
+
 		this._score_w = 16;
-		
+
 		this.xv = 0;
 		this.yv = Math.random()*.5+.5;
-		
+
 		this.w = 100;
 		this.h = 106;
-		
+
 		this.score = 0;
-		
+
 		this
-			.animate("up", 0, 0, 5)		
+			.animate("up", 0, 0, 5)
 			.animate("down", 0, 1, 5);
-		
+
 		this.bind("EnterFrame", function(e) {
-			
+
 			// move up/down
 			if(this.score < 0) {
 				this.y += this.yv;
@@ -29,21 +29,21 @@ Crafty.c("HitScore", {
 			}
 
 			// destroy once out of screen
-			if(this.y > Crafty.DOM.window.height+this.h) {
+			if(this.y > Crafty.viewport.height+this.h) {
 				this.score_text.destroy();
 				this.destroy();
 			} else if (this.y < -this.h) {
 				this.score_text.destroy();
 				this.destroy();
 			}
-			
+
 		});
-		
+
 	},
 	setScore: function(score) {
 		this.score = score;
 		var score_str = (score > 0) ? "+"+this.score.toString() : this.score.toString();
-		
+
 		// set up score text
 		this.score_text = Crafty.e("2D, DOM, SpriteText")
 				.registerFont("BlueScore", this._score_w, HA.game.cacheBuster('../../img/fonts/blue_score_16x16.png'))
@@ -56,7 +56,7 @@ Crafty.c("HitScore", {
 					z:0
 				})
 				.text('');
-					
+
 		// determine font/animation based on sign of score
 		if(this.score > 0) {
 			this.animate("up", 15, 0);

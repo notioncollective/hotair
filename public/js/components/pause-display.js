@@ -6,12 +6,12 @@ Crafty.c("PauseDisplay", {
 		this.x = 0;
 		this.y = 0;
 		this.z = 1000;
-		this.w = Crafty.DOM.window.width;
-		this.h = Crafty.DOM.window.height;
+		this.w = Crafty.viewport.width;
+		this.h = Crafty.viewport.height;
 		this.updateContent();
 	},
 	/**
-	 * 
+	 *
 	 */
 	showPauseScreenDisplay: function() {
 		$("#PauseDisplay").show();

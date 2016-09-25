@@ -6,8 +6,8 @@ Crafty.c("TimerDisplay", {
 		this.addComponent("2D, DOM, Color, Text");
 		this.w = 180;
 		this.h = 30;
-		this.x = Crafty.DOM.window.width-this.w-40;
-		this.y = Crafty.DOM.window.height-this.h;
+		this.x = Crafty.viewport.width-this.w-40;
+		this.y = Crafty.viewport.height-this.h;
 		this.text(this.formatScore('0'));
 		this.css({"text-align": "right"});
 
@@ -21,7 +21,7 @@ Crafty.c("TimerDisplay", {
 	},
 
 	updateScoreBackground: function() {
-		var y = Crafty.DOM.window.height-80,
+		var y = Crafty.viewport.height-80,
 			w = this.w,
 			sprite_w = 80;
 

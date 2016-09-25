@@ -7,12 +7,12 @@ Crafty.c("EnemySelectionArrow", {
 		// this.y = 80;
 		this.z = -1;
 		this
-			.animate("select_arrow", 0, 0, 3)
-			.animate("select_arrow", 30, -1);		
-			
-    this.bind('EnterFrame', this._enterFrame);         
+			.reel("select_arrow", 1000, 0, 0, 4)
+			.animate("select_arrow", -1);
+
+    this.bind('EnterFrame', this._enterFrame);
 	},
-	
+
 	 _enterFrame: function() {
     if(typeof this.enemyParent !== 'undefined') {
       this.y = this.enemyParent.y-70;

@@ -8,9 +8,9 @@ Crafty.c("Enemy", {
 		this.h = 120;
 		this.selected = false;
 		this.hit = false;
-		this.y = Crafty.DOM.window.height + this.h;
-		this.x = this.w + Math.random()*(Crafty.DOM.window.width-this.w*2);
-		this.vy = 800;
+		this.y = Crafty.viewport.height + this.h;
+		this.x = this.w + Math.random()*(Crafty.viewport.width-this.w*2);
+		this.vy = -200;
 		this.scoreMultiplier = 1;
 
 
@@ -20,13 +20,14 @@ Crafty.c("Enemy", {
 		this.TERMINAL_VELOCITY = 10; // for falling, max dy
 
 		this
-			.animate("hit_d", 0, 3, 4)
-			.animate("hit_r", 5, 3, 9)
-			.animate("falling_d", 0, 0, 1)
-			.animate("falling_r", 2, 0, 3)
-			.animate("normal", 0, 2, 15)
-			.animate("normal", this.BALLOON_DURATION, -1)
+			.reel("hit_d", 1000, 0, 4, 4)
+			.reel("hit_r", 1000, 5, 4, 4)
+			.reel("falling_d", 200, 0, 0, 2)
+			.reel("falling_r", 200, 2, 0, 2)
+			.reel("normal", 2000, 0, 2, 16);
+			// .reel("normal", this.BALLOON_DURATION, -1)
 
+		this.animate('normal', -1);
 
 		this.collision(new Crafty.polygon([
 			[20,40],
@@ -38,7 +39,7 @@ Crafty.c("Enemy", {
 		]));
 
 		// trigger the Offscreen event if balloon goes offscreen
-		this.bind('Moved', this.onMove);
+		// this.bind('Moved', this.onMove);
 
 		// move on every frame
 		// this.bind('EnterFrame', this._move);
@@ -90,7 +91,7 @@ Crafty.c("Enemy", {
 
 	setSpeed: function(speed) {
 		console.log("speed: ", speed);
-		this.vy = (speed * 500); // speed
+		this.vy = (speed * -100); // speed
 		console.log("this.dy: ", this.dy);
 		return this;
 	},
@@ -113,7 +114,7 @@ Crafty.c("Enemy", {
 		if(this.dy < this.TERMINAL_VELOCITY) {
 			this.dy = this.dy*1.1;
 		}
-		if(this.y > Crafty.DOM.window.height+20) {
+		if(this.y > Crafty.viewport.height+20) {
 			this.unbindAllMediatorEvents();
 			this
 				.unbind("EnterFrame", this._fallingCallback)
@@ -227,7 +228,7 @@ Crafty.c("Enemy", {
 	},
 
 	onMove: function(e) {
-		console.log('onMove', e);
+		// console.log('onMove', e);
 		// top of screen
 		if (this.y <= -this.h) {
 			this.onLeaveScreenTop();

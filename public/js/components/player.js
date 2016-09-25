@@ -13,11 +13,11 @@ Crafty.c("Player", {
 		});
 
 		this.bind("EnterFrame", function(e) {
-			if(this.x > Crafty.DOM.window.width) {
+			if(this.x > Crafty.viewport.width) {
 				this.x = -40;
 			}
 			if(this.x < -40) {
-				this.x = Crafty.DOM.window.width;
+				this.x = Crafty.viewport.width;
 			}
 		});
 	},

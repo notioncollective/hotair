@@ -7,32 +7,32 @@ Crafty.c("TweetPerson", {
 
 		this.w = 80;
 		this.h = 80;
-		
+
 		// set up animation states
 		this
-			.animate("r", 0, 0, 7)		
+			.animate("r", 0, 0, 7)
 			.animate("d", 0, 1, 7);
 
 		// this.angle = 0;
 
 		this.bind("EnterFrame", function(e) {
-			
+
 			this.y += this.yv;
 
 			// destroy once out of screen
-			if(this.y > Crafty.DOM.window.height+this.h) {
+			if(this.y > Crafty.viewport.height+this.h) {
 				this.destroy();
 			} else if (this.y < -this.h) {
 				this.destroy();
 			}
-			
+
 			// this.x += (Math.sin(this.angle)/2);
 			// this.angle = (this.angle >= 360) ? 0 : this.angle +.05;
 
 		});
 
 	},
-	
+
 	// set party to 'r' or 'd'
 	setTweetPersonParty: function(party) {
 		this.setParty(party);
