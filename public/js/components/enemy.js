@@ -3,27 +3,29 @@ Crafty.c("Enemy", {
 	init: function() {
 		console.log("Enemy : init");
 		_.bindAll(this);
-		this.addComponent("2D, DOM, Color, Collision, Text, Tweet, SpriteAnimation, Party, balloonx2");
-		this.color("#0F0");
+		this.addComponent("2D, DOM, Motion, Collision, Text, Tweet, SpriteAnimation, Party, Swipe, balloonx2");
 		this.w = 120;
 		this.h = 120;
 		this.selected = false;
 		this.hit = false;
 		this.y = Crafty.DOM.window.height + this.h;
 		this.x = this.w + Math.random()*(Crafty.DOM.window.width-this.w*2);
-		// this.x = Crafty.DOM.window.width-150;
-		this.dy = (Math.random()*.5)+.3; // speed
+		this.vy = 800;
 		this.scoreMultiplier = 1;
-		
+
+
+		// swipe config
+		this.minTapDistance = this.w / 2;
+
 		this.TERMINAL_VELOCITY = 10; // for falling, max dy
-		
+
 		this
-			.animate("hit_d", 0, 3, 4)		
-			.animate("hit_r", 5, 3, 9)		
-			.animate("falling_d", 0, 0, 1)		
-			.animate("falling_r", 2, 0, 3)		
-			.animate("normal", 0, 2, 15)		
-			.animate("normal", this.BALLOON_DURATION, -1)			
+			.animate("hit_d", 0, 3, 4)
+			.animate("hit_r", 5, 3, 9)
+			.animate("falling_d", 0, 0, 1)
+			.animate("falling_r", 2, 0, 3)
+			.animate("normal", 0, 2, 15)
+			.animate("normal", this.BALLOON_DURATION, -1)
 
 
 		this.collision(new Crafty.polygon([
@@ -34,28 +36,34 @@ Crafty.c("Enemy", {
 			[this.w-20,40],
 			[this.w/2, this.h],
 		]));
-		
-		this.startMovement();
-		
+
+		// trigger the Offscreen event if balloon goes offscreen
+		this.bind('Moved', this.onMove);
+
+		// move on every frame
+		// this.bind('EnterFrame', this._move);
+
+		// this.startMovement();
+
 	},
-	
+
 	/**
-	 * This is called from within the dart's hit event handler.  Must be registered after hit so that only 
+	 * This is called from within the dart's hit event handler.  Must be registered after hit so that only
 	 * balloons that have been hit will be subscribed to the hit complete event.
 	 */
 	registerHitCompleteEvent: function() {
-		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, this._handleHitCompleteEvent);		
+		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, this._handleHitCompleteEvent);
 	},
-	
+
 	unbindAllMediatorEvents: function() {
 		HA.m.unsubscribe(HA.e.ENEMY_HIT_COMPLETE, this._handleHitCompleteEvent);
-		HA.m.unsubscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);		
+		HA.m.unsubscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
 	},
-	
+
 	_handleHitCompleteEvent: function(e, enemy, dScore) {
 		this.doHit(dScore);
 	},
-	
+
 	_handleEnemyOffScreenComplete: function(e, enemy, dScore, whoops) {
 		console.log("Enemy: _handleEnemyOffScreenComplete", enemy, dScore);
 		if(whoops) {
@@ -64,7 +72,7 @@ Crafty.c("Enemy", {
 		this.unbindAllMediatorEvents();
 		this.destroy();
 	},
-	
+
 	/**
 	 * This is called from the hit complete event handler
 	 */
@@ -77,15 +85,16 @@ Crafty.c("Enemy", {
 		if(typeof this.selection !== 'undefined') this.selection.destroy();
 		this.showTweetPerson();
 		this.showScore(dScore);
-			
+
 	},
-	
+
 	setSpeed: function(speed) {
 		console.log("speed: ", speed);
-		this.dy = (speed); // speed
+		this.vy = (speed * 500); // speed
 		console.log("this.dy: ", this.dy);
 		return this;
 	},
+
 	startMovement: function() {
 		this.bind("EnterFrame", this._risingCallback);
 	},
@@ -112,6 +121,7 @@ Crafty.c("Enemy", {
 			console.log("++++++ DESTROYED ENEMY ENTITY", this, this.y);
 		}
 	},
+
 	_risingCallback: function(e) {
 			this.y -= this.dy;
 			if (this.y < 80-this.h-10) {
@@ -119,9 +129,9 @@ Crafty.c("Enemy", {
 				if(this.hit) return;
 				this.hit = true;
 				this.unbind("EnterFrame");
-				
+
 				HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
-				
+
 				HA.m.publish(HA.e.ENEMY_OFF_SCREEN_START, [this]);
 			}
 	},
@@ -133,7 +143,7 @@ Crafty.c("Enemy", {
 								x: this.x,
 								y: this.y+offset
 							})
-							.setScore(score);							
+							.setScore(score);
 	},
 	showTweetPerson: function() {
 		var party = this.getParty();
@@ -154,9 +164,13 @@ Crafty.c("Enemy", {
 				})
 				.setParty(party)
 				.drawInfo();
-		// var tpw = tweet_person_info.;
 	},
+	showTweet: function() {
+		// show the tweet beside the baloon
+	},
+
 	select: function() {
+		console.log('enemy.select', this.getId());
 		if(!this.selected) Crafty.audio.play("select", 1, .5);
 		this.selected = true;
 		this.selection = Crafty.e('EnemySelection')
@@ -172,13 +186,60 @@ Crafty.c("Enemy", {
               enemyParent: this
             });
 
-		// this.stop().animate("selected", this.BALLOON_DURATION, -1);
 		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
 	},
 	unselect: function() {
 		this.selected = false;
-		if(typeof this.selection !== 'undefined') this.selection.destroy();			
-		if(typeof this.balloon_select_arrow !== 'undefined') this.balloon_select_arrow.destroy();			
-		// this.stop().animate("normal", this.BALLOON_DURATION, -1);
+		if(typeof this.selection !== 'undefined') this.selection.destroy();
+		if(typeof this.balloon_select_arrow !== 'undefined') this.balloon_select_arrow.destroy();
+	},
+
+	//
+	// new API
+	//
+
+	// each enemy has a tweet which has a unique ID
+	getId: function() {
+		return this.tweet.id;
+	},
+
+	// On top, select this eneny
+	onTap: function(e) {
+		this.select();
+	},
+
+	onSwipeUp: function(e) {
+		if (this.selected) {
+			this.vy = -1000;
+			this.ay = -1000;
+			this.showPartyColor();
+			this.selected = false;
+			Crafty.trigger('BalloonReleased', this);
+		}
+	},
+	onSwipeDown: function(e) {
+		if (this.selected) {
+			this.marked = true;
+			this.trigger('Fire', this);
+			this.selected = false;
+			Crafty.trigger('BalloonReleased', this);
+		}
+	},
+
+	onMove: function(e) {
+		console.log('onMove', e);
+		// top of screen
+		if (this.y <= -this.h) {
+			this.onLeaveScreenTop();
+
+		// bottom of screen
+		} else if (this.ht && (this.y >= Crafty.viewport._height)) {
+			this.onLeaveScreenBottom();
+		}
+
+		// text follows balloon
+		if (this.text) {
+			this.text.y = this.y;
+		}
 	}
 });

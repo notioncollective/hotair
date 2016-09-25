@@ -9,6 +9,7 @@ HA.game = function(ns, $, _, C) {
 			_defaults = {},
 			_scoreIncrement = 100,
 			_level = 0,
+			_timer,
 			_party,
 			_perfectLevel = true,
 			_numEnemiesPerLevel = 10,
@@ -31,10 +32,10 @@ HA.game = function(ns, $, _, C) {
 		HA.mediator.init();
 		HA.enemyController.init();
 		HA.sceneManager.init();
-		
-		// High scores are now loaded on demand.	
+
+		// High scores are now loaded on demand.
 		// _fetchHighScores();
-		
+
 		// The init method no longer performs the fetch, so it's not necessary here.
 		HA.twitter.init();
 
@@ -49,7 +50,7 @@ HA.game = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.INCREMENT_LEVEL, _handleIncrementLevelEvent);
 		HA.m.subscribe(HA.events.START_LEVEL, _handleStartLevelEvent);
 		HA.m.subscribe(HA.e.SAVE_SCORE, _handleSaveScoreEvent);
-		
+
 		// For window blur, when changing browser windows or application
 		C.bind("Pause", function(e) {
 			console.log("C.bind('Pause')");
@@ -65,26 +66,26 @@ HA.game = function(ns, $, _, C) {
 			if(!HA.enemyController.isProducing()) HA.enemyController.startProducing();
 		});
 
-		
+
 		// using jQuery here, wasn't sure of the Crafty equiv
 		$(window).on('resize orientationChanged', function(e) {
 		  // console.log("Change viewport size!", e);
       HA.m.publish(HA.events.RESIZE_VIEWPORT, [C.DOM.window.width, C.DOM.window.height]);
     });
-		
+
 		HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
 		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
 
 		// Initialize Crafty
 		C.init();
 		C.settings.modify("autoPause", true);
-		
+
 		// Load the first scene
 		HA.m.publish(HA.events.LOAD_SCENE, ["loading"]);
 
 	};
-	
-	
+
+
 	/***** EVENT HANDLERS *****/
 
 	/**
@@ -117,7 +118,7 @@ HA.game = function(ns, $, _, C) {
 		_initNewGame();
 		HA.m.publish(HA.e.START_LEVEL, [_level]);
 	}
-	
+
 	function _initNewGame() {
 		var token = HA.getCsrfToken();
 		$.ajax({
@@ -132,11 +133,11 @@ HA.game = function(ns, $, _, C) {
 					console.log("Game Started!");
 				} else {
 					console.error("error starting game");
-				} 	
+				}
 			}
 		});
-	} 
-	
+	}
+
 	/**
 	 * Handles GAME_OVER event.
 	 * @private
@@ -147,7 +148,7 @@ HA.game = function(ns, $, _, C) {
 		console.log("HA.game handleGameoverEvent");
 		// TODO: Possibly perform extra cleanup here, maybe clear out the mediator?
 		_unbindGameplayKeyboardEvents();
-		
+
 		// _saveScore();
 		// _pauseDisplay.destroy();
 		// _pauseMenu.destroy();
@@ -166,25 +167,25 @@ HA.game = function(ns, $, _, C) {
 		if(!C.isPaused()) {
 			// remove event bindings from Gameplay
 			_unbindGameplayKeyboardEvents();
-			
+
 			_createPauseDisplay();
 
 			// Pause the music, but leave other sounds alone.
 			C.audio.pause("game_music");
 			C.audio.play('pause');
-			
+
 			// Do the actual frame pause on following frame.
 			Crafty.bind("EnterFrame", _doPause);
-			
+
 		}
 	};
 
-	
+
 	/**
 	 * Perform the actual pause of the draw loop via Crafty.pause();
 	 * Also displays the PauseDisplay and pause menu entities.
 	 * @private
-	 * @method _doPause(); 
+	 * @method _doPause();
 	 */
 	function _doPause() {
 		Crafty.unbind("EnterFrame", _doPause);
@@ -193,11 +194,11 @@ HA.game = function(ns, $, _, C) {
 		C.settings.modify("autoPause", false);
 		C.pause();
 	}
-	
+
 	function _createCloseMenu() {
 		closeMenuNav = Crafty.e('ListNav')
 			.attr({wrappingId: "CloseListNav"});
-			
+
 		closeMenuNav.addListItem({
 			text: "Ok!",
 			callback: function() {
@@ -210,18 +211,18 @@ HA.game = function(ns, $, _, C) {
 	}
 
 
-	function _createPauseDisplay() {	
+	function _createPauseDisplay() {
 			// Create the pause display entity
 			_pauseDisplay = C.e("PauseDisplay");
 	}
-	
+
 	function _createPauseMenu() {
-		
+
 			console.log("create pause menu");
 			// Create the pause nav entity
 			_pauseMenu = C.e("ListNav")
 				.attr({wrappingId: "PauseNav"});
-			
+
 			_pauseMenu.addListItem({
 				text: "Resume",
 				callback: function(arg) {
@@ -230,25 +231,25 @@ HA.game = function(ns, $, _, C) {
 					this.destroy();
 				}
 			});
-			
+
 			_pauseMenu.addListItem({
 				text: "Instructions",
 				callback: function(arg) {
 					HA.game.closeModals();
-					HA.game.openModal("InstructionsDisplay"); 
+					HA.game.openModal("InstructionsDisplay");
 					this.destroy();
 					_createCloseMenu();
 				},
 				args: ["Instructions!"]
 			});
-			
+
 			_pauseMenu.addListItem({
         text: "Share",
         callback: function(arg) {
           window.open('/share', '_blank');
         }
-      });			
-      
+      });
+
 			_pauseMenu.addListItem({
 				text: "End Game",
 				callback: function(arg) {
@@ -256,7 +257,7 @@ HA.game = function(ns, $, _, C) {
 					HA.m.publish(HA.e.END_GAME);
 				}
 			});
-			
+
 			_pauseMenu.addListItem({
 				text: function() {
 					var mute = HA.game.isMuted() ? "-mute" : "";
@@ -274,7 +275,7 @@ HA.game = function(ns, $, _, C) {
 					}
 				}
 			})
-      
+
       _pauseMenu.renderListNav();
 	}
 
@@ -353,10 +354,10 @@ HA.game = function(ns, $, _, C) {
 			HA.player.addToScore(scoreInc);
 			C.audio.play('hit_good');
 		}
-		
+
 		_gameHitCount += 1;
 		_saveData(data);
-		
+
 		HA.m.publish(HA.e.ENEMY_HIT_COMPLETE, [enemy, scoreInc]);
 	};
 
@@ -384,7 +385,7 @@ HA.game = function(ns, $, _, C) {
 		}
 		HA.m.publish(HA.e.ENEMY_OFF_SCREEN_COMPLETE, [enemy, scoreInc, whoops]);
 	};
-	
+
 	/**
 	 Handle level complete event.
 	 @private
@@ -404,7 +405,7 @@ HA.game = function(ns, $, _, C) {
 			HA.m.publish(HA.e.INCREMENT_LEVEL);
 		}
 	};
-	
+
 	/**
 	 * Handle increment level event.
 	 * @private
@@ -415,7 +416,7 @@ HA.game = function(ns, $, _, C) {
 		console.log("_handleIncrementLevelEvent");
 		_incrementLevel();
 	}
-	
+
 	/**
 	 Handle start level event.
 	 @private
@@ -432,12 +433,12 @@ HA.game = function(ns, $, _, C) {
 		HA.enemyController.setSpeed(_getLevel() / 1.5);
 		if(!HA.enemyController.isProducing()) HA.enemyController.startProducing(true);
 	};
-	
-	
+
+
 	function _handleSaveScoreEvent(e, initials, score) {
 		_saveScore(initials, score, HA.player.getParty());
 	}
-	
+
 	/**
 	 * The actual function that is handles the gameplay keyboard events
 	 * @private
@@ -447,15 +448,10 @@ HA.game = function(ns, $, _, C) {
 		if(e.keyCode == Crafty.keys['ENTER']) {
 			if(!Crafty.isPaused()) {
 				HA.m.publish(HA.events.PAUSE_GAME);
-				// _unbindGameplayKeyboardEvents();
 			}
 		}
-		// if(e.keyCode == Crafty.keys['ESC']) {
-			// console.log("Full scrn");
-			// HA.sm.toggleFullScreenMode();
-		// }
 	}
-	
+
 	/**
 	 * Bind the ENTER and ESC keys to the pause and full screen functionality.
 	 * @private
@@ -466,7 +462,7 @@ HA.game = function(ns, $, _, C) {
     console.log("Bind game keyboard events");
 		$(document).on("keydown", _gameplayKeyboardEventHandler);
 	}
-	
+
 	/**
 	 * Unbind the ENTER and ESC keys to the pause and full screen functionality.
 	 * @private
@@ -476,7 +472,7 @@ HA.game = function(ns, $, _, C) {
 	  console.log("Unbind game keyboard events");
 		$(document).off("keydown");
 	}
-	
+
 	/**
 	 * Increment the level.
 	 * @private
@@ -489,7 +485,7 @@ HA.game = function(ns, $, _, C) {
 		HA.m.publish(HA.e.SHOW_MESSAGE, ["Level "+_level]);
 		console.log("_incrementLevel", _level);
 	}
-	
+
 	/**
 	 * Set the game to a specific level directly.
 	 * @private
@@ -500,27 +496,27 @@ HA.game = function(ns, $, _, C) {
 		_level = level;
 		HA.m.publish(HA.e.SHOW_MESSAGE, ["Level "+level]);
 	}
-	
+
 	function _getSpeed() {
 		return _level;
 	}
-	
+
 	function _getScoreMultiplier() {
 		return _level;
 	}
-	
+
 	function _getScoreIncrement() {
 		return _level*_scoreIncrement;
 	}
-	
+
 	function _getLevel() {
 		return _level;
 	}
-	
+
 	function _getNumEnemiesPerLevel() {
 		return _numEnemiesPerLevel;
 	}
-	
+
 	/**
 	 Save score to high scores in database.
 	 @private
@@ -547,11 +543,11 @@ HA.game = function(ns, $, _, C) {
 					HA.m.publish(HA.e.SCORE_SAVED_TO_DB, [resp]);
 				} else {
 					console.error("error saving score!", resp);
-				} 	
+				}
 			}
 		});
 	};
-	
+
 	function _saveData(data) {
 		console.log("SAVING DATA: ", data);
 		var token = HA.getCsrfToken();
@@ -566,9 +562,9 @@ HA.game = function(ns, $, _, C) {
 		});
 		_gaq.push(['_trackEvent', 'Gameplay', 'EnemyHit', data.tweet_party]);
 	}
-	
+
 	/**
-	 * Fetch the highscores from the server. 
+	 * Fetch the highscores from the server.
 	 */
 	function _fetchHighScores(callback, context) {
 		$.getJSON('/highscores', function(resp) {
@@ -580,21 +576,21 @@ HA.game = function(ns, $, _, C) {
 			}
 		});
 	}
-	
+
 	function _mute() {
 		Crafty.audio.mute();
 		_muted = true;
 	}
-	
+
 	function _unmute() {
 		Crafty.audio.unmute();
-		_muted = false; 
+		_muted = false;
 	}
-	
+
 	function _isMuted() {
 		return _muted;
 	}
-	
+
 	// public methods
 
 	/**
@@ -608,21 +604,21 @@ HA.game = function(ns, $, _, C) {
 	 Close all modals
 	 @public
 	 @method closeModals
-	 */	
+	 */
 	ns.closeModals = function() {
-		$(".modal").hide();		
+		$(".modal").hide();
 	}
-	
+
 	/**
 	 Open a modals
 	 @public
 	 @method openModal
-	 * @param id {string} the id of the modal template in the DOM	 
-	 */	
+	 * @param id {string} the id of the modal template in the DOM
+	 */
 	ns.openModal = function(id) {
 		$("#"+id).show();
 	}
-	
+
 	/**
 	 Unpause gameplay.
 	 @public
@@ -631,7 +627,7 @@ HA.game = function(ns, $, _, C) {
 	ns.getParty = function() {
 		return _party;
 	};
-	
+
 	/**
 	 UnPause gameplay.
 	 @public
@@ -645,7 +641,7 @@ HA.game = function(ns, $, _, C) {
 			throw "Party must be a string containing either 'r' or 'd'";
 		}
 	};
-	
+
 	/**
 	 * Check to see if a value is a highscore.
 	 * @param {Object} score
@@ -656,7 +652,7 @@ HA.game = function(ns, $, _, C) {
 			var scores = _.pluck(_highScores, "score"),
 					min = _.min(scores),
 					isHigh = (score > min || scores.length < 5);
-			
+
 			console.log("Min score", min);
 			console.log("Scores length", scores.length);
 			console.log("Is high score?", isHigh);
@@ -665,26 +661,26 @@ HA.game = function(ns, $, _, C) {
 
 		} else return false;
 	}
-	
+
 	ns.fetchHighScores = _fetchHighScores;
-	
+
 	ns.getHighScores = function() {
 		return _highScores;
 	}
-	
+
 	ns.getNumEnemiesPerLevel = _getNumEnemiesPerLevel;
-	
+
 	ns.cacheBuster = function(path) {
 		_cacheBuster = _cacheBuster || Date.now();
 		if(_.isString(path)) {
 			return path+'?_='+_cacheBuster;
 		} else return _cacheBuster;
 	}
-	
+
 	ns.isMuted = _isMuted;
-	
+
 	ns.mute = _mute;
-	
+
 	ns.unmute = _unmute;
 
 	return ns;

@@ -1,8 +1,8 @@
-Crafty.c("ScoreDisplay", {
+Crafty.c("TimerDisplay", {
 	SCORE_DIGITS: 6,
 	init: function() {
 		_.bindAll(this);
-		console.log("ScoreDisplay: init()");
+		console.log("TimerDisplay: init()");
 		this.addComponent("2D, DOM, Color, Text");
 		this.w = 180;
 		this.h = 30;
