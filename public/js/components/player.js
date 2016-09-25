@@ -12,20 +12,22 @@ Crafty.c("Player", {
 			}
 		});
 
-		this.bind("EnterFrame", function(e) {
-			if(this.x > Crafty.viewport.width) {
-				this.x = -40;
-			}
-			if(this.x < -40) {
-				this.x = Crafty.viewport.width;
-			}
-		});
+		this.bind('Fire', this._handleFireEvent);
 	},
-	dropDart: function() {
+
+	dropDart: function(enemy) {
 		console.log("Player : dropDart()");
 		Crafty.audio.play('drop');
 		Crafty.e("Dart")
+			.attr({
+				x: this.x+(this.w/4),
+				y: this.y
+			})
 			.setParty(this.getParty())
-			.attr({x: this.x+(this.w/4), y: this.y, dy: 4});
+			.fireAtTarget(enemy);
+	},
+
+	_handleFireEvent: function(enemy) {
+		this.dropDart(enemy);
 	}
 });

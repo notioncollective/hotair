@@ -14,8 +14,8 @@ Crafty.c("HitScore", {
 		this.score = 0;
 
 		this
-			.animate("up", 0, 0, 5)
-			.animate("down", 0, 1, 5);
+			.reel("up", 500, 0, 0, 5)
+			.reel("down", 500, 0, 1, 5);
 
 		this.bind("EnterFrame", function(e) {
 
@@ -59,12 +59,12 @@ Crafty.c("HitScore", {
 
 		// determine font/animation based on sign of score
 		if(this.score > 0) {
-			this.animate("up", 15, 0);
+			this.animate("up", 1);
 			this.score_text
 				.registerFont('BlueScore')
 				.text(score_str);
 		} else {
-			this.animate("down", 15, 0);
+			this.animate("down", 1);
 			this.score_text
 				.registerFont('GreyScore')
 				.text(score_str);

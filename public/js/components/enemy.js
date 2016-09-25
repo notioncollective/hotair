@@ -6,8 +6,11 @@ Crafty.c("Enemy", {
 		this.addComponent("2D, DOM, Motion, Collision, Text, Tweet, SpriteAnimation, Party, Swipe, balloonx2");
 		this.w = 120;
 		this.h = 120;
+
 		this.selected = false;
-		this.hit = false;
+		this.marked = false;
+		// this.hit = false;
+
 		this.y = Crafty.viewport.height + this.h;
 		this.x = this.w + Math.random()*(Crafty.viewport.width-this.w*2);
 		this.vy = -200;
@@ -29,23 +32,28 @@ Crafty.c("Enemy", {
 
 		this.animate('normal', -1);
 
-		this.collision(new Crafty.polygon([
-			[20,40],
-			[this.w/4,10],
-			[this.w/2, 0],
-			[3*(this.w/4),10],
-			[this.w-20,40],
-			[this.w/2, this.h],
-		]));
+		// this.collision(new Crafty.polygon([
+		// 	[20,40],
+		// 	[this.w/4,10],
+		// 	[this.w/2, 0],
+		// 	[3*(this.w/4),10],
+		// 	[this.w-20,40],
+		// 	[this.w/2, this.h],
+		// ]));
 
-		// trigger the Offscreen event if balloon goes offscreen
-		// this.bind('Moved', this.onMove);
+		this.checkHits('Dart');
 
-		// move on every frame
-		// this.bind('EnterFrame', this._move);
+		this.bind('HitOn', function(data) {
+			console.log('HitOn', data);
+			var dart = data[0].obj;
 
-		// this.startMovement();
+			if (this.marked) {
+				dart.destroy();
+				this.doHit(100);
+			}
+		});
 
+		this.bind('Moved', this.onMove);
 	},
 
 	/**
@@ -78,8 +86,9 @@ Crafty.c("Enemy", {
 	 * This is called from the hit complete event handler
 	 */
 	doHit: function(dScore) {
-		if(this.hit) return;
-		this.hit = true;
+		// if(this.hit) return;
+		// this.hit = true;
+		this.unselect();
 		this
 			.animate("hit_"+this.getParty(), 30, 0)
 			.startFalling();
@@ -96,28 +105,18 @@ Crafty.c("Enemy", {
 		return this;
 	},
 
-	startMovement: function() {
-		this.bind("EnterFrame", this._risingCallback);
-	},
-	startFalling: function() {
-		console.log("falling");
-		this
-			.unbind("EnterFrame", this._risingCallback)
-			.bind("EnterFrame", this._fallingCallback);
-	},
-	_fallingCallback: function(e) {
+	startFalling: function(e) {
 		// added test for isPlaying, otherwise this was causing errors on re-init
-		if(typeof this.isPlaying === 'function' && !this.isPlaying('hit_r') && !this.isPlaying('hit_d')) {
+		// if(typeof this.isPlaying === 'function' && !this.isPlaying('hit_r') && !this.isPlaying('hit_d')) {
 			this.animate("falling_"+this.getParty(), 10, -1);
-		}
-		this.y += this.dy;
-		if(this.dy < this.TERMINAL_VELOCITY) {
-			this.dy = this.dy*1.1;
-		}
+		// }
+		this.vy = 100;
+		this.ay = 50;
+
 		if(this.y > Crafty.viewport.height+20) {
 			this.unbindAllMediatorEvents();
 			this
-				.unbind("EnterFrame", this._fallingCallback)
+				.unbind("EnterFrame")
 				.destroy();
 			console.log("++++++ DESTROYED ENEMY ENTITY", this, this.y);
 		}
@@ -189,6 +188,7 @@ Crafty.c("Enemy", {
 
 		HA.m.publish(HA.e.ENEMY_SELECTED, [this]);
 	},
+
 	unselect: function() {
 		this.selected = false;
 		if(typeof this.selection !== 'undefined') this.selection.destroy();
@@ -211,31 +211,30 @@ Crafty.c("Enemy", {
 
 	onSwipeUp: function(e) {
 		if (this.selected) {
-			this.vy = -1000;
-			this.ay = -1000;
-			this.showPartyColor();
+			this.vy = -200;
+			this.ay = -500;
 			this.selected = false;
-			Crafty.trigger('BalloonReleased', this);
 		}
 	},
+
 	onSwipeDown: function(e) {
 		if (this.selected) {
 			this.marked = true;
-			this.trigger('Fire', this);
+			Crafty.trigger('Fire', this);
 			this.selected = false;
-			Crafty.trigger('BalloonReleased', this);
 		}
 	},
 
 	onMove: function(e) {
-		// console.log('onMove', e);
 		// top of screen
-		if (this.y <= -this.h) {
-			this.onLeaveScreenTop();
+		if (this.y < 80-this.h-10) {
+			console.log("enemy off screen");
 
-		// bottom of screen
-		} else if (this.ht && (this.y >= Crafty.viewport._height)) {
-			this.onLeaveScreenBottom();
+
+
+			// HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
+
+			// HA.m.publish(HA.e.ENEMY_OFF_SCREEN_START, [this]);
 		}
 
 		// text follows balloon

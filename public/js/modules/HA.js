@@ -6,7 +6,7 @@ HA = {};
 
 HA = function(ns, $, _) {
 	var NAMESPACE_STR = "HA";
-	
+
 	/**
 	 * Get the CSRF token from the meta tag.
 	 * @private
@@ -16,8 +16,8 @@ HA = function(ns, $, _) {
 	function _getCsrfToken() {
 		var token = $("meta[name='csrf-token']").attr("content");
 		return token;
-	}	
-	
+	}
+
 	function _submitErrorReport(message, id) {
 		console.log(message, id);
 		$.ajax({
@@ -27,7 +27,7 @@ HA = function(ns, $, _) {
 			data: JSON.stringify({userMessage: message, id: id})
 		});
 	}
-	
+
 	// http://www.zachleat.com/web/yui-code-review-yahoonamespace/
 	/**
 	 * Create a sub-namespace on the HA root object.
@@ -49,7 +49,7 @@ HA = function(ns, $, _) {
 
 	    return o;
 	};
-	
+
 	ns.init = function() {
 		// set up CSRF token
 		$.ajaxSetup({
@@ -58,7 +58,7 @@ HA = function(ns, $, _) {
 				xhr.setRequestHeader('X-CSRF-Token', token);
 			}
 		});
-		
+
 		// $(document).ajaxError(function(event, xhr, settings, thrownError) {
 			// var resp = JSON.parse(xhr.responseText),
 					// promptMessage = prompt("An Error!? What a bunch of Malarkey! It would help us greatly if you'd briefly describe what happened:");
@@ -66,9 +66,44 @@ HA = function(ns, $, _) {
 		// });
 
 	};
-	
+
 	ns.getCsrfToken = _getCsrfToken;
-	
+
+	ns.quadratic = function(a, b, c) {
+	  var d = b * b - 4 * a * c,
+	      ds,
+	      mbmds,
+	      mbpds;
+	  if (a === 0) {
+	    // linear equation
+	    if (b === 0) {
+	      if (c === 0) {
+	        // all values of x are ok.
+	        return [undefined, undefined, undefined];
+	      } else {
+	        return [];
+	      }
+	    } else {
+	      return [-c / b];
+	    }
+	  }
+
+	  if (d < 0) {
+	    return [];
+	  } else if (d === 0) {
+	    return [-b / (2 * a)];
+	  }
+
+	  ds = Math.sqrt(d);
+	  if (b >= 0) {
+	    mbmds = -b - ds;
+	    return [mbmds / (2 * a), 2 * c / mbmds];
+	  } else {
+	    mbpds = -b + ds;
+	    return [2 * c / mbpds, mbpds / (2 * a)];
+	  }
+	};
+
 	return ns;
-	
+
 }(HA || {}, jQuery, _);

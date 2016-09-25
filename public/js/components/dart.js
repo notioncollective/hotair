@@ -1,6 +1,6 @@
 /**
  * Dart component. Sets color based on player party.
- * @class dart
+ * @class this
  */
 
 Crafty.c("Dart", {
@@ -12,44 +12,61 @@ Crafty.c("Dart", {
 	 @param {Object} e Event object.
 	 */
 	init: function() {
-		this.addComponent("2D, DOM, Color, Collision, Party");
+		this.addComponent("2D, DOM, Color, Collision, Motion, Party");
+
 		this.setPartySpriteTemplate('%p_dartx2');
-		
+
 		this.w = 40;
 		this.h = 40;
-		this.dy = 1;
-		this.ay = .2;
 
-		this.collision(new Crafty.polygon([
-			[15, 10],
-			[this.w-15, 10],
-			[this.w-15, this.h-10],
-			[15, this.h-10]
-		]));
-		
+		// this.collision(new Crafty.polygon([
+		// 	[15, 10],
+		// 	[this.w-15, 10],
+		// 	[this.w-15, this.h-10],
+		// 	[15, this.h-10]
+		// ]));
+
 		/**
 		 * Trigger the ENEMY_HIT event.
 		 */
-		this.onHit("Enemy", function(e) {
-			var enemy = e[0].obj;
-			if(enemy.y+enemy.h/3 < this.y) return;
-			enemy.registerHitCompleteEvent();
-			HA.m.publish(HA.e.ENEMY_HIT_START, [e[0].obj]);
-			this.destroy();
-		});
-		
-		
-		
-		this.bind("EnterFrame", function() {
-			this.y += this.dy;
-			this.dy = this.dy+this.ay;
-		});
+		// this.onHit("Enemy", function(e) {
+		// 	console.log('hit enemy!', e[0].obj);
+
+		// 	var enemy = e[0].obj;
+		// 	if(enemy.y+enemy.h/3 < this.y) return;
+		// 	enemy.registerHitCompleteEvent();
+		// 	HA.m.publish(HA.e.ENEMY_HIT_START, [e[0].obj]);
+		// 	this.destroy();
+		// });
+
+		this.bind('Moved', this.onMove);
+
 	},
-	
-	// setParty: function(party) {
-	// 	if(party === 'r' || party === 'd' ) {
-	// 		this._party = party;
-	// 		this.addComponent(this._party+'_dartx2');
-	// 	} else { throw "Party must be set to either 'd' or 'r'"; }
-	// }
+	fireAtTarget: function(enemy) {
+		this.target = enemy;
+		console.log('fireAtTarget', enemy);
+		var bx = enemy.x + enemy.w/2;
+		var by = enemy.y + enemy.h/2;
+		var dx = this.x + this.w/2;
+		var dy = this.y + this.h/2;
+
+		this.ay = 500;
+		this.vy = 200;
+
+		var roots = HA.quadratic(
+			(.5*this.ay), // a
+			(this.vy-enemy.vy), // b
+			(dy - by) // c
+		);
+
+		var t = Math.max(roots[0], roots[1]);
+		var vx = (bx-dx)/t;
+
+		this.vx = vx; // (sign(vx)) * Math.min(Math.abs(vx), params.thisMaxXV);
+	},
+	onMove: function(e) {
+		var vel = this.velocity();
+		var origin = new Crafty.math.Vector2D(0, 0);
+		this.rotation = (vel.angleTo(origin) + Math.PI / 2) * (180 / Math.PI);
+	}
 });

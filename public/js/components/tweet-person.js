@@ -10,8 +10,8 @@ Crafty.c("TweetPerson", {
 
 		// set up animation states
 		this
-			.animate("r", 0, 0, 7)
-			.animate("d", 0, 1, 7);
+			.reel("r", 1000, 0, 0, 7)
+			.reel("d", 1000, 0, 1, 7);
 
 		// this.angle = 0;
 
