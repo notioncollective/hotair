@@ -119,10 +119,11 @@ function csrf(req, res, next) {
 
 // simple middleware for useragent detection
 function agent(req, res, next) {
-	if(!(useragent.is(req.headers['user-agent']).chrome || useragent.is(req.headers['user-agent']).safari || useragent.is(req.headers['user-agent']).firefox)
-		|| useragent.is(req.headers['user-agent']).mobile_safari) {
-		res.redirect('/notsupported');
-	} else next();
+// 	if(!(useragent.is(req.headers['user-agent']).chrome || useragent.is(req.headers['user-agent']).safari || useragent.is(req.headers['user-agent']).firefox)
+// 		|| useragent.is(req.headers['user-agent']).mobile_safari) {
+// 		res.redirect('/notsupported');
+// 	} else next();
+  next();
 }
 
 // generate a uuid for this session (i.e. user, in our terms)
@@ -137,7 +138,7 @@ function user_token(req, res, next) {
 app.get('/', agent, csrf, user_token, routes.home);
 app.get('/play', agent, csrf, routes.play);
 app.get('/score/:id', routes.score);
-app.get('/notsupported', routes.notsupported);
+// app.get('/notsupported', routes.notsupported);
 app.get('/newsletter', routes.newsletter)
 // app.get('/survey', auth, routes.survey);
 // app.get('/privatealpha', auth, routes.privatealpha);
