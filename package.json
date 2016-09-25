@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "grunt",
-    "predeploy": "grunt"
+    "install": "grunt"
   },
   "dependencies": {
     "cron": "1.0.1",
