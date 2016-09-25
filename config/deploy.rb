@@ -1,5 +1,5 @@
-# config valid only for Capistrano 3.1
-lock '3.4.0'
+# config valid only for Capistrano 3.4
+lock '3.6.1'
 
 set :application, 'Hotair'
 set :repo_url, 'https://github.com/notioncollective/hotair.git'
@@ -38,7 +38,7 @@ append :linked_files, ".env"
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
-# 
+#
 
 namespace :node do
 
