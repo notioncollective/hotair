@@ -2,12 +2,12 @@
 lock '3.6.1'
 
 set :application, 'Hotair'
-set :repo_url, 'https://github.com/notioncollective/hotair.git'
+set :repo_url, 'ncgitolite@notioncollective.com:hotairnode'
 
 set :node_bin_path, '/usr/local/bin/node'
 set :npm_roles, :web
 
-append :linked_files, ".env"
+set :linked_files, %w{.env}
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
@@ -37,8 +37,8 @@ append :linked_files, ".env"
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
-# set :keep_releases, 5
-#
+
+set :keep_releases, ENV['CAP_KEEP_RELEASES'].to_i || 5
 
 namespace :node do
 
@@ -71,6 +71,7 @@ end
 namespace :deploy do
 
   desc 'Restart application'
+
   task :restart do
     invoke 'node:restart'
   end
@@ -87,3 +88,5 @@ namespace :deploy do
   end
 
 end
+
+
