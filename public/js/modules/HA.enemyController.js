@@ -16,10 +16,11 @@ HA.enemyController = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.PAUSE_GAME, _handlePauseGameEvent);
 		HA.m.subscribe(HA.events.RESUME_GAME, _handleResumeGameEvent);
 		HA.m.subscribe(HA.events.END_GAME, _handleEndGameEvent);
-		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, _handleEnemyHitCompleteEvent);
-		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, _handleEnemyOffScreenCompleteEvent);
-		HA.m.subscribe(HA.e.ENEMY_DESTROYED, _handleEnemyDestroyedEvent);
 		HA.m.subscribe(HA.e.ENEMY_SELECTED, _handleEnemySelectedEvent);
+
+		// With new gameplay, these could probably be combined?
+		C.bind('EnemyPassed', _removeEnemy);
+		C.bind('EnemyHit', _removeEnemy);
 
 		// _bindKeyboardEvents();
 	}
@@ -66,33 +67,15 @@ HA.enemyController = function(ns, $, _, C) {
 		_removeAllEnemies();
 	}
 
-	function _handleEnemyHitStartEvent(e, enemy) {
-		console.log('HA.enemyController _handleEnemyHitStartEvent');
-
-	}
-
-	function _handleEnemyHitCompleteEvent(e, enemy) {
-		console.log('HA.enemyController _handleEnemyHitCompleteEvent');
-		_removeEnemy(enemy);
-	}
-
-	function _handleEnemyOffScreenCompleteEvent(e, enemy) {
-		console.log('HA.enemyController _handleEnemyOffScreenEvent');
-		_removeEnemy(enemy);
-	}
-
-	function _handleEnemyDestroyedEvent(e, enemy) {
-		console.log('HA.enemyController _handleEnemyDestroyedEvent');
-	}
-
-	// When an enemy is selected, unselect the rest
+	// When an enemy is selected, unselect the rest and update the local reference to the selected enemy
 	function _handleEnemySelectedEvent(e, selectedEnemy) {
 		console.log('HA.enemyController _handleEnemySelectedEvent');
-		_.filter(_enemies, function(enemy) {
+		_enemies.forEach(function(enemy) {
 			if (enemy.getId() !== selectedEnemy.getId()) {
 				enemy.unselect();
 			}
 		});
+		_setSelectedEnemy();
 	}
 
 	/***** PRIVATE METHODS *****/
@@ -108,6 +91,10 @@ HA.enemyController = function(ns, $, _, C) {
 		_speed = speed;
 	}
 
+	/**
+	 * Being generating balloons at timed interval
+	 * @param  {Boolean} firstGo
+	 */
 	function _startProducing(firstGo) {
 		_producing = true;
 		clearInterval(_timer);
@@ -116,22 +103,29 @@ HA.enemyController = function(ns, $, _, C) {
 		console.log("startProducing", _timer);
 	}
 
+	/**
+	 * Stop generating balloons at timed interval
+	 */
 	function _stopProducing() {
 		console.log("stopProducing", _timer);
 		_producing = false;
 		clearInterval(_timer);
 	}
 
+	/**
+	 * Produce a single balloon and add it to the list of enemies.
+	 */
 	function _produceEnemy() {
 		console.log("_produceEnemy", _timer);
 		var tweet;
 		if(_curEnemy < _numEnemies) {
 			if( tweet = _tweets[_curEnemy]) {
 				console.log("tweet: ", tweet);
+				console.log("party: ", tweet.value.party);
 				_enemies.push(C.e("Enemy").setTweet(tweet).setSpeed(_speed).setParty(tweet.value.party));
 			}
 			if(_curEnemy === 0 || _enemies.length === 1) {
-				//select the first enemy
+				// if this is the only enemy, select it
 				_selectedEnemy = 0;
 				_enemies[0].select();
 			}
@@ -142,6 +136,9 @@ HA.enemyController = function(ns, $, _, C) {
 		_curEnemy += 1;
 	}
 
+	/**
+	 * Select the next enemy on the screen, vertically below
+	 */
 	function _selectNextEnemy() {
 		_setSelectedEnemy();
 		if(_selectedEnemy < _enemies.length - 1) {
@@ -153,6 +150,9 @@ HA.enemyController = function(ns, $, _, C) {
 		_enemies[_selectedEnemy].select();
 	}
 
+	/**
+	 * Select the previous enemy on the screen, vertically above
+	 */
 	function _selectPreviousEnemy() {
 		_setSelectedEnemy();
 		if(_selectedEnemy > 0) {
@@ -164,12 +164,18 @@ HA.enemyController = function(ns, $, _, C) {
 		_enemies[_selectedEnemy].select();
 	}
 
+	/**
+	 * Unselect all enemies - used when selecting a single enemy
+	 */
 	function _unselectAllEnemies() {
 		_.each(_enemies, function(enemy) {
 			enemy.unselect();
 		});
 	}
 
+	/**
+	 * Store a reference to the currently selected enemy
+	 */
 	function _setSelectedEnemy() {
 		var selected = _.find(_enemies, function(enemy, index) {
 			if(enemy.selected)
@@ -178,14 +184,18 @@ HA.enemyController = function(ns, $, _, C) {
 		});
 	}
 
+	/**
+	 * Remove an enemy from our list of enemies. If the enemy being removed is selected,
+	 * select the next enemy.
+	 * @param  {Object} enemy A reference to the enemy instance to be removed.
+	 */
 	function _removeEnemy(enemy) {
+		console.log('_removeEnemy', enemy);
 		var index = _.indexOf(_enemies, enemy);
-		console.log("Removing Visible Enemy: " + enemy);
 		if(index !== -1) {
 			enemy.unselect();
 			if(_enemies[_selectedEnemy] === enemy) {
 				// If the enemy to remove is selected, select the new 0 index enemy.
-				console.log("000000000 selected enemy destroyed");
 				_enemies.splice(index, 1);
 				if(_enemies[0] !== undefined) {
 					_selectedEnemy = 0;
@@ -194,7 +204,6 @@ HA.enemyController = function(ns, $, _, C) {
 			} else {
 				// The enemy isn't selected, so don't worry about selecting another enemy
 				_enemies.splice(index, 1);
-				console.log("000000000 unselected enemy destroyed");
 			}
 
 			// _destroyEnemy(enemy);
@@ -207,11 +216,13 @@ HA.enemyController = function(ns, $, _, C) {
 		}
 	}
 
+	/**
+	 * Destroy enemy
+	 * @param  {Object} enemy A reference to the enemy instance to be removed.
+	 */
 	function _destroyEnemy(enemy) {
 		console.log("_destroyEnemy: ",enemy);
 		if(enemy.hasOwnProperty("destroy") || _.has(enemy, "destroy")) {
-			enemy.unbindAllMediatorEvents();
-			enemy.unselect();
 			enemy.destroy();
 		}
 	}

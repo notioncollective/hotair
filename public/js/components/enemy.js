@@ -53,33 +53,9 @@ Crafty.c("Enemy", {
 			}
 		});
 
-		this.bind('Moved', this.onMove);
-	},
+		this.bind('Moved', this.onMove.bind(this));
 
-	/**
-	 * This is called from within the dart's hit event handler.  Must be registered after hit so that only
-	 * balloons that have been hit will be subscribed to the hit complete event.
-	 */
-	registerHitCompleteEvent: function() {
-		HA.m.subscribe(HA.e.ENEMY_HIT_COMPLETE, this._handleHitCompleteEvent);
-	},
-
-	unbindAllMediatorEvents: function() {
-		HA.m.unsubscribe(HA.e.ENEMY_HIT_COMPLETE, this._handleHitCompleteEvent);
-		HA.m.unsubscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
-	},
-
-	_handleHitCompleteEvent: function(e, enemy, dScore) {
-		this.doHit(dScore);
-	},
-
-	_handleEnemyOffScreenComplete: function(e, enemy, dScore, whoops) {
-		console.log("Enemy: _handleEnemyOffScreenComplete", enemy, dScore);
-		if(whoops) {
-			this.showScore(dScore, 0);
-		}
-		this.unbindAllMediatorEvents();
-		this.destroy();
+		this.bind('Remove', this.onDestroy.bind(this));
 	},
 
 	/**
@@ -93,9 +69,12 @@ Crafty.c("Enemy", {
 			.animate("hit_"+this.getParty(), 30, 0)
 			.startFalling();
 		if(typeof this.selection !== 'undefined') this.selection.destroy();
-		this.showTweetPerson();
-		this.showScore(dScore);
 
+		this.showTweetPerson();
+
+		// this.showScore(dScore);
+
+		Crafty.trigger('EnemyHit', this);
 	},
 
 	setSpeed: function(speed) {
@@ -114,7 +93,6 @@ Crafty.c("Enemy", {
 		this.ay = 50;
 
 		if(this.y > Crafty.viewport.height+20) {
-			this.unbindAllMediatorEvents();
 			this
 				.unbind("EnterFrame")
 				.destroy();
@@ -122,19 +100,6 @@ Crafty.c("Enemy", {
 		}
 	},
 
-	_risingCallback: function(e) {
-			this.y -= this.dy;
-			if (this.y < 80-this.h-10) {
-				console.log("enemy off screen");
-				if(this.hit) return;
-				this.hit = true;
-				this.unbind("EnterFrame");
-
-				HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
-
-				HA.m.publish(HA.e.ENEMY_OFF_SCREEN_START, [this]);
-			}
-	},
 	showScore: function(score, offset) {
 		if(!_.isNumber(offset)) offset = -40;
 		// console.log("******** showScore");
@@ -145,6 +110,7 @@ Crafty.c("Enemy", {
 							})
 							.setScore(score);
 	},
+
 	showTweetPerson: function() {
 		var party = this.getParty();
 		var tweet_person = Crafty.e('TweetPerson')
@@ -165,6 +131,7 @@ Crafty.c("Enemy", {
 				.setParty(party)
 				.drawInfo();
 	},
+
 	showTweet: function() {
 		// show the tweet beside the baloon
 	},
@@ -228,12 +195,11 @@ Crafty.c("Enemy", {
 	onMove: function(e) {
 		// top of screen
 		if (this.y < 80-this.h-10) {
-			console.log("enemy off screen");
-
-
+			console.log("enemy off screen", this.getParty());
+			Crafty.trigger('EnemyPassed', this);
+			this.destroy();
 
 			// HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_COMPLETE, this._handleEnemyOffScreenComplete);
-
 			// HA.m.publish(HA.e.ENEMY_OFF_SCREEN_START, [this]);
 		}
 
@@ -241,5 +207,11 @@ Crafty.c("Enemy", {
 		if (this.text) {
 			this.text.y = this.y;
 		}
+	},
+
+	// clean up... may need to destroy entities created within this component?
+	// - tweet text
+	onDestroy: function(e) {
+		this.unselect();
 	}
 });

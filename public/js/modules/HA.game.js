@@ -50,6 +50,8 @@ HA.game = function(ns, $, _, C) {
 		HA.m.subscribe(HA.events.INCREMENT_LEVEL, _handleIncrementLevelEvent);
 		HA.m.subscribe(HA.events.START_LEVEL, _handleStartLevelEvent);
 		HA.m.subscribe(HA.e.SAVE_SCORE, _handleSaveScoreEvent);
+		HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
+		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
 
 		// For window blur, when changing browser windows or application
 		C.bind("Pause", function(e) {
@@ -58,6 +60,7 @@ HA.game = function(ns, $, _, C) {
 			C.audio.pause("game_music");
 			if(HA.enemyController.isProducing()) HA.enemyController.stopProducing();
 		});
+
 		C.bind("Unpause", function(e) {
 			console.log("C.bind('Unpause')");
 			if(_state !== 1) return;
@@ -66,15 +69,17 @@ HA.game = function(ns, $, _, C) {
 			if(!HA.enemyController.isProducing()) HA.enemyController.startProducing();
 		});
 
+		// With new gameplay, these could probably be combined?
+		C.bind('EnemyPassed', _handleEnemyPassed);
+		C.bind('EnemyHit', _handleEnemyPassed);
+
 
 		// using jQuery here, wasn't sure of the Crafty equiv
 		$(window).on('resize orientationChanged', function(e) {
 		  // console.log("Change viewport size!", e);
-      HA.m.publish(HA.events.RESIZE_VIEWPORT, [C.DOM.window.width, C.DOM.window.height]);
+      HA.m.publish(HA.events.RESIZE_VIEWPORT, [C.viewport.width, C.viewport.height]);
     });
 
-		HA.m.subscribe(HA.e.ENEMY_HIT_START, _handleEnemyHitStartEvent);
-		HA.m.subscribe(HA.e.ENEMY_OFF_SCREEN_START, _handleEnemyOffScreenStartEvent);
 
 		// Initialize Crafty
 		C.init();
@@ -360,6 +365,13 @@ HA.game = function(ns, $, _, C) {
 
 		HA.m.publish(HA.e.ENEMY_HIT_COMPLETE, [enemy, scoreInc]);
 	};
+
+	function _handleEnemyPassed(enemy) {
+		console.log("_handleEnemyPassed", enemy.getParty());
+		var party = enemy.getParty();
+		var scoreInc = _getScoreIncrement();
+		C.trigger('UpdateScore', { scoreInc: scoreInc, party: party });
+	}
 
 	/**
 	 Handle event when an enemy goes offscreen.

@@ -7,6 +7,7 @@ Crafty.c("Score", {
 
 	init: function() {
 		console.log("Score: init()");
+		Crafty.bind('UpdateScore', this._handleUpdateScore.bind(this));
 	},
 
 	/**
@@ -29,9 +30,13 @@ Crafty.c("Score", {
 	 */
 	setScore: function(score, party) {
 		if (party) {
+			// set by party, probably more common case
 			this._score[party] = score;
+		} else {
+			// replace entire score object
+			this._score = score;
 		}
-		this._score = score;
+		console.log('score set', score, party);
 	},
 
 	/**
@@ -46,5 +51,10 @@ Crafty.c("Score", {
 	 */
 	setIncrement: function(inc) {
 		this._increment = inc;
+	},
+
+	_handleUpdateScore(data) {
+		console.log('_handleUpdateScore', data);
+		this.setScore(data.scoreInc, data.party);
 	}
 });
